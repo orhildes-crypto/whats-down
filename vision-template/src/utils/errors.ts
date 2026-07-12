@@ -5,6 +5,7 @@ export class ServiceError extends Error {
         message: string,
     ) {
         super(message);
+        this.name = this.constructor.name;
     }
 }
 
