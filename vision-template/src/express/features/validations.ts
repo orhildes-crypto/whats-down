@@ -57,7 +57,7 @@ export const getByIdRequestSchema = z.object({
     }),
 });
 
-// POST /api/ystem-service
+// POST /api/system-service
 export const createOneRequestSchema = z.object({
     body: requiredFields.merge(optionalFields),
     query: z.object({}),
