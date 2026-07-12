@@ -10,3 +10,4 @@ export const config = {
         featuresCollectionName: env.get('FEATURES_COLLECTION_NAME').default('features').required().asString(),
     },
 };
+

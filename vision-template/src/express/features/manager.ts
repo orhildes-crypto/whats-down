@@ -29,3 +29,4 @@ export class FeaturesManager {
         return FeaturesModel.findByIdAndDelete(featureId).orFail(new DocumentNotFoundError(featureId)).lean().exec();
     };
 }
+
