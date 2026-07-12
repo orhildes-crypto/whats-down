@@ -1,6 +1,6 @@
 export interface CreateSystemServicePayload {
     name: string;
-    parentId: string | null;
+    parentId: string | null ;
 }
 
 export interface SystemService extends CreateSystemServicePayload {

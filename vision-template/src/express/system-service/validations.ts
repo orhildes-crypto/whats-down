@@ -59,22 +59,24 @@ export const getByIdRequestSchema = z.object({
 
 // POST /api/system-service
 export const createOneRequestSchema = z.object({
-    body: requiredFields.merge(optionalFields),
+    body: requiredFields.merge(z.object({
+        parentId: zodMongoObjectId.nullable(),
+    })),
     query: z.object({}),
     params: z.object({}),
 });
 
 // PUT /api/system-service/:id
-export const updateOneRequestSchema = z.object({
-    body: requiredFields.partial().merge(optionalFields),
+export const editServiceRequestSchema = z.object({
+    body: requiredFields.partial().merge(optionalFields).refine(
+        (data) => Object.keys(data).length > 0,
+        { message: "At least one field must be provided for update" }
+    ),
     query: z.object({}),
     params: z.object({
         id: zodMongoObjectId,
     })
-}).refine(
-    (data) => Object.keys(data.body).length > 0,
-    { message: "At least one field must be provided for update" }
-);;
+})
 
 // PATCH /api/system-service/:id/status
 export const changeStatusRequestSchema = z.object({
