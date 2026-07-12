@@ -51,8 +51,50 @@ export class SystemServiceManager {
             throw new SystemWithChildrenError(systemId);
         }
         
-        return SystemServiceModel.findByIdAndUpdate(systemId, {$set: {status: status, statusUpdatedAt: Date.now()}}, {new: true})
+        const result = await SystemServiceModel.findByIdAndUpdate(systemId, {$set: {status: status, statusUpdatedAt: Date.now()}}, {new: true})
             .orFail(new DocumentNotFoundError(systemId)).lean().exec();
+
+        await this.updateParentsStatus(systemId, status);
+
+        return result;
+    }
+
+    static updateParentsStatus = async (systemId: string, status: "UP" | "DOWN"): Promise<void> => {
+    const childSystem = await SystemServiceModel.findById(systemId) ;
+    
+    
+    if (!childSystem?.parentId) {
+        return;
+    }
+
+    const parentSystem = await SystemServiceModel.findById(childSystem.parentId) ;
+    
+    let newParentStatus: "UP" | "DOWN";
+    if (status === "DOWN") {
+        newParentStatus = "DOWN";
+    } else {
+        const hasDownSibling = await this.checkForDownKids(childSystem.parentId);
+        hasDownSibling ? newParentStatus = "DOWN" : newParentStatus = "UP";
+    }
+
+    
+    if (newParentStatus === parentSystem?.status) {
+        return;
+    }
+
+    await SystemServiceModel.findByIdAndUpdate(childSystem.parentId, {$set: {status: newParentStatus, statusUpdatedAt: Date.now()}}, {new: true});
+
+    
+    await this.updateParentsStatus(childSystem.parentId, newParentStatus);
+};
+
+    static checkForDownKids = async (parentId: string): Promise<boolean> => {
+        const result = await SystemServiceModel.exists({
+            parentId: parentId,
+            status: "DOWN",
+        });
+
+        return result ? true : false;
     }
 
     static checkForCycles = async (systemId: string, parentId: string): Promise<boolean> => {
