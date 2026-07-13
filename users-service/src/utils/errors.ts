@@ -15,20 +15,14 @@ export class DocumentNotFoundError extends ServiceError {
     }
 }
 
-export class CreateCircleError extends ServiceError {
-    constructor(systemId: string, parentId: string) {
-        super(422, `Can not change parent id ${parentId} for system ${systemId}. Creates circle in tree`);
-    }
-}
-
-export class SystemWithChildrenError extends ServiceError {
-    constructor(systemId: string) {
-        super(422, `Can not change status of system ${systemId}. This system has children`);
-    }
-}
-
-export class GoogleIdOrPasswordRequiredError extends ServiceError {
+export class PasswordIncorrectError extends ServiceError {
     constructor() {
-        super(422, `Either googleId or passwordHash must be provided.`);
+        super(401, 'Invalid credentials');
+    }
+}
+
+export class GoogleAuthError extends ServiceError {
+    constructor() {
+        super(401, 'Invalid Google authentication token');
     }
 }

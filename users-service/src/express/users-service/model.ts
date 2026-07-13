@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 import { config } from '../../config.js';
 import { UserDocument } from './interface.js';
-import { GoogleIdOrPasswordRequiredError } from '../../utils/errors.js';
 
 
 const UserSchema = new mongoose.Schema<UserDocument>(
@@ -23,7 +22,7 @@ const UserSchema = new mongoose.Schema<UserDocument>(
         },
         passwordHash: {
             type: String,  
-            required: false,
+            required: true,
         },
         googleId: {
             type: String,  
@@ -36,14 +35,5 @@ const UserSchema = new mongoose.Schema<UserDocument>(
         versionKey: false,
     },
 );
-
-// Validating that either googleId or passwordHash is provided
-UserSchema.pre('validate', function(next) {
-  if (!this.googleId && !this.passwordHash) {
-    return next(new GoogleIdOrPasswordRequiredError());
-  }
-
-  next();
-});
 
 export const UserModel = mongoose.model<UserDocument>(config.mongo.userCollectionName, UserSchema);

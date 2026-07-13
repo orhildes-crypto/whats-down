@@ -9,4 +9,10 @@ export const config = {
         uri: env.get('MONGO_URI').default('mongodb://localhost').required().asString(),
         userCollectionName: env.get('USER_COLLECTION_NAME').default('users').required().asString(),
     },
+    google: {
+        clientId: env.get('GOOGLE_CLIENT_ID').required().asString(),
+    },
+    jwt: {
+        secret: env.get('JWT_SECRET').required().asString(),
+    },
 };
