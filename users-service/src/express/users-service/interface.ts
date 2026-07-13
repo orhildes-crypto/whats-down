@@ -9,11 +9,11 @@ export interface CreateLocalUserPayload extends BaseUser {
     password: string; 
 }
 
-export interface CreateGoogleUserPayload extends BaseUser {
-    googleId: string;
-}
 
-export type CreateUserPayload = CreateLocalUserPayload | CreateGoogleUserPayload;
+export interface GoogleAuthPayload {
+    googleId: string; // token.sub
+    email: string;    // token.email
+}
 
 
 type AuthMethod =
