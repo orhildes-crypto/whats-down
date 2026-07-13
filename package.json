@@ -1,0 +1,9 @@
+{
+  "name": "whats-down",
+  "private": true,
+  "workspaces": [
+    "system-service",
+    "users-service",
+    "shared"
+  ]
+}
