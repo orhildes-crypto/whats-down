@@ -9,7 +9,7 @@
 // import request from 'supertest';
 // import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 // import { config } from '../src/config.js';
-// import { SystemServiceDocument } from '../src/express/system-service/interface.js';
+// import { SystemServiceDocument } from '../src/express/users-service/interface.js';
 // import { Server } from '../src/express/server.js';
 
 // const { mongo } = config;
