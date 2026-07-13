@@ -26,7 +26,9 @@ export type UserDocument = User & {
     _id: string;
 };
 
+export type SafeUserDocument = Omit<UserDocument, 'passwordHash' | 'googleId'>;
+
 export interface AuthResult {
-    user: UserDocument;
+    user: SafeUserDocument;
     token: string;
 }

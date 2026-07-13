@@ -1,53 +1,27 @@
 import { Response } from 'express';
 import { TypedRequest } from '../../utils/zod.js';
-import { SystemServiceManager } from './manager.js';
+import { UsersServiceManager } from './manager.js';
 import {
     createOneRequestSchema,
     deleteOneRequestSchema,
-    getByIdRequestSchema,
-    getByQueryRequestSchema,
-    getCountRequestSchema,
-    editServiceRequestSchema,
-    changeStatusRequestSchema,
-    getRootsByQueryRequestSchema,
+    loginRequestSchema, 
+    googleAuthRequestSchema,
 } from './validations.js';
 
-export class SystemServiceController {
-    static getByQuery = async (req: TypedRequest<typeof getByQueryRequestSchema>, res: Response) => {
-        const { step, limit, ...query } = req.query;
-
-        res.json(await SystemServiceManager.getByQuery(query, step, limit));
-    };
-
-    static getRoots = async (req: TypedRequest<typeof getRootsByQueryRequestSchema>, res: Response) => {
-        const { step, limit } = req.query;
-
-        res.json(await SystemServiceManager.getRoots(step, limit));
-    };
-
-    static getCount = async (req: TypedRequest<typeof getCountRequestSchema>, res: Response) => {
-        res.json(await SystemServiceManager.getCount(req.query));
-    };
-
-    static getById = async (req: TypedRequest<typeof getByIdRequestSchema>, res: Response) => {
-        res.json(await SystemServiceManager.getById(req.params.id));
-    };
-
+export class UsersServiceController {
     static createOne = async (req: TypedRequest<typeof createOneRequestSchema>, res: Response) => {
-        // Change createdBy after auth is added!!!
-        const createdBy = "123";
-        res.json(await SystemServiceManager.createOne(req.body, createdBy));
+        res.json(await UsersServiceManager.createLocalUser({ ...req.body }));
     };
 
-    static editService = async (req: TypedRequest<typeof editServiceRequestSchema>, res: Response) => {
-        res.json(await SystemServiceManager.editService(req.params.id, req.body));
+    static login = async (req: TypedRequest<typeof loginRequestSchema>, res: Response) => {
+        res.json(await UsersServiceManager.loginLocalUser(req.body.username, req.body.password));
     };
 
-    static changeStatus = async (req: TypedRequest<typeof changeStatusRequestSchema>, res: Response) => {
-        res.json(await SystemServiceManager.changeStatus(req.params.id, req.body.status));
+    static loginWithGoogle = async (req: TypedRequest<typeof googleAuthRequestSchema>, res: Response) => {
+        res.json(await UsersServiceManager.loginWithGoogle(req.body.idToken));
     };
 
     static deleteOne = async (req: TypedRequest<typeof deleteOneRequestSchema>, res: Response) => {
-        res.json(await SystemServiceManager.deleteOne(req.params.id));
+        res.json(await UsersServiceManager.deleteUser(req.params.id));
     };
 }

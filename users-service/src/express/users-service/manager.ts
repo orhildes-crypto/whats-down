@@ -30,7 +30,9 @@ export class UsersServiceManager {
         }
                 
         const token = this.generateJWTToken(user);
-        return { user, token };
+
+        const safeUser = this.toSafeUser(user);
+        return { user: safeUser, token };
     };
 
     static client = new OAuth2Client(config.google.clientId);
@@ -63,17 +65,21 @@ export class UsersServiceManager {
 
         const token = this.generateJWTToken(user);
 
-        return { user, token };
+        const plainUser = user.toObject() as UserDocument;
+        const safeUser = this.toSafeUser(plainUser);
+        return { user: safeUser, token };
     }
 
     static generateJWTToken = (user: UserDocument): string => {
         return jwt.sign({ userId: user._id, email: user.email }, config.jwt.secret, { expiresIn: '1h' });
     };
 
-    static deleteUser = async (id: string): Promise<void> => {
-        const result = await UserModel.deleteOne({ _id: id }).exec();
-        if (result.deletedCount === 0) {
-            throw new DocumentNotFoundError(id);
-        }
+    static deleteUser = async (id: string): Promise<UserDocument> => {
+        return await UserModel.findByIdAndDelete(id).select('-passwordHash -googleId').orFail(new DocumentNotFoundError(id)).lean().exec();
     };
+
+    static toSafeUser = (user: UserDocument): Omit<UserDocument, 'passwordHash' | 'googleId'> => {
+        const { passwordHash, googleId, ...safeUser } = user;
+        return safeUser;
+    }; 
 }
