@@ -1,44 +1,49 @@
 import mongoose from 'mongoose';
 import { config } from '../../config.js';
-import { SystemServiceDocument } from './interface.js';
+import { UserDocument } from './interface.js';
+import { GoogleIdOrPasswordRequiredError } from '../../utils/errors.js';
 
-const { Schema } = mongoose;
 
-const SystemServiceSchema = new mongoose.Schema<SystemServiceDocument>(
+const UserSchema = new mongoose.Schema<UserDocument>(
     {
-        name: {
+        role: {
             type: String,
+            enum: ['ADMIN', 'EDITOR', 'VIEWER'],
             required: true,
         },
-        parentId: {
-            type: Schema.Types.ObjectId, 
-            ref: 'SystemServiceModel',
-            default: null 
-        },
-        createdAt: {
-            type: Date,
-            default: Date.now,
-        },
-        createdBy: {
+        username: {
             type: String,
             required: true,
+            unique: true,
         },
-        status: {
+        email: {
             type: String,
-            enum: ["UP", "DOWN"],
-            default: "UP",
-        },
-        statusUpdatedAt: {
-            type: Date,
             required: true,
-            default: Date.now,
-        }
-
+            unique: true,
+        },
+        passwordHash: {
+            type: String,  
+            required: false,
+        },
+        googleId: {
+            type: String,  
+            required: false,
+            unique: true,
+            sparse: true,
+        },
     },
     {
         versionKey: false,
     },
 );
 
+// Validating that either googleId or passwordHash is provided
+UserSchema.pre('validate', function(next) {
+  if (!this.googleId && !this.passwordHash) {
+    return next(new GoogleIdOrPasswordRequiredError());
+  }
 
-export const SystemServiceModel = mongoose.model<SystemServiceDocument>(config.mongo.systemServiceCollectionName, SystemServiceSchema);
+  next();
+});
+
+export const UserModel = mongoose.model<UserDocument>(config.mongo.userCollectionName, UserSchema);

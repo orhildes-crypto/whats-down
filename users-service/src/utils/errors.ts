@@ -26,3 +26,9 @@ export class SystemWithChildrenError extends ServiceError {
         super(422, `Can not change status of system ${systemId}. This system has children`);
     }
 }
+
+export class GoogleIdOrPasswordRequiredError extends ServiceError {
+    constructor() {
+        super(422, `Either googleId or passwordHash must be provided.`);
+    }
+}

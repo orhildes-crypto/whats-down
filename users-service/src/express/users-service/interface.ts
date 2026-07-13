@@ -1,15 +1,28 @@
-export interface CreateSystemServicePayload {
-    name: string;
-    parentId: string | null ;
+type BaseUser = {
+    username: string;
+    email: string;
+    role: "ADMIN" | "EDITOR" | "VIEWER";
+};
+
+
+export interface CreateLocalUserPayload extends BaseUser {
+    password: string; 
 }
 
-export interface SystemService extends CreateSystemServicePayload {
-    createdBy: string;
-    status: "UP" | "DOWN";
-    createdAt: Date;
-    statusUpdatedAt: Date;
+export interface CreateGoogleUserPayload extends BaseUser {
+    googleId: string;
 }
 
-export interface SystemServiceDocument extends SystemService {
+export type CreateUserPayload = CreateLocalUserPayload | CreateGoogleUserPayload;
+
+
+type AuthMethod =
+    | { passwordHash: string; googleId?: string }
+    | { googleId: string; passwordHash?: string };
+
+export type User = BaseUser & AuthMethod;
+
+
+export type UserDocument = User & {
     _id: string;
-}
+};
