@@ -1,5 +1,4 @@
 {
-  // totaltypescript.com/tsconfig-cheat-sheet
   "compilerOptions": {
     // Base Options
     "target": "ES2022",
@@ -25,10 +24,12 @@
     // Transpilation
     "moduleResolution": "NodeNext",
     "module": "NodeNext",
-    "rootDir": "src",
+    "rootDir": ".",
     "outDir": "dist",
+    "declaration": true,
 
     "lib": ["ES2022"]
   },
-  "include": ["src/**/*", ]
+  "include": ["*.ts"],
+  "exclude": ["dist", "node_modules"]
 }

@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { TypedRequest } from '../../utils/zod.js';
+import { TypedRequest } from '@whats-down/shared';
 import { SystemServiceManager } from './manager.js';
 import {
     createOneRequestSchema,
