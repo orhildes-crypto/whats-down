@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { systemServiceRouter } from './system-service/router.js';
+import {  usersServiceRouter } from './users-service/router.js';
 
 export const appRouter = Router();
 
-appRouter.use('/api/system-services', systemServiceRouter);
+appRouter.use('/api/users-services', usersServiceRouter);
 
 appRouter.use(['/isAlive', '/isalive', '/health'], (_req, res) => {
     res.status(200).send('alive');

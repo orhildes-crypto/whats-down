@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { wrapController, validateRequest } from '@whats-down/shared';
+import { wrapController, validateRequest, authenticateMiddleware, authorizationMiddleware } from '@whats-down/shared';
 import { UsersServiceController } from './controller.js';
 import {
     createOneRequestSchema,
@@ -7,10 +7,24 @@ import {
     loginRequestSchema,
     googleAuthRequestSchema,
 } from './validations.js';
+import { config } from '../../config.js';
 
 export const usersServiceRouter = Router();
 
-usersServiceRouter.post('/', validateRequest(createOneRequestSchema), wrapController(UsersServiceController.createOne));
-usersServiceRouter.delete('/:id', validateRequest(deleteOneRequestSchema), wrapController(UsersServiceController.deleteOne));
-usersServiceRouter.post('/login', validateRequest(loginRequestSchema), wrapController(UsersServiceController.login));
-usersServiceRouter.post('/login/google', validateRequest(googleAuthRequestSchema), wrapController(UsersServiceController.loginWithGoogle));
+usersServiceRouter.post('/', 
+    validateRequest(createOneRequestSchema), 
+    wrapController(UsersServiceController.createOne));
+
+usersServiceRouter.post('/login', 
+    validateRequest(loginRequestSchema),
+    wrapController(UsersServiceController.login));
+
+usersServiceRouter.post('/login/google', 
+    validateRequest(googleAuthRequestSchema), 
+    wrapController(UsersServiceController.loginWithGoogle));
+
+usersServiceRouter.delete('/:id', 
+    authenticateMiddleware(config.jwt.secret), 
+    authorizationMiddleware(['ADMIN']),
+    validateRequest(deleteOneRequestSchema), 
+    wrapController(UsersServiceController.deleteOne));
