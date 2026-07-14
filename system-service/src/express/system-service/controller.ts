@@ -11,6 +11,10 @@ import {
     changeStatusRequestSchema,
     getRootsByQueryRequestSchema,
 } from './validations.js';
+import { AuthenticatedRequest } from '@whats-down/shared';
+import { DeveloperError } from '@whats-down/shared';
+
+type CreateOneRequest = AuthenticatedRequest & TypedRequest<typeof createOneRequestSchema>;
 
 export class SystemServiceController {
     static getByQuery = async (req: TypedRequest<typeof getByQueryRequestSchema>, res: Response) => {
@@ -33,9 +37,12 @@ export class SystemServiceController {
         res.json(await SystemServiceManager.getById(req.params.id));
     };
 
-    static createOne = async (req: TypedRequest<typeof createOneRequestSchema>, res: Response) => {
-        // Change createdBy after auth is added!!!
-        const createdBy = "123";
+    static createOne = async (req: CreateOneRequest, res: Response) => {
+        if (!req.user) {
+            throw new DeveloperError("User context is missing. Make sure authenticateMiddleware is applied to this route.");
+        }
+
+        const createdBy = req.user.userId;
         res.json(await SystemServiceManager.createOne(req.body, createdBy));
     };
 

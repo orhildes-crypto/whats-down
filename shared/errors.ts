@@ -19,3 +19,9 @@ export class AuthenticationError extends ServiceError {
         super(401, 'Unauthorized. You must be authenticated to access this resource.');
     }
 }
+
+export class DeveloperError extends ServiceError {
+    constructor(message: string){
+        super(500, `Developer Error: ${message}`);
+    }
+}
