@@ -23,6 +23,7 @@ const UserSchema = new mongoose.Schema<UserDocument>(
         passwordHash: {
             type: String,  
             required: true,
+            select: false,
         },
         googleId: {
             type: String,  

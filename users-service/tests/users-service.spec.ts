@@ -184,7 +184,6 @@ describe('e2e users-service api testing', () => {
         let userIdToDelete: string;
 
         beforeEach(async () => {
-            // יצירת משתמש שישמש כמטרת מחיקה
             const { body } = await request(app).post(BASE_ROUTE).send(exampleUser).expect(200);
             userIdToDelete = body._id;
         });

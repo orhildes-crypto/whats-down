@@ -25,3 +25,9 @@ export class DeveloperError extends ServiceError {
         super(500, `Developer Error: ${message}`);
     }
 }
+
+export class ConflictError extends ServiceError {
+    constructor(message: string = 'Can not enter same document twice') {
+        super(409, message);
+    }
+}
