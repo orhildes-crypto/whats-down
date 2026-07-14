@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { zodMongoObjectId } from '../../utils/zod.js';
+import { zodMongoObjectId } from '@whats-down/shared';
 
 const MIN_NAME_LENGTH = 3;
 const MAX_NAME_LENGTH = 15;

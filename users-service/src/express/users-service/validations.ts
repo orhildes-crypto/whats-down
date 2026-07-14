@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { zodMongoObjectId } from '../../utils/zod.js';
+import { zodMongoObjectId } from '@whats-down/shared';
 
 const baseUserSchema = z.object({
     username: z.string(),

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { validateRequest, wrapController } from '../../utils/express/wrappers.js';
+import { wrapController, validateRequest } from '@whats-down/shared';
 import { UsersServiceController } from './controller.js';
 import {
     createOneRequestSchema,

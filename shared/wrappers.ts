@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { NextFunction, Request, Response } from 'express';
 import { AnyZodObject } from 'zod';
-import { TypedRequest } from '../zod.js';
+import { TypedRequest } from './zod.js';
 
 export const wrapMiddleware = (func: (req: Request, res?: Response) => Promise<void>) => {
     return (req: Request, res: Response, next: NextFunction) => {

@@ -30,5 +30,5 @@
 
     "lib": ["ES2022"]
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "../shared/types.ts", "../shared/mongoose.ts"]
 }
