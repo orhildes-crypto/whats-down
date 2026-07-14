@@ -1,0 +1,21 @@
+export class ServiceError extends Error {
+    constructor(
+        public code: number,
+        message: string,
+    ) {
+        super(message);
+        this.name = this.constructor.name;
+    }
+}
+
+export class AuthorizationError extends ServiceError {
+    constructor(){
+        super(403, 'Forbidden. You do not have permission to access this resource.');
+    }
+}
+
+export class AuthenticationError extends ServiceError {
+    constructor(){
+        super(401, 'Unauthorized. You must be authenticated to access this resource.');
+    }
+}

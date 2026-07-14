@@ -71,8 +71,8 @@ export class UsersServiceManager {
     }
 
     static generateJWTToken = (user: UserDocument): string => {
-        return jwt.sign({ userId: user._id, email: user.email }, config.jwt.secret, { expiresIn: '1h' });
-    };
+    return jwt.sign({ userId: user._id, role: user.role}, config.jwt.secret, { expiresIn: '1h' });
+};
 
     static deleteUser = async (id: string): Promise<UserDocument> => {
         return await UserModel.findByIdAndDelete(id).select('-passwordHash -googleId').orFail(new DocumentNotFoundError(id)).lean().exec();

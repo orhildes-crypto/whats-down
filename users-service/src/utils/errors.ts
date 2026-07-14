@@ -1,13 +1,5 @@
 /* eslint-disable max-classes-per-file */
-export class ServiceError extends Error {
-    constructor(
-        public code: number,
-        message: string,
-    ) {
-        super(message);
-        this.name = this.constructor.name;
-    }
-}
+import {ServiceError} from '@whats-down/shared';
 
 export class DocumentNotFoundError extends ServiceError {
     constructor(identifier: string) {
