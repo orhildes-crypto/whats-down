@@ -8,7 +8,8 @@ const UserSchema = new mongoose.Schema<UserDocument>(
         role: {
             type: String,
             enum: ['ADMIN', 'EDITOR', 'VIEWER'],
-            required: true,
+            required: false,
+            default: 'VIEWER',
         },
         username: {
             type: String,

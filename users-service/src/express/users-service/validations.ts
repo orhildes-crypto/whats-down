@@ -4,7 +4,7 @@ import { zodMongoObjectId } from '@whats-down/shared';
 const baseUserSchema = z.object({
     username: z.string(),
     email: z.string().email(),
-    role: z.enum(['ADMIN', 'EDITOR', 'VIEWER']),
+    role: z.enum(['ADMIN', 'EDITOR', 'VIEWER']).default('VIEWER'),
 });
 
 export const createLocalUserSchema = baseUserSchema.extend({
