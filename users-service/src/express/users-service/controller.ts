@@ -7,7 +7,7 @@ import {
     loginRequestSchema, 
     googleAuthRequestSchema,
 } from './validations.js';
-import { setAuthCookie } from '@whats-down/users-service/src/utils/express/cookie.js';
+import { setAuthCookie } from '../../utils/express/cookie.js';
 
 export class UsersServiceController {
     static createOne = async (req: TypedRequest<typeof createOneRequestSchema>, res: Response) => {

@@ -9,6 +9,7 @@ import jwt from 'jsonwebtoken';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { config } from '../src/config.js';
 import { Server } from '../src/express/server.js';
+import { COOKIE_NAME } from '@whats-down/shared';
 
 const { mongo, jwt: jwtConfig } = config;
 
@@ -119,12 +120,11 @@ describe('e2e users-service api testing', () => {
 
     describe('POST /api/users/login (Local Login)', () => {
         beforeEach(async () => {
-            // יצירת המשתמש ב-DB לפני כל טסט של לוגין
             await request(app).post(BASE_ROUTE).send(exampleUser).expect(200);
         });
 
         it('should successfully login and return a JWT token', async () => {
-            const { body } = await request(app)
+            const response = await request(app)
                 .post(`${BASE_ROUTE}/login`)
                 .send({
                     username: exampleUser.username,
@@ -132,10 +132,15 @@ describe('e2e users-service api testing', () => {
                 })
                 .expect(200);
 
-            expect(body.token).toBeDefined();
-            
-            
-            const decoded = jwt.verify(body.token, jwtConfig.secret) as { userId: string; role: string };
+            const cookies = response.headers['set-cookie'];
+            expect(cookies).toBeDefined();
+
+            const authCookie = (cookies as unknown as string[]).find((c) => c.startsWith(`${COOKIE_NAME}=`));
+            expect(authCookie).toBeDefined();
+
+            const token = authCookie!.split(';')[0]!.split('=')[1];
+
+            const decoded = jwt.verify(token!, jwtConfig.secret) as { userId: string; role: string };
             expect(decoded.role).toEqual(exampleUser.role);
         });
 
@@ -164,12 +169,13 @@ describe('e2e users-service api testing', () => {
         it('should successfully authenticate with a valid Google Token', async () => {
             const mockGoogleToken = 'mock-google-id-token-123';
 
-            const { body } = await request(app)
+            const response = await request(app)
                 .post(`${BASE_ROUTE}/login/google`)
                 .send({ idToken: mockGoogleToken })
                 .expect(200);
 
-            expect(body.token).toBeDefined();
+            const cookies = response.headers['set-cookie'];
+            expect(cookies).toBeDefined();
         });
 
         it('should fail validation when idToken is missing', async () => {
@@ -191,14 +197,14 @@ describe('e2e users-service api testing', () => {
         it('should allow ADMIN to delete a user', async () => {
             return request(app)
                 .delete(`${BASE_ROUTE}/${userIdToDelete}`)
-                .set('Authorization', `Bearer ${adminToken}`) 
+                .set('Cookie', `${COOKIE_NAME}=${adminToken}`)
                 .expect(200);
         });
 
         it('should block EDITOR from deleting a user', async () => {
             return request(app)
                 .delete(`${BASE_ROUTE}/${userIdToDelete}`)
-                .set('Authorization', `Bearer ${editorToken}`) 
+                .set('Cookie', `${COOKIE_NAME}=${editorToken}`)
                 .expect(403); // Forbidden
         });
 
@@ -211,7 +217,7 @@ describe('e2e users-service api testing', () => {
         it('should return 404 when trying to delete a non-existing user (with Admin token)', async () => {
             return request(app)
                 .delete(`${BASE_ROUTE}/${fakeObjectId}`)
-                .set('Authorization', `Bearer ${adminToken}`)
+                .set('Cookie', `${COOKIE_NAME}=${adminToken}`)
                 .expect(404);
         });
     });
