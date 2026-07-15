@@ -5,6 +5,7 @@ import http from 'http';
 import { errorMiddleware } from '../utils/express/error.js';
 import { loggerMiddleware } from '../utils/logger/middleware.js';
 import { appRouter } from './router.js';
+import cookieParser from 'cookie-parser';
 
 /* v8 ignore start */
 export class Server {
@@ -19,6 +20,8 @@ export class Server {
 
     static createExpressApp() {
         const app = express();
+
+        app.use(cookieParser()); 
 
         app.use(helmet());
         app.use(express.json());

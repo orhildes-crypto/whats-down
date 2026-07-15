@@ -7,6 +7,7 @@ import {
     loginRequestSchema, 
     googleAuthRequestSchema,
 } from './validations.js';
+import { setAuthCookie } from '@whats-down/users-service/src/utils/express/cookie.js';
 
 export class UsersServiceController {
     static createOne = async (req: TypedRequest<typeof createOneRequestSchema>, res: Response) => {
@@ -14,11 +15,15 @@ export class UsersServiceController {
     };
 
     static login = async (req: TypedRequest<typeof loginRequestSchema>, res: Response) => {
-        res.json(await UsersServiceManager.loginLocalUser(req.body.username, req.body.password));
+        const { user, token } = await UsersServiceManager.loginLocalUser(req.body.username, req.body.password);
+        setAuthCookie(res, token);
+        res.json({ user });
     };
 
     static loginWithGoogle = async (req: TypedRequest<typeof googleAuthRequestSchema>, res: Response) => {
-        res.json(await UsersServiceManager.loginWithGoogle(req.body.idToken));
+        const { user, token } = await UsersServiceManager.loginWithGoogle(req.body.idToken);
+        setAuthCookie(res, token);
+        res.json({ user });
     };
 
     static deleteOne = async (req: TypedRequest<typeof deleteOneRequestSchema>, res: Response) => {
