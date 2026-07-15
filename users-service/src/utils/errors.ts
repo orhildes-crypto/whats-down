@@ -18,3 +18,9 @@ export class GoogleAuthError extends ServiceError {
         super(401, 'Invalid Google authentication token');
     }
 }
+
+export class SelfDemotionError extends ServiceError {
+    constructor() {
+        super(400, 'You cannot demote yourself');
+    }
+}

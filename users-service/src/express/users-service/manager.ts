@@ -1,5 +1,5 @@
 import { OAuth2Client } from 'google-auth-library/build/src/auth/oauth2client.js';
-import { DocumentNotFoundError, GoogleAuthError, PasswordIncorrectError } from '../../utils/errors.js';
+import { DocumentNotFoundError, GoogleAuthError, PasswordIncorrectError, SelfDemotionError } from '../../utils/errors.js';
 import { AuthResult, CreateLocalUserPayload ,UserDocument, SafeUserDocument  } from './interface.js';
 import { UserModel } from './model.js';
 import bcrypt from 'bcryptjs';
@@ -13,7 +13,7 @@ export class UsersServiceManager {
         const newUser = await UserModel.create({
             username: payload.username,
             email: payload.email,
-            role: payload.role,
+            role: payload.role, // change after admin is entered to the system
             passwordHash: await bcrypt.hash(payload.password, 10),
         }).catch(err => {
             if (err.code === 11000) {
@@ -44,21 +44,6 @@ export class UsersServiceManager {
         return { user: safeUser, token };
     };
 
-    static client = new OAuth2Client(config.google.clientId);
-
-    static verifyGoogleToken = async (idToken: string): Promise<TokenPayload> => {
-        const ticket = await this.client.verifyIdToken({
-            idToken,
-            audience: config.google.clientId,
-        });
-
-        const payload = ticket.getPayload(); 
-        if (!payload) {
-            throw new GoogleAuthError();
-        }
-
-        return payload; 
-    }
 
     static loginWithGoogle = async (idToken: string): Promise<AuthResult> => {
         // For tests
@@ -90,15 +75,46 @@ export class UsersServiceManager {
         const plainUser = user.toObject() as UserDocument;
         const safeUser = this.toSafeUser(plainUser);
         return { user: safeUser, token };
-    }
+    };
 
-    static generateJWTToken = (user: UserDocument): string => {
-    return jwt.sign({ userId: user._id, role: user.role}, config.jwt.secret, { expiresIn: '1h' });
-};
+    static changeUserRole = async (
+            targetId: string, 
+            role: "ADMIN" | "EDITOR" | "VIEWER", 
+            requestingUserId: string): Promise<SafeUserDocument> => {
+        if (targetId === requestingUserId) {
+            throw new SelfDemotionError();
+        }
+
+        const updatedUser = await UserModel.findByIdAndUpdate(targetId, { role }, { new: true })
+            .select('-googleId')
+            .orFail(new DocumentNotFoundError(targetId)).lean().exec();
+        return this.toSafeUser(updatedUser);
+    };
 
     static deleteUser = async (id: string): Promise<UserDocument> => {
         return await UserModel.findByIdAndDelete(id).select('-googleId').orFail(new DocumentNotFoundError(id)).lean().exec();
     };
+
+    static client = new OAuth2Client(config.google.clientId);
+
+    static verifyGoogleToken = async (idToken: string): Promise<TokenPayload> => {
+        const ticket = await this.client.verifyIdToken({
+            idToken,
+            audience: config.google.clientId,
+        });
+
+        const payload = ticket.getPayload(); 
+        if (!payload) {
+            throw new GoogleAuthError();
+        }
+
+        return payload; 
+    }
+
+
+    static generateJWTToken = (user: UserDocument): string => {
+    return jwt.sign({ userId: user._id, role: user.role}, config.jwt.secret, { expiresIn: '1h' });
+};
 
     static toSafeUser = (user: UserDocument): Omit<UserDocument, 'googleId' | 'passwordHash'> => {
     const { googleId, passwordHash, ...safeUser } = user;

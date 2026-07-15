@@ -1,12 +1,11 @@
 import jwt from 'jsonwebtoken';
 import { AuthenticationError, AuthorizationError, DeveloperError } from './errors.js';
-import { NextFunction, Response } from 'express';
-import { AuthenticatedRequest } from './interface.js';
+import { NextFunction, Response, Request } from 'express';
 import { COOKIE_NAME } from './constants.js';
 
 
 export const authenticateMiddleware = (secret: string) => {
-    return (req: AuthenticatedRequest, _res: Response, next: NextFunction) => {
+    return (req: Request, _res: Response, next: NextFunction) => {
         const token = req.cookies[COOKIE_NAME]; 
 
          if (!token) {
@@ -26,7 +25,7 @@ export const authenticateMiddleware = (secret: string) => {
 }
 
 export const authorizationMiddleware = (authorizedRole: ('ADMIN' | 'EDITOR' | 'VIEWER')[]) => {
-    return (req: AuthenticatedRequest, _res: Response, next: NextFunction) => {
+    return (req: Request, _res: Response, next: NextFunction) => {
         if (!req.user) {
             throw new DeveloperError("authorizationMiddleware must be used after authenticateMiddleware");
         }

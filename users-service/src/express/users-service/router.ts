@@ -6,6 +6,7 @@ import {
     deleteOneRequestSchema,
     loginRequestSchema,
     googleAuthRequestSchema,
+    changeUserRoleRequestSchema,
 } from './validations.js';
 import { config } from '../../config.js';
 
@@ -28,3 +29,9 @@ usersServiceRouter.delete('/:id',
     authorizationMiddleware(['ADMIN']),
     validateRequest(deleteOneRequestSchema), 
     wrapController(UsersServiceController.deleteOne));
+
+usersServiceRouter.patch('/:id/role',
+    authenticateMiddleware(config.jwt.secret), 
+    authorizationMiddleware(['ADMIN']),
+    validateRequest(changeUserRoleRequestSchema), 
+    wrapController(UsersServiceController.changeUserRole));

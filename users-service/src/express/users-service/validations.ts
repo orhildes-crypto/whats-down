@@ -37,6 +37,17 @@ export const googleAuthRequestSchema = z.object({
     params: z.object({}),
 });
 
+// PATCH /users-service/:id/role
+export const changeUserRoleRequestSchema = z.object({
+    body: z.object({
+        role: z.enum(['ADMIN', 'EDITOR', 'VIEWER']),
+    }),
+    query: z.object({}),
+    params: z.object({
+        id: zodMongoObjectId,
+    }),
+});
+
 // DELETE /users-service/:id
 export const deleteOneRequestSchema = z.object({
     body: z.object({}),

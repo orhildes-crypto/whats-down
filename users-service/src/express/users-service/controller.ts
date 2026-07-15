@@ -6,6 +6,7 @@ import {
     deleteOneRequestSchema,
     loginRequestSchema, 
     googleAuthRequestSchema,
+    changeUserRoleRequestSchema,
 } from './validations.js';
 import { setAuthCookie } from '../../utils/express/cookie.js';
 
@@ -24,6 +25,12 @@ export class UsersServiceController {
         const { user, token } = await UsersServiceManager.loginWithGoogle(req.body.idToken);
         setAuthCookie(res, token);
         res.json({ user });
+    };
+
+    static changeUserRole = async (req: TypedRequest<typeof changeUserRoleRequestSchema>, res: Response) => {
+        const { role } = req.body;
+        const updatedUser = await UsersServiceManager.changeUserRole(req.params.id, role, req.user!.userId);
+        res.json(updatedUser);
     };
 
     static deleteOne = async (req: TypedRequest<typeof deleteOneRequestSchema>, res: Response) => {

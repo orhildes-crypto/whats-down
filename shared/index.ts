@@ -4,5 +4,5 @@ export * from './types.js';
 export * from './mongoose.js';
 export * from './errors.js';
 export * from './JWTwrappers.js';
-export * from './interface.js';
 export * from './constants.js';
+export * from './express.d.js';
