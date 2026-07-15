@@ -7,8 +7,9 @@ import {
     loginRequestSchema, 
     googleAuthRequestSchema,
     changeUserRoleRequestSchema,
+    logoutRequestSchema,
 } from './validations.js';
-import { setAuthCookie } from '../../utils/express/cookie.js';
+import { setAuthCookie, clearAuthCookie } from '../../utils/express/cookie.js';
 
 export class UsersServiceController {
     static createOne = async (req: TypedRequest<typeof createOneRequestSchema>, res: Response) => {
@@ -35,5 +36,10 @@ export class UsersServiceController {
 
     static deleteOne = async (req: TypedRequest<typeof deleteOneRequestSchema>, res: Response) => {
         res.json(await UsersServiceManager.deleteUser(req.params.id));
+    };
+
+    static logout = async (_req: TypedRequest<typeof logoutRequestSchema>, res: Response) => {
+        clearAuthCookie(res);
+        res.status(200).json({ message: "Logged out successfully" });
     };
 }

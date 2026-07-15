@@ -48,6 +48,13 @@ export const changeUserRoleRequestSchema = z.object({
     }),
 });
 
+// Post /users-service/logout
+export const logoutRequestSchema = z.object({
+    body: z.object({}),
+    query: z.object({}),
+    params: z.object({}),
+});
+
 // DELETE /users-service/:id
 export const deleteOneRequestSchema = z.object({
     body: z.object({}),

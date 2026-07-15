@@ -221,4 +221,101 @@ describe('e2e users-service api testing', () => {
                 .expect(404);
         });
     });
+
+    describe('POST /api/users/logout', () => {
+    it('should clear the auth cookie and return 200', async () => {
+        const response = await request(app)
+            .post(`${BASE_ROUTE}/logout`)
+            .set('Cookie', `${COOKIE_NAME}=${adminToken}`)
+            .expect(200);
+
+        const cookies = response.headers['set-cookie'] as unknown as string[];
+        expect(cookies).toBeDefined();
+
+        const clearedCookie = cookies.find((c) => c.startsWith(`${COOKIE_NAME}=`));
+        expect(clearedCookie).toBeDefined();
+        // ערך ריק, ו-Expires בעבר (או Max-Age=0) הם הסימנים שהעוגייה נמחקת
+        expect(clearedCookie).toMatch(new RegExp(`${COOKIE_NAME}=;`));
+    });
+
+    it('should succeed even without an existing auth cookie', async () => {
+        return request(app)
+            .post(`${BASE_ROUTE}/logout`)
+            .expect(200);
+    });
+});
+
+describe('PATCH /api/users/:id/role', () => {
+    let targetUserId: string;
+
+    beforeEach(async () => {
+        const { body } = await request(app)
+            .post(BASE_ROUTE)
+            .send({ ...exampleUser, username: 'target_user', email: 'target@example.com' })
+            .expect(200);
+        targetUserId = body._id;
+    });
+
+    it('should allow ADMIN to change another user\'s role', async () => {
+        const { body } = await request(app)
+            .patch(`${BASE_ROUTE}/${targetUserId}/role`)
+            .set('Cookie', `${COOKIE_NAME}=${adminToken}`)
+            .send({ role: 'ADMIN' })
+            .expect(200);
+
+        expect(body.role).toEqual('ADMIN');
+    });
+
+    it('should block EDITOR from changing a role', async () => {
+        return request(app)
+            .patch(`${BASE_ROUTE}/${targetUserId}/role`)
+            .set('Cookie', `${COOKIE_NAME}=${editorToken}`)
+            .send({ role: 'ADMIN' })
+            .expect(403);
+    });
+
+    it('should return 401 when changing a role without a token', async () => {
+        return request(app)
+            .patch(`${BASE_ROUTE}/${targetUserId}/role`)
+            .send({ role: 'ADMIN' })
+            .expect(401);
+    });
+
+    it('should return 404 for a non-existing user', async () => {
+        return request(app)
+            .patch(`${BASE_ROUTE}/${fakeObjectId}/role`)
+            .set('Cookie', `${COOKIE_NAME}=${adminToken}`)
+            .send({ role: 'ADMIN' })
+            .expect(404);
+    });
+
+    it('should fail validation for an invalid role value', async () => {
+        return request(app)
+            .patch(`${BASE_ROUTE}/${targetUserId}/role`)
+            .set('Cookie', `${COOKIE_NAME}=${adminToken}`)
+            .send({ role: 'SUPER_ADMIN' })
+            .expect(400);
+    });
+
+    it('should block an ADMIN from changing their own role (self-demotion protection)', async () => {
+        // יוצרים משתמש רגיל, ואז מעדכנים אותו ידנית ל-ADMIN ב-DB
+        const { body: newUser } = await request(app)
+            .post(BASE_ROUTE)
+            .send({ ...exampleUser, username: 'self_admin', email: 'self_admin@example.com' })
+            .expect(200);
+
+        await mongoose.connection.collection('users').updateOne(
+            { _id: new mongoose.Types.ObjectId(newUser._id) },
+            { $set: { role: 'ADMIN' } },
+        );
+
+        const selfToken = jwt.sign({ userId: newUser._id, role: 'ADMIN' }, jwtConfig.secret);
+
+        return request(app)
+            .patch(`${BASE_ROUTE}/${newUser._id}/role`)
+            .set('Cookie', `${COOKIE_NAME}=${selfToken}`)
+            .send({ role: 'VIEWER' })
+            .expect(400); // Bad Request due to self-demotion protection
+    });
+});
 });

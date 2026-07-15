@@ -7,6 +7,7 @@ import {
     loginRequestSchema,
     googleAuthRequestSchema,
     changeUserRoleRequestSchema,
+    logoutRequestSchema,
 } from './validations.js';
 import { config } from '../../config.js';
 
@@ -35,3 +36,7 @@ usersServiceRouter.patch('/:id/role',
     authorizationMiddleware(['ADMIN']),
     validateRequest(changeUserRoleRequestSchema), 
     wrapController(UsersServiceController.changeUserRole));
+
+usersServiceRouter.post('/logout',
+    validateRequest(logoutRequestSchema),
+    wrapController(UsersServiceController.logout));
