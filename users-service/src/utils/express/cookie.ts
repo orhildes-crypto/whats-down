@@ -4,7 +4,9 @@ import { REFRESH_TOKEN_TTL } from '../../express/users-service/refresh-token/man
 import env from 'env-var';
 
 export const REFRESH_COOKIE_NAME = 'refreshToken';
-const isProduction = env.get('NODE_ENV').asString() === 'production';
+const isProduction = env.get('NODE_ENV').asString() === 'production';;
+
+const REFRESH_PATH = '/api/users-services/auth/refresh';
 
 export const setAuthCookie = (
     res: Response, 
@@ -24,7 +26,7 @@ export const setRefreshCookie = (res: Response, token: string) => {
     
     setAuthCookie(res, token, {
         name: REFRESH_COOKIE_NAME,
-        path: '/auth/refresh', 
+        path: REFRESH_PATH, 
         maxAge: REFRESH_TOKEN_TTL
     });
 };
@@ -41,6 +43,6 @@ export const clearAuthCookie = (res: Response) => {
         httpOnly: true,
         sameSite: 'lax',
         secure: isProduction,
-        path: '/auth/refresh' 
+        path: REFRESH_PATH,
     });
 };

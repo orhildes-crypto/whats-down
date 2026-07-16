@@ -47,14 +47,29 @@ export class UsersServiceManager {
     static loginWithGoogle = async (idToken: string): Promise<AuthResult> => {
         // For tests
         if (process.env['NODE_ENV'] === 'test' && idToken === 'mock-google-id-token-123') {
+            const mockUser = await UserModel.findOneAndUpdate(
+                { email: 'google-test@example.com' },
+                {
+                    $setOnInsert: {
+                        username: 'google_mock_user',
+                        email: 'google-test@example.com',
+                        role: 'VIEWER',
+                        googleId: 'mock-google-id-123',
+                    },
+                },
+                { upsert: true, new: true },
+            )
+                .lean()
+                .exec();
+
             return {
                 user: {
-                    _id: 'google-mock-user-123',
-                    username: 'google_mock_user',
-                    email: 'google-test@example.com',
-                    role: 'VIEWER',
+                    _id: mockUser._id.toString(),
+                    username: mockUser.username,
+                    email: mockUser.email,
+                    role: mockUser.role,
                 },
-                token: 'mock-jwt-token-123',
+                token: this.generateJWTToken(mockUser as UserDocument),
             };
         }
 
@@ -119,11 +134,12 @@ export class UsersServiceManager {
     };
 
     static generateTokenForUserId = async (userId: string): Promise<string> => {
-    const user = await UserModel.findById(userId).select('role').lean().exec();
-    if (!user) {
-        throw new DocumentNotFoundError(userId);
-    }
-    
-    return this.generateJWTToken(user as UserDocument);
-};
+        const user = await UserModel.findById(userId).select('role').lean().exec();
+
+        if (!user) {
+            throw new DocumentNotFoundError(userId);
+        }
+
+        return this.generateJWTToken(user as UserDocument);
+    };
 }

@@ -11,7 +11,7 @@ import {
 } from './validations.js';
 import { setAuthCookie, clearAuthCookie, REFRESH_COOKIE_NAME, setRefreshCookie } from '../../utils/express/cookie.js';
 import { createInitialRefreshToken, rotateRefreshToken } from './refresh-token/manager.js';
-import { InvalidOrExpiredTokenError, ReuseTokenAttackDetected } from '../../utils/errors.js';
+import { DocumentNotFoundError, InvalidOrExpiredTokenError } from '../../utils/errors.js';
 
 export class UsersServiceController {
     static createOne = async (req: TypedRequest<typeof createOneRequestSchema>, res: Response) => {
@@ -47,7 +47,17 @@ export class UsersServiceController {
 
         const { rawToken: newRawToken, record } = await rotateRefreshToken(rawRefreshToken);
 
-        const nextAccessToken = await UsersServiceManager.generateTokenForUserId(record.userId.toString());
+        let nextAccessToken: string;
+
+        try {
+            nextAccessToken = await UsersServiceManager.generateTokenForUserId(record.userId.toString());
+        } catch (err) {
+            if (err instanceof DocumentNotFoundError) {
+                // If user was deleted by admin, his token is expired
+                throw new InvalidOrExpiredTokenError();
+            }
+            throw err;
+        }
 
         setAuthCookie(res, nextAccessToken);
         setRefreshCookie(res, newRawToken);

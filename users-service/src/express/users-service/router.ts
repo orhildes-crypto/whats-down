@@ -17,6 +17,9 @@ usersServiceRouter.post('/',
     validateRequest(createOneRequestSchema), 
     wrapController(UsersServiceController.createOne));
 
+usersServiceRouter.post('/auth/refresh', 
+    wrapController(UsersServiceController.refresh));
+
 usersServiceRouter.post('/login', 
     validateRequest(loginRequestSchema),
     wrapController(UsersServiceController.login));
