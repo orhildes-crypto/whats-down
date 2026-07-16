@@ -1,0 +1,12 @@
+{
+  "name": "whats-down",
+  "private": true,
+  "workspaces": [
+    "system-service",
+    "users-service",
+    "shared"
+  ],
+  "devDependencies": {
+    "eslint-config-prettier": "^10.1.8"
+  }
+}
