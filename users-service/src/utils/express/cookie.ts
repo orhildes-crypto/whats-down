@@ -1,19 +1,46 @@
 import { Response } from 'express';
 import { COOKIE_NAME } from '@whats-down/shared';
+import { REFRESH_TOKEN_TTL } from '../../express/users-service/refresh-token/manager.js';
 import env from 'env-var';
 
-export const setAuthCookie = (res: Response, token: string) => {
-    res.cookie(COOKIE_NAME, token, { 
+export const REFRESH_COOKIE_NAME = 'refreshToken';
+const isProduction = env.get('NODE_ENV').asString() === 'production';
+
+export const setAuthCookie = (
+    res: Response, 
+    token: string, 
+    options: { name?: string; path?: string; maxAge?: number } = {}) => {
+    
+        res.cookie(options.name ?? COOKIE_NAME, token, { 
         httpOnly: true, 
         sameSite: 'lax', 
-        secure: env.get('NODE_ENV').asString() === 'production',
-        maxAge: 60 * 60 * 1000  });
+        secure: isProduction,
+        maxAge: options.maxAge ?? 60 * 60 * 1000,
+        path:  options.path ?? '/'
+    });
+};
+
+export const setRefreshCookie = (res: Response, token: string) => {
+    
+    setAuthCookie(res, token, {
+        name: REFRESH_COOKIE_NAME,
+        path: '/auth/refresh', 
+        maxAge: REFRESH_TOKEN_TTL
+    });
 };
 
 export const clearAuthCookie = (res: Response) => {
     res.clearCookie(COOKIE_NAME, {
         httpOnly: true,
         sameSite: 'lax',
-        secure: env.get('NODE_ENV').asString() === 'production',
+        secure: isProduction,
+        path: '/'
+    });
+
+    res.clearCookie(REFRESH_COOKIE_NAME, {
+        httpOnly: true,
+        sameSite: 'lax',
+        secure: isProduction,
+        path: '/auth/refresh' 
     });
 };

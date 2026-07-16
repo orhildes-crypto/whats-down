@@ -5,8 +5,8 @@ import { RefreshTokenModel } from './model.js';
 import { RefreshTokenDocument } from './interface.js';
 import { InvalidOrExpiredTokenError, ReuseTokenAttackDetected } from '../../../utils/errors.js';
 
-const REFRESH_TOKEN_TTL = 7 * 24 * 60 * 60 * 1000; // one week
-const AUDIT_RETENTION = 30 * 24 * 60 * 60 * 1000; // one month
+export const REFRESH_TOKEN_TTL = 7 * 24 * 60 * 60 * 1000; // one week
+export const AUDIT_RETENTION = 30 * 24 * 60 * 60 * 1000; // one month
 
 export const hashToken = (rawToken: string): string => {
     return crypto.createHash('sha256').update(rawToken).digest('hex');
@@ -33,7 +33,7 @@ export const createInitialRefreshToken = async (userId: string): Promise<{ rawTo
     return { rawToken, record };
 };
 
-export const rotateRefreshToken = async (rawToken: string): Promise<RefreshTokenDocument> => {
+export const rotateRefreshToken = async (rawToken: string): Promise<{rawToken: string, record: RefreshTokenDocument}> => {
     const currentTokenHash = hashToken(rawToken);
     const now = new Date();
 
@@ -84,7 +84,7 @@ export const rotateRefreshToken = async (rawToken: string): Promise<RefreshToken
         deleteAt: deleteAt,
     });
 
-    return nextTokenRecord;
+    return {rawToken: newRawToken, record: nextTokenRecord};
 };
 
 export const reuseAttackDetected = async (existingToken: RefreshTokenDocument): Promise<void> => {
