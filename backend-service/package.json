@@ -1,0 +1,30 @@
+{
+  "name": "backend-proxy",
+  "version": "1.0.0",
+  "private": true,
+  "main": "dist/server.js",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js"
+  },
+  "dependencies": {
+    "axios": "^1.7.0",
+    "cookie": "^0.7.2",
+    "cookie-parser": "^1.4.6",
+    "env-var": "^7.5.0",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "set-cookie-parser": "^2.6.0"
+  },
+  "devDependencies": {
+    "@types/cookie": "^0.6.0",
+    "@types/cookie-parser": "^1.4.7",
+    "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/node": "^20.14.0",
+    "@types/set-cookie-parser": "^2.4.7",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.5.0"
+  }
+}
