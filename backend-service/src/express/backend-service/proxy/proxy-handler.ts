@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import axios from 'axios';
-import { rewriteSetCookiePath } from './cookie';
+import { rewriteSetCookiePath } from './cookie.js';
 
 interface ProxyOptions {
     targetUrl: string;

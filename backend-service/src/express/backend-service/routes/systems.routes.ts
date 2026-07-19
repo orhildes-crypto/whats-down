@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { config } from '../config';
-import { forwardRequest } from '../proxy/proxy-handler';
-import { authenticateMiddleware } from '../middleware/auth.middleware';
+import { config } from '../../../config.js';
+import { forwardRequest } from '../proxy/proxy-handler.js';
+import { authenticateMiddleware } from '../middleware/auth.middleware.js';
 
 export const backendSystemsRouter = Router();
 

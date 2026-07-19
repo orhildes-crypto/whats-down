@@ -1,5 +1,5 @@
 /* v8 ignore start */
-import { config } from './express/backend-service/config.js';
+import { config } from './config.js';
 import { Server } from './express/server.js';
 import { logger } from './utils/logger/index.js';
 

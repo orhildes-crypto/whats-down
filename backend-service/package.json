@@ -2,11 +2,12 @@
   "name": "@whats-down/backend-proxy",
   "version": "1.0.0",
   "private": true,
-  "main": "dist/server.js",
+  "main": "dist/index.js",
+  "type": "module",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "dev": "npm run build && npm start",
     "build": "tsc",
-    "start": "node dist/server.js"
+    "start": "node dist/index.js"
   },
   "dependencies": {
     "@whats-down/shared": "*",
