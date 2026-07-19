@@ -515,7 +515,7 @@ describe('e2e system-services api testing', () => {
                 return request(app)
                     .delete(`${BASE_ROUTE}/${service._id}`)
                     .set('Cookie', `${COOKIE_NAME}=${editorToken}`)
-                    .expect(403); // נחסם
+                    .expect(403); 
             });
 
             it('should block VIEWER from deleting a service', async () => {
@@ -528,7 +528,7 @@ describe('e2e system-services api testing', () => {
                 return request(app)
                     .delete(`${BASE_ROUTE}/${service._id}`)
                     .set('Cookie', `${COOKIE_NAME}=${viewerToken}`)
-                    .expect(403); // נחסם
+                    .expect(403); 
             });
 
             it('should fail for deleting a non-existing service', async () => {

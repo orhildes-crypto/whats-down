@@ -205,7 +205,6 @@ describe('e2e users-service api testing', () => {
 
             const clearedCookie = cookies.find((c) => c.startsWith(`${COOKIE_NAME}=`));
             expect(clearedCookie).toBeDefined();
-            // ערך ריק, ו-Expires בעבר (או Max-Age=0) הם הסימנים שהעוגייה נמחקת
             expect(clearedCookie).toMatch(new RegExp(`${COOKIE_NAME}=;`));
         });
 
@@ -229,12 +228,10 @@ describe('e2e users-service api testing', () => {
         const cookies = response.headers['set-cookie'] as unknown as string[];
         expect(cookies).toBeDefined();
 
-        // הדפסה זמנית לדיבאג - בוא נראה מה השרת באמת מחזיר ב-set-cookie!
         console.log('DEBUG COOKIES RETURNED FROM LOGIN:', cookies);
 
         const refreshCookie = cookies.find(c => c.startsWith(`${REFRESH_COOKIE_NAME}=`));
         
-        // זה ימנע את ה-404 ויגיד לנו מיד אם הבעיה היא שהקוקי בכלל לא קיים ב-Response!
         expect(refreshCookie).toBeDefined();
 
         const rawCookieValue = refreshCookie!.split(';')[0]; 
@@ -244,7 +241,7 @@ describe('e2e users-service api testing', () => {
         it('1. Happy Path - should rotate tokens successfully and return new cookies', async () => {
             const response = await request(app)
                 .post(`${BASE_ROUTE}/auth/refresh`)
-                .set('Cookie', [validRefreshTokenCookie]) // נשלח נקי ללא מגבלות ה-path ש-supertest מסנן
+                .set('Cookie', [validRefreshTokenCookie]) 
                 .expect(200);
 
             expect(response.body.success).toBe(true);
@@ -273,13 +270,12 @@ describe('e2e users-service api testing', () => {
         it('3. Security - should detect reuse attack, revoke family, clear cookies and return 401', async () => {
             const firstRefreshResponse = await request(app).post(`${BASE_ROUTE}/auth/refresh`).set('Cookie', [validRefreshTokenCookie]).expect(200);
 
-            // מחלצים את ה-cookie החדש שנוצר כדי לבדוק את הניקוי שלו בהתקפה
             const newCookies = firstRefreshResponse.headers['set-cookie'] as unknown as string[];
             const newRefreshCookie = newCookies.find((c) => c.startsWith(`${REFRESH_COOKIE_NAME}=`))!.split(';')[0];
 
             const attackResponse = await request(app)
                 .post(`${BASE_ROUTE}/auth/refresh`)
-                .set('Cookie', [validRefreshTokenCookie]) // שימוש חוזר בטוקן הישן!
+                .set('Cookie', [validRefreshTokenCookie])
                 .expect(401);
 
             expect(attackResponse.body.type).toBe('ReuseTokenAttackDetected');
@@ -349,7 +345,6 @@ describe('e2e users-service api testing', () => {
         });
 
         it('should block an ADMIN from changing their own role (self-demotion protection)', async () => {
-            // יוצרים משתמש רגיל, ואז מעדכנים אותו ידנית ל-ADMIN ב-DB
             const { body: newUser } = await request(app)
                 .post(BASE_ROUTE)
                 .send({ ...exampleUser, username: 'self_admin', email: 'self_admin@example.com' })
