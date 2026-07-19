@@ -29,6 +29,7 @@ export const rewriteSetCookiePath = (rawCookies: string[], newPath: string): str
             httpOnly: updatedCookie.httpOnly,
             sameSite: sameSiteValue,
             maxAge: updatedCookie.maxAge,
+            expires: updatedCookie.expires,
             secure: updatedCookie.secure,
         });
     });

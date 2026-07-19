@@ -24,12 +24,14 @@ backendUsersRouter.post('/auth/refresh', (req, res) => {
 backendUsersRouter.post('/login', (req, res) => {
     forwardRequest(req, res, {
         targetUrl: `${USERS_SERVICE_URL}/api/users-services/login`,
+        cookieRewritePath: '/api/users/auth/refresh',
     });
 });
 
 backendUsersRouter.post('/login/google', (req, res) => {
     forwardRequest(req, res, {
         targetUrl: `${USERS_SERVICE_URL}/api/users-services/login/google`,
+        cookieRewritePath: '/api/users/auth/refresh',
     });
 });
 
@@ -48,5 +50,6 @@ backendUsersRouter.patch('/:id/role', authenticateMiddleware(config.jwt.secret),
 backendUsersRouter.post('/logout', (req, res) => {
     forwardRequest(req, res, {
         targetUrl: `${USERS_SERVICE_URL}/api/users-services/logout`,
+        cookieRewritePath: '/api/users/auth/refresh',
     });
 });
