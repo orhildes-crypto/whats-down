@@ -4,6 +4,7 @@
   "workspaces": [
     "system-service",
     "users-service",
+    "backend-service",
     "shared"
   ],
   "devDependencies": {

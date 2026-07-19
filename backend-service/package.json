@@ -1,5 +1,5 @@
 {
-  "name": "backend-proxy",
+  "name": "@whats-down/backend-proxy",
   "version": "1.0.0",
   "private": true,
   "main": "dist/server.js",
@@ -9,6 +9,7 @@
     "start": "node dist/server.js"
   },
   "dependencies": {
+    "@whats-down/shared": "*",
     "axios": "^1.7.0",
     "cookie": "^0.7.2",
     "cookie-parser": "^1.4.6",
