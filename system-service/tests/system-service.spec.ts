@@ -17,7 +17,7 @@ import { COOKIE_NAME } from '@whats-down/shared';
 const { mongo, jwt: jwtConfig } = config; 
 
 const fakeObjectId = '111111111111111111111111';
-const BASE_ROUTE = '/api/system-services'; 
+const BASE_ROUTE = '/api/system-service'; 
 
 const generateTestToken = (role: 'ADMIN' | 'EDITOR' | 'VIEWER' = 'ADMIN') => {
     return jwt.sign(
@@ -44,7 +44,7 @@ const exampleSystemService = {
     parentId: null,
 };
 
-describe('e2e system-services api testing', () => {
+describe('e2e system-service api testing', () => {
     let app: Express;
 
     beforeAll(async () => {

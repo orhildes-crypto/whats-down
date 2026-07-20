@@ -3,7 +3,7 @@ import { systemServiceRouter } from './system-service/router.js';
 
 export const appRouter = Router();
 
-appRouter.use('/api/system-services', systemServiceRouter);
+appRouter.use('/api/system-service', systemServiceRouter);
 
 appRouter.use(['/isAlive', '/isalive', '/health'], (_req, res) => {
     res.status(200).send('alive');
