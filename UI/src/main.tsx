@@ -1,0 +1,1 @@
+trash:///App.tsx
