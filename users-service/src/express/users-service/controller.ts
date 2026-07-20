@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { TypedRequest } from '@whats-down/shared';
+import { InternalServerError, TypedRequest } from '@whats-down/shared';
 import { UsersServiceManager } from './manager.js';
 import {
     createOneRequestSchema,
@@ -8,12 +8,21 @@ import {
     googleAuthRequestSchema,
     changeUserRoleRequestSchema,
     logoutRequestSchema,
+    getMeRequestSchema,
 } from './validations.js';
 import { setAuthCookie, clearAuthCookie, REFRESH_COOKIE_NAME, setRefreshCookie } from '../../utils/express/cookie.js';
 import { createInitialRefreshToken, rotateRefreshToken } from './refresh-token/manager.js';
 import { DocumentNotFoundError, InvalidOrExpiredTokenError } from '../../utils/errors.js';
 
 export class UsersServiceController {
+    static getMe = async (req: TypedRequest<typeof getMeRequestSchema>, res: Response) => {
+        if (!req.user) {
+            throw new InternalServerError();
+        }
+
+        res.json(await UsersServiceManager.getMe(req.user.userId));
+    };
+
     static createOne = async (req: TypedRequest<typeof createOneRequestSchema>, res: Response) => {
         res.json(await UsersServiceManager.createLocalUser({ ...req.body }));
     };

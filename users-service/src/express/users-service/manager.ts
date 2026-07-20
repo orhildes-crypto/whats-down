@@ -9,11 +9,20 @@ import jwt from 'jsonwebtoken';
 import { AuthenticationError, ConflictError } from '@whats-down/shared';
 
 export class UsersServiceManager {
+    static getMe = async (id: string): Promise<SafeUserDocument> => {
+        const user = await UserModel.findById(id).orFail(new DocumentNotFoundError(id)).exec();
+
+        const plainUser = user.toObject() as UserDocument;
+        const safeUser = this.toSafeUser(plainUser);
+
+        return safeUser;
+    }
+
     static createLocalUser = async (payload: CreateLocalUserPayload): Promise<SafeUserDocument> => {
         const newUser = await UserModel.create({
             username: payload.username,
             email: payload.email,
-            role: payload.role, // change after admin is entered to the system
+            role: 'VIEWER', 
             passwordHash: await bcrypt.hash(payload.password, 10),
         }).catch((err) => {
             if (err.code === 11000) {
@@ -27,7 +36,7 @@ export class UsersServiceManager {
     };
 
     static loginLocalUser = async (username: string, password: string): Promise<AuthResult> => {
-        const user = await UserModel.findOne({ username }).select('+passwordHash').lean().exec();
+        const user = await UserModel.findOne({ username }).select('+passwordHash').exec();
         if (!user) {
             throw new AuthenticationError();
         }
@@ -40,7 +49,8 @@ export class UsersServiceManager {
 
         const token = this.generateJWTToken(user);
 
-        const safeUser = this.toSafeUser(user);
+        const plainUser = user.toObject() as UserDocument;
+        const safeUser = this.toSafeUser(plainUser);
         return { user: safeUser, token };
     };
 
@@ -128,7 +138,7 @@ export class UsersServiceManager {
         return jwt.sign({ userId: user._id, role: user.role }, config.jwt.secret, { expiresIn: '1h' });
     };
 
-    static toSafeUser = (user: UserDocument): Omit<UserDocument, 'googleId' | 'passwordHash'> => {
+    static toSafeUser = (user: UserDocument): SafeUserDocument => {
         const { googleId, passwordHash, ...safeUser } = user;
         return safeUser;
     };

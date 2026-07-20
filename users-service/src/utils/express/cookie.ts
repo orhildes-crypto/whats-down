@@ -6,7 +6,7 @@ import env from 'env-var';
 export const REFRESH_COOKIE_NAME = 'refreshToken';
 const isProduction = env.get('NODE_ENV').asString() === 'production';;
 
-const REFRESH_PATH = '/api/users-services/auth/refresh';
+export const REFRESH_PATH = '/api/users-services/auth/refresh';
 
 export const setAuthCookie = (
     res: Response, 

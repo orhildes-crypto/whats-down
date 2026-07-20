@@ -9,11 +9,6 @@ export interface CreateLocalUserPayload extends BaseUser {
     password: string; 
 }
 
-export interface GoogleAuthPayload {
-    googleId: string; // token.sub
-    email: string;    // token.email
-}
-
 type AuthMethod = {
     passwordHash: string; 
     googleId?: string;      

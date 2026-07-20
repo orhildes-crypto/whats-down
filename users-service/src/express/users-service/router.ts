@@ -8,10 +8,16 @@ import {
     googleAuthRequestSchema,
     changeUserRoleRequestSchema,
     logoutRequestSchema,
+    getMeRequestSchema,
 } from './validations.js';
 import { config } from '../../config.js';
 
 export const usersServiceRouter = Router();
+
+usersServiceRouter.get('/me', 
+    validateRequest(getMeRequestSchema), 
+    authenticateMiddleware(config.jwt.secret), 
+    wrapController(UsersServiceController.getMe));
 
 usersServiceRouter.post('/', 
     validateRequest(createOneRequestSchema), 

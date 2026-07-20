@@ -11,6 +11,13 @@ export const createLocalUserSchema = baseUserSchema.extend({
     password: z.string().min(8),
 });
 
+// GET /users-service/me
+export const getMeRequestSchema = z.object({
+    body: z.object({}),
+    query: z.object({}),
+    params: z.object({}),
+})
+
 // POST /users-service/signup
 export const createOneRequestSchema = z.object({
     body: createLocalUserSchema,
