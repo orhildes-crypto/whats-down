@@ -42,11 +42,11 @@ systemServiceRouter.post('/',
     authorizationMiddleware(['ADMIN', 'EDITOR']),
     validateRequest(createOneRequestSchema), 
     wrapController(SystemServiceController.createOne));
-systemServiceRouter.put('/:id', 
+systemServiceRouter.patch('/:id/name', 
     authenticateMiddleware(config.jwt.secret), 
     authorizationMiddleware(['ADMIN', 'EDITOR']),
     validateRequest(editServiceRequestSchema), 
-    wrapController(SystemServiceController.editService));
+    wrapController(SystemServiceController.renameService));
 systemServiceRouter.patch('/:id/status', 
     authenticateMiddleware(config.jwt.secret), 
     authorizationMiddleware(['ADMIN', 'EDITOR']),

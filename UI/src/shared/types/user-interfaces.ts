@@ -11,7 +11,3 @@ export interface CreateLocalUserPayload extends BaseUser {
 export type SafeUserDocument = BaseUser & {
     _id: string;
 };
-
-export interface UserResponseObj {
-  user: SafeUserDocument;
-}

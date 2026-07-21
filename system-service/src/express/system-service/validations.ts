@@ -66,12 +66,9 @@ export const createOneRequestSchema = z.object({
     params: z.object({}),
 });
 
-// PUT /api/system-service/:id
+// PATCH /api/system-service/:id/name
 export const editServiceRequestSchema = z.object({
-    body: requiredFields.partial().merge(optionalFields).refine(
-        (data) => Object.keys(data).length > 0,
-        { message: "At least one field must be provided for update" }
-    ),
+    body: requiredFields,
     query: z.object({}),
     params: z.object({
         id: zodMongoObjectId,

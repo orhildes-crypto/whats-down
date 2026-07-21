@@ -1,5 +1,5 @@
 import { apiClient } from '../../../shared/api/apiClient';
-import { type SafeUserDocument, type CreateLocalUserPayload, type UserResponseObj } from '../../../shared/types/user-interfaces';
+import { type SafeUserDocument, type CreateLocalUserPayload } from '../../../shared/types/user-interfaces';
 
 export const usersService = {
     getMe: async (): Promise<SafeUserDocument> => {

@@ -6,7 +6,20 @@ export interface CreateSystemServicePayload {
 export interface SystemServiceDocument extends CreateSystemServicePayload {
     _id: string;
     createdBy: string;
-    status: "UP" | "DOWN";
+    status: 'UP' | 'DOWN';
     createdAt: Date;
     statusUpdatedAt: Date;
 }
+
+export interface SystemServiceFilters {
+    createdBy?: string;
+    status?: 'UP' | 'DOWN';
+    parentId?: string | null;
+    name?: string;
+}
+
+export interface SystemQueryParams extends SystemServiceFilters {
+    step: number;
+    limit?: number;
+}
+

@@ -44,8 +44,8 @@ export class SystemServiceController {
         res.json(await SystemServiceManager.createOne(req.body, createdBy));
     };
 
-    static editService = async (req: TypedRequest<typeof editServiceRequestSchema>, res: Response) => {
-        res.json(await SystemServiceManager.editService(req.params.id, req.body));
+    static renameService = async (req: TypedRequest<typeof editServiceRequestSchema>, res: Response) => {
+        res.json(await SystemServiceManager.renameService(req.params.id, req.body.name));
     };
 
     static changeStatus = async (req: TypedRequest<typeof changeStatusRequestSchema>, res: Response) => {

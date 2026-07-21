@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { CreateCircleError, DocumentNotFoundError, SystemWithChildrenError } from '../../utils/errors.js';
+import { DocumentNotFoundError, SystemWithChildrenError } from '../../utils/errors.js';
 import { CreateSystemServicePayload, SystemService, SystemServiceDocument } from './interface.js';
 import { SystemServiceModel } from './model.js';
 
@@ -36,14 +36,8 @@ export class SystemServiceManager {
         return SystemServiceModel.findByIdAndDelete(systemId).orFail(new DocumentNotFoundError(systemId)).lean().exec();
     };
 
-    static editService = async (systemId: string, update:  Omit<Partial<SystemServiceDocument>, 'status'>): Promise<SystemServiceDocument> => {
-        if (update.parentId) {
-            if (await this.checkForCycles(systemId, update.parentId)) {
-                throw new CreateCircleError(systemId, update.parentId);
-            }
-        }
-        
-        return SystemServiceModel.findByIdAndUpdate(systemId, update, { new: true }).orFail(new DocumentNotFoundError(systemId)).lean().exec();
+    static renameService = async (systemId: string, newName: string) => {
+        return SystemServiceModel.findByIdAndUpdate(systemId, {name: newName}, { new: true }).orFail(new DocumentNotFoundError(systemId)).lean().exec();
     }
 
     static changeStatus = async (systemId: string,  status: "UP" | "DOWN"): Promise<SystemServiceDocument> => {
