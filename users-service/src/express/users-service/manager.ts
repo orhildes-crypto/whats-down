@@ -16,13 +16,13 @@ export class UsersServiceManager {
         const safeUser = this.toSafeUser(plainUser);
 
         return safeUser;
-    }
+    };
 
     static createLocalUser = async (payload: CreateLocalUserPayload): Promise<SafeUserDocument> => {
         const newUser = await UserModel.create({
             username: payload.username,
             email: payload.email,
-            role: 'VIEWER', 
+            role: 'VIEWER',
             passwordHash: await bcrypt.hash(payload.password, 10),
         }).catch((err) => {
             if (err.code === 11000) {
@@ -111,11 +111,14 @@ export class UsersServiceManager {
             .orFail(new DocumentNotFoundError(targetId))
             .lean()
             .exec();
+
         return this.toSafeUser(updatedUser);
     };
 
-    static deleteUser = async (id: string): Promise<UserDocument> => {
-        return await UserModel.findByIdAndDelete(id).select('-googleId').orFail(new DocumentNotFoundError(id)).lean().exec();
+    static deleteUser = async (id: string): Promise<SafeUserDocument> => {
+        const user = await UserModel.findByIdAndDelete(id).orFail(new DocumentNotFoundError(id)).lean().exec();
+
+        return this.toSafeUser(user);
     };
 
     static client = new OAuth2Client(config.google.clientId);

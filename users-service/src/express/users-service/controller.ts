@@ -34,7 +34,7 @@ export class UsersServiceController {
         const { rawToken } = await createInitialRefreshToken(user._id.toString());
         setRefreshCookie(res, rawToken);
 
-        res.json({ user });
+        res.json(user);
     };
 
     static loginWithGoogle = async (req: TypedRequest<typeof googleAuthRequestSchema>, res: Response) => {
@@ -44,7 +44,7 @@ export class UsersServiceController {
         const { rawToken } = await createInitialRefreshToken(user._id.toString());
         setRefreshCookie(res, rawToken);
 
-        res.json({ user });
+        res.json(user);
     };
 
     static refresh = async (req: TypedRequest<any>, res: Response) => {
