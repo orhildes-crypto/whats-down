@@ -6,6 +6,7 @@ import { SystemServiceModel } from './model.js';
 export class SystemServiceManager {
     static getByQuery = async (query: Partial<SystemService>, step: number, limit?: number): Promise<SystemServiceDocument[]> => {
         return await SystemServiceModel.find(query, {}, limit ? { limit, skip: limit * step } : {})
+            .sort('status name')
             .lean()
             .exec();
     };
@@ -20,6 +21,7 @@ export class SystemServiceManager {
 
     static getRoots = async (step: number, limit?: number): Promise<SystemServiceDocument[]> => {
         return await SystemServiceModel.find({ parentId: null }, {}, limit ? { limit, skip: limit * step } : {})
+            .sort('status name')
             .lean()
             .exec();
     };

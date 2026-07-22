@@ -40,5 +40,7 @@ const SystemServiceSchema = new mongoose.Schema<SystemServiceDocument>(
     },
 );
 
+SystemServiceSchema.index({status: 1, name: 1}); // Relies on DOWN < UP alphabetically — should be changed if a third status is added.
+
 
 export const SystemServiceModel = mongoose.model<SystemServiceDocument>(config.mongo.systemServiceCollectionName, SystemServiceSchema);
