@@ -31,6 +31,12 @@ export const systemsService = {
         ).data;
     },
 
+    getAncestors: async (systemId: string): Promise<SystemServiceDocument[]> => {
+        return (
+            await apiClient.get<SystemServiceDocument[]>(`/systems/${systemId}/ancestors`)
+        ).data;
+    },
+
     rename: async (systemId: string, newName: string): Promise<SystemServiceDocument> => {
         return (
             await apiClient.patch<SystemServiceDocument>(`/systems/${systemId}/name`, 
