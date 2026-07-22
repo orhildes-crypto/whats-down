@@ -300,7 +300,7 @@ describe('e2e system-service api testing', () => {
             });
         });
 
-        describe(`PUT ${BASE_ROUTE}/:id`, () => {
+        describe(`PATCH ${BASE_ROUTE}/:id/name`, () => {
             it('should edit service name', async () => {
                 const propertyForUpdate = 'renamed-service';
 
@@ -311,7 +311,7 @@ describe('e2e system-service api testing', () => {
                     .expect(200);
 
                 const { body } = await request(app)
-                    .put(`${BASE_ROUTE}/${service._id}`)
+                    .patch(`${BASE_ROUTE}/${service._id}/name`)
                     .set('Cookie', `${COOKIE_NAME}=${editorToken}`)
                     .send({ name: propertyForUpdate })
                     .expect(200);
@@ -327,7 +327,7 @@ describe('e2e system-service api testing', () => {
                     .expect(200);
 
                 return request(app)
-                    .put(`${BASE_ROUTE}/${service._id}`)
+                    .patch(`${BASE_ROUTE}/${service._id}/name`)
                     .set('Cookie', `${COOKIE_NAME}=${viewerToken}`)
                     .send({ name: 'hacked-name' })
                     .expect(403);
@@ -335,7 +335,7 @@ describe('e2e system-service api testing', () => {
 
             it('should fail for updating a non-existing service', async () => {
                 return request(app)
-                    .put(`${BASE_ROUTE}/${fakeObjectId}`)
+                    .patch(`${BASE_ROUTE}/${fakeObjectId}/name`)
                     .set('Cookie', `${COOKIE_NAME}=${adminToken}`)
                     .send({ name: 'system-x' })
                     .expect(404);
@@ -349,7 +349,7 @@ describe('e2e system-service api testing', () => {
                     .expect(200);
 
                 return request(app)
-                    .put(`${BASE_ROUTE}/${service._id}`)
+                    .patch(`${BASE_ROUTE}/${service._id}/name`)
                     .set('Cookie', `${COOKIE_NAME}=${adminToken}`)
                     .send({})
                     .expect(400);
@@ -363,38 +363,10 @@ describe('e2e system-service api testing', () => {
                     .expect(200);
 
                 return request(app)
-                    .put(`${BASE_ROUTE}/${service._id}`)
+                    .patch(`${BASE_ROUTE}/${service._id}/name`)
                     .set('Cookie', `${COOKIE_NAME}=${adminToken}`)
                     .send({ status: 'DOWN' })
                     .expect(400);
-            });
-
-            it('should reject parentId change that creates a cycle', async () => {
-                const { body: a } = await request(app).post(BASE_ROUTE).set('Cookie', `${COOKIE_NAME}=${adminToken}`).send({ name: 'SYSTEM-A', parentId: null }).expect(200);
-                const { body: b } = await request(app).post(BASE_ROUTE).set('Cookie', `${COOKIE_NAME}=${adminToken}`).send({ name: 'SYSTEM-B', parentId: a._id }).expect(200);
-                const { body: c } = await request(app).post(BASE_ROUTE).set('Cookie', `${COOKIE_NAME}=${adminToken}`).send({ name: 'SYSTEM-C', parentId: b._id }).expect(200);
-
-                const { body } = await request(app)
-                    .put(`${BASE_ROUTE}/${b._id}`)
-                    .set('Cookie', `${COOKIE_NAME}=${adminToken}`)
-                    .send({ parentId: c._id })
-                    .expect(422);
-
-                expect(body.type).toEqual('CreateCircleError');
-            });
-
-            it('should allow changing to a valid new parent (no cycle)', async () => {
-                const { body: a } = await request(app).post(BASE_ROUTE).set('Cookie', `${COOKIE_NAME}=${adminToken}`).send({ name: 'SYSTEM-A', parentId: null }).expect(200);
-                const { body: b } = await request(app).post(BASE_ROUTE).set('Cookie', `${COOKIE_NAME}=${adminToken}`).send({ name: 'SYSTEM-B', parentId: null }).expect(200);
-                const { body: c } = await request(app).post(BASE_ROUTE).set('Cookie', `${COOKIE_NAME}=${adminToken}`).send({ name: 'SYSTEM-C', parentId: a._id }).expect(200);
-
-                const { body } = await request(app)
-                    .put(`${BASE_ROUTE}/${c._id}`)
-                    .set('Cookie', `${COOKIE_NAME}=${adminToken}`)
-                    .send({ parentId: b._id })
-                    .expect(200);
-
-                expect(body.parentId).toEqual(b._id);
             });
         });
 
