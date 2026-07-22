@@ -10,6 +10,7 @@ import {
     editServiceRequestSchema,
     changeStatusRequestSchema,
     getRootsByQueryRequestSchema,
+    getAncestorsByIdRequestSchema,
 } from './validations.js';
 import { DeveloperError } from '@whats-down/shared';
 
@@ -33,6 +34,10 @@ export class SystemServiceController {
 
     static getById = async (req: TypedRequest<typeof getByIdRequestSchema>, res: Response) => {
         res.json(await SystemServiceManager.getById(req.params.id));
+    };
+
+    static getParents = async (req: TypedRequest<typeof getAncestorsByIdRequestSchema>, res: Response) => {
+        res.json(await SystemServiceManager.getAncestors(req.params.id));
     };
 
     static createOne = async (req: TypedRequest<typeof createOneRequestSchema>, res: Response) => {

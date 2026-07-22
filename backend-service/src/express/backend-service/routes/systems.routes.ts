@@ -30,6 +30,11 @@ backendSystemsRouter.get('/:id', authenticateMiddleware(JWT_SECRET), (req, res) 
         targetUrl: `${SYSTEMS_SERVICE_URL}/api/system-service/${req.params.id}`,
     });
 });
+backendSystemsRouter.get('/:id/ancestors', authenticateMiddleware(JWT_SECRET), (req, res) => {
+    forwardRequest(req, res, {
+        targetUrl: `${SYSTEMS_SERVICE_URL}/api/system-service/${req.params.id}/ancestors`
+    })
+});
 
 backendSystemsRouter.post('/', authenticateMiddleware(JWT_SECRET), (req, res) => {
     forwardRequest(req, res, {

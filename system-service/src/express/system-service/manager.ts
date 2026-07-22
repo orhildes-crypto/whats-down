@@ -24,17 +24,51 @@ export class SystemServiceManager {
             .exec();
     };
 
-    static createOne = async (
-        createSystemServicePayload: CreateSystemServicePayload,
-        createdBy: string ,
-    ): Promise<SystemServiceDocument> => {
+    static getAncestors = async (systemId: string): Promise<SystemServiceDocument[]> => {
+        const result = await SystemServiceModel.aggregate([
+            {
+                $match: { _id: new mongoose.Types.ObjectId(systemId) },
+            },
+            {
+                $graphLookup: {
+                    from: 'system-services',
+                    startWith: '$parentId',
+                    connectFromField: 'parentId',
+                    connectToField: '_id',
+                    as: 'ancestors',
+                    maxDepth: 10,
+                    depthField: 'distance',
+                },
+            },
+            {
+                $addFields: {
+                    ancestors: {
+                        $sortArray: {
+                            input: '$ancestors',
+                            sortBy: { distance: 1 },
+                        },
+                    },
+                },
+            },
+        ]);
+
+        if (!result[0]) {
+            throw new DocumentNotFoundError(systemId);
+        }
+
+        const ancestors = result[0].ancestors;
+
+        return ancestors;
+    };
+
+    static createOne = async (createSystemServicePayload: CreateSystemServicePayload, createdBy: string): Promise<SystemServiceDocument> => {
         const newSystem = await SystemServiceModel.create({
             createdBy: createdBy,
             name: createSystemServicePayload.name,
             parentId: createSystemServicePayload.parentId,
         });
 
-        await this.updateParentsStatus(newSystem.id, "UP");
+        await this.updateParentsStatus(newSystem.id, 'UP');
 
         return newSystem;
     };
@@ -43,11 +77,10 @@ export class SystemServiceManager {
         if (await this.checkForKids(systemId)) {
             throw new SystemWithChildrenError(systemId);
         }
-        
-        const deletedSystem = await SystemServiceModel.findByIdAndDelete(systemId)
-            .orFail(new DocumentNotFoundError(systemId)).lean().exec();
 
-        await this.updateParentsStatus(systemId, "UP");
+        const deletedSystem = await SystemServiceModel.findByIdAndDelete(systemId).orFail(new DocumentNotFoundError(systemId)).lean().exec();
+
+        await this.updateParentsStatus(systemId, 'UP');
 
         return deletedSystem;
     };
@@ -99,7 +132,9 @@ export class SystemServiceManager {
             childSystem.parentId,
             { $set: { status: newParentStatus, statusUpdatedAt: Date.now() } },
             { new: true },
-        ).lean().exec();
+        )
+            .lean()
+            .exec();
 
         await this.updateParentsStatus(childSystem.parentId, newParentStatus);
     };

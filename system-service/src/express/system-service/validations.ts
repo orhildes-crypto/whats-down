@@ -57,6 +57,15 @@ export const getByIdRequestSchema = z.object({
     }),
 });
 
+// GET /api/system-service/:id/ancestors
+export const getAncestorsByIdRequestSchema = z.object({
+    body: z.object({}),
+    query: z.object({}),
+    params: z.object({
+        id: zodMongoObjectId,
+    }),
+});
+
 // POST /api/system-service
 export const createOneRequestSchema = z.object({
     body: requiredFields.merge(z.object({

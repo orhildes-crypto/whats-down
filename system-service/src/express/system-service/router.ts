@@ -10,6 +10,7 @@ import {
     changeStatusRequestSchema,
     editServiceRequestSchema,
     getRootsByQueryRequestSchema,
+    getAncestorsByIdRequestSchema,
 } from './validations.js';
 import { authenticateMiddleware, authorizationMiddleware } from '@whats-down/shared';
 import { config } from '../../config.js';
@@ -36,6 +37,11 @@ systemServiceRouter.get('/:id',
     authorizationMiddleware(['ADMIN', 'EDITOR', 'VIEWER']),
     validateRequest(getByIdRequestSchema), 
     wrapController(SystemServiceController.getById));
+systemServiceRouter.get('/:id/parents',
+    authenticateMiddleware(config.jwt.secret),
+    authorizationMiddleware(['ADMIN', 'EDITOR', 'VIEWER']),
+    validateRequest(getAncestorsByIdRequestSchema),
+    wrapController(SystemServiceController.getParents));
 
 systemServiceRouter.post('/', 
     authenticateMiddleware(config.jwt.secret), 
