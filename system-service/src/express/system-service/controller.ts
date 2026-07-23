@@ -40,6 +40,7 @@ export class SystemServiceController {
         res.json(await SystemServiceManager.getAncestors(req.params.id));
     };
 
+    // denormalized copy of username at creation time. assumes usernames can not be changed — revisit if that changes
     static createOne = async (req: TypedRequest<typeof createOneRequestSchema>, res: Response) => {
         if (!req.user) {
             throw new DeveloperError("User context is missing. Make sure authenticateMiddleware is applied to this route.");

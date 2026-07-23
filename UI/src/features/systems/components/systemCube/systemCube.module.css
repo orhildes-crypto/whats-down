@@ -1,0 +1,106 @@
+.cubeContainer {
+    position: relative;
+    border-radius: 12px;
+    padding: 24px 20px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 200px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+    font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        'Segoe UI',
+        Roboto,
+        sans-serif;
+}
+
+.cubeContainer:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.statusUp {
+    background-color: #e8f5e9;
+    border: 2px solid #a5d6a7;
+    color: #1b5e20;
+}
+
+.statusDown {
+    background-color: #ffebee;
+    border: 2px solid #ef9a9a;
+    color: #b71c1c;
+}
+
+.cubeHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-top: 10px;
+    margin-bottom: 12px;
+}
+
+.cubeTitle {
+    margin-top: 3;
+    font-size: 1.4rem;
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: -0.2px;
+}
+
+/* תג הסטטוס בפינה השמאלית העליונה */
+.statusBadge {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    font-size: 0.95rem;
+    font-weight: 800;
+    padding: 6px 14px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.badgeUp {
+    background-color: #2e7d32;
+    color: #ffffff;
+}
+
+.badgeDown {
+    background-color: #c62828;
+    color: #ffffff;
+}
+
+/* תוכן הכרטיס והמידע */
+.cubeContent {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 1rem;
+    font-weight: 500;
+    margin-top: 8px;
+}
+
+.infoRow {
+    direction: rtl;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.infoLabel {
+    font-weight: 700;
+    opacity: 0.85;
+}
+
+.cubeActions {
+    display: flex;
+    gap: 12px;
+    margin-top: 18px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
