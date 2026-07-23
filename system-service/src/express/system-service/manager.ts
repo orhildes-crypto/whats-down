@@ -1,29 +1,79 @@
-import mongoose from 'mongoose';
+import mongoose, { PipelineStage } from 'mongoose';
 import { DocumentNotFoundError, SystemWithChildrenError } from '../../utils/errors.js';
-import { CreateSystemServicePayload, SystemService, SystemServiceDocument } from './interface.js';
+import { CreateSystemServicePayload, SystemService, SystemServiceDocument, SystemCubeDTO } from './interface.js';
 import { SystemServiceModel } from './model.js';
 
 export class SystemServiceManager {
-    static getByQuery = async (query: Partial<SystemService>, step: number, limit?: number): Promise<SystemServiceDocument[]> => {
-        return await SystemServiceModel.find(query, {}, limit ? { limit, skip: limit * step } : {})
-            .sort('status name')
-            .lean()
-            .exec();
+    static getByQuery = async (query: Partial<SystemService>, step: number, limit?: number): Promise<SystemCubeDTO[]> => {
+        const pipeline: PipelineStage[] = [{ $match: query }, { $sort: { status: 1, name: 1 } }];
+
+        if (limit) {
+            pipeline.push({ $skip: limit * step }, { $limit: limit });
+        }
+
+        pipeline.push(
+            {
+                $lookup: {
+                    from: 'system-services',
+                    localField: '_id',
+                    foreignField: 'parentId',
+                    as: 'children',
+                },
+            },
+            {
+                $addFields: {
+                    hasChildren: { $gt: [{ $size: '$children' }, 0] },
+                },
+            },
+            {
+                $project: {
+                    children: 0,
+                },
+            },
+        );
+
+        return await SystemServiceModel.aggregate<SystemCubeDTO>().exec();
     };
 
     static getCount = async (query: Partial<SystemService>): Promise<number> => {
         return await SystemServiceModel.countDocuments(query).exec();
     };
 
-    static getById = async (systemId: string): Promise<SystemServiceDocument> => {
-        return await SystemServiceModel.findById(systemId).orFail(new DocumentNotFoundError(systemId)).lean().exec();
+    static getById = async (systemId: string): Promise<SystemCubeDTO> => {
+        const system = await SystemServiceModel.findById(systemId).orFail(new DocumentNotFoundError(systemId)).lean().exec();
+
+        return { ...system, hasChildren: await this.checkForKids(system._id) };
     };
 
-    static getRoots = async (step: number, limit?: number): Promise<SystemServiceDocument[]> => {
-        return await SystemServiceModel.find({ parentId: null }, {}, limit ? { limit, skip: limit * step } : {})
-            .sort('status name')
-            .lean()
-            .exec();
+    static getRoots = async (step: number, limit?: number): Promise<SystemCubeDTO[]> => {
+        const pipeline: PipelineStage[] = [{ $match: { parentId: null } }, { $sort: { status: 1, name: 1 } }];
+
+        if (limit) {
+            pipeline.push({ $skip: limit * step }, { $limit: limit });
+        }
+
+        pipeline.push(
+            {
+                $lookup: {
+                    from: 'system-services',
+                    localField: '_id',
+                    foreignField: 'parentId',
+                    as: 'children',
+                },
+            },
+            {
+                $addFields: {
+                    hasChildren: { $gt: [{ $size: '$children' }, 0] },
+                },
+            },
+            {
+                $project: {
+                    children: 0,
+                },
+            },
+        );
+
+        return await SystemServiceModel.aggregate<SystemCubeDTO>().exec();
     };
 
     static getAncestors = async (systemId: string): Promise<SystemServiceDocument[]> => {

@@ -7,8 +7,13 @@ export interface SystemServiceDocument extends CreateSystemServicePayload {
     _id: string;
     createdBy: string;
     status: 'UP' | 'DOWN';
-    createdAt: Date;
-    statusUpdatedAt: Date;
+    createdAt: string;
+    statusUpdatedAt: string;
+    createdByUsername: string;
+}
+
+export interface SystemCubeDTO extends SystemServiceDocument {
+    hasChildren: boolean;
 }
 
 export interface SystemServiceFilters {
