@@ -7,8 +7,9 @@ import { createLocalUserSchema } from '@whats-down/shared/common';
 import { getErrorMessage } from '../../../../shared/utils/zodErrorMessages';
 
 export const RegisterPage: React.FC = () => {
-    const [registerData, setRegisterData] = useState<CreateLocalUserPayload>({ email: '', username: '', password: ''});
+    const [registerData, setRegisterData] = useState<CreateLocalUserPayload>({ email: '', username: '', password: '' });
     const [errors, setErrors] = useState<Record<string, string>>({});
+    const [showPassword, setShowPassword] = useState<boolean>(false);
 
     const navigate = useNavigate();
 
@@ -24,7 +25,7 @@ export const RegisterPage: React.FC = () => {
         const result = fieldSchema.safeParse(value);
 
         if (!result.success) {
-            return getErrorMessage(result.error.issues[0], name);;
+            return getErrorMessage(result.error.issues[0], name);
         }
 
         return '';
@@ -37,7 +38,6 @@ export const RegisterPage: React.FC = () => {
             setErrors({});
             return true;
         } else {
-            
             result.error.issues.forEach((issue) => {
                 setErrors((prevErrors) => ({
                     ...prevErrors,
@@ -88,7 +88,7 @@ export const RegisterPage: React.FC = () => {
                         <label htmlFor="username" className={styles.label}>
                             שם משתמש
                         </label>
-                        <input id="username" type="text" className={styles.input}  value={registerData.username} onChange={handleChange} />
+                        <input id="username" type="text" className={styles.input} value={registerData.username} onChange={handleChange} />
                         {errors.username && <span className={styles.fieldError}>{errors.username}</span>}
                     </div>
 
@@ -96,7 +96,7 @@ export const RegisterPage: React.FC = () => {
                         <label htmlFor="email" className={styles.label}>
                             אימייל
                         </label>
-                        <input id="email" type="email" className={styles.input}  value={registerData.email} onChange={handleChange} />
+                        <input id="email" type="email" className={styles.input} value={registerData.email} onChange={handleChange} />
                         {errors.email && <span className={styles.fieldError}>{errors.email}</span>}
                     </div>
 
@@ -104,13 +104,22 @@ export const RegisterPage: React.FC = () => {
                         <label htmlFor="password" className={styles.label}>
                             סיסמה
                         </label>
-                        <input
-                            id="password"
-                            type="password"
-                            className={styles.input}
-                            value={registerData.password}
-                            onChange={handleChange}
-                        />
+                        <div className={styles.passwordWrapper}>
+                            <input
+                                id="password"
+                                type={showPassword ? 'text' : 'password'}
+                                className={`${styles.input} ${styles.passwordInput}`}
+                                value={registerData.password}
+                                onChange={handleChange}
+                            />
+                            <button
+                                type="button" 
+                                className={styles.togglePasswordButton}
+                                onClick={() => setShowPassword((prev) => !prev)}
+                            >
+                                {'👁️'}
+                            </button>
+                        </div>
                         {errors.password && <span className={styles.fieldError}>{errors.password}</span>}
                     </div>
 
