@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import styles from './RegisterPage.module.css';
+import styles from './registerPage.module.css';
 import { useRegister } from './useRegister';
 import { type CreateLocalUserPayload } from '../../../../shared/types/user-interfaces';
+import { createLocalUserSchema } from '@whats-down/shared/common';
+import { getErrorMessage } from '../../../../shared/utils/zodErrorMessages';
 
 export const RegisterPage: React.FC = () => {
     const [registerData, setRegisterData] = useState<CreateLocalUserPayload>({ email: '', username: '', password: '', role: 'VIEWER' });
@@ -10,58 +12,67 @@ export const RegisterPage: React.FC = () => {
 
     const navigate = useNavigate();
 
+    type FieldName = keyof CreateLocalUserPayload;
+
     const { mutateAsync: register, isPending, error } = useRegister();
 
-    const validateForm = () => {
-        let tempErrors: { username?: string; email?: string; password?: string } = {};
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const validateSingleField = (name: FieldName, value: unknown): string => {
+        const fieldSchema = createLocalUserSchema.shape[name];
 
-        if (!registerData.username.trim()) {
-            tempErrors.username = 'Username is required.';
-        } else if (registerData.username.length < 3) {
-            tempErrors.username = 'Username must be at least 3 characters.';
+        if (!fieldSchema) return '';
+
+        const result = fieldSchema.safeParse(value);
+
+        if (!result.success) {
+            return getErrorMessage(result.error.issues[0], name);;
         }
 
-        if (!registerData.email) {
-            tempErrors.email = 'Email is required.';
-        } else if (!emailRegex.test(registerData.email)) {
-            tempErrors.email = 'Please enter a valid email address.';
+        return '';
+    };
+
+    const validateForm = (): boolean => {
+        const result = createLocalUserSchema.safeParse(registerData);
+
+        if (result.success) {
+            setErrors({});
+            return true;
+        } else {
+            
+            result.error.issues.forEach((issue) => {
+                setErrors((prevErrors) => ({
+                    ...prevErrors,
+                    [issue.path[0]]: getErrorMessage(issue),
+                }));
+            });
+
+            return false;
         }
-
-        if (!registerData.password) {
-            tempErrors.password = 'Password is required.';
-        } else if (registerData.password.length < 8) {
-            tempErrors.password = 'Password must be at least 8 characters.';
-        }
-
-        setErrors(tempErrors);
-
-        // Returns true if the errors object has no keys (form is valid)
-        return Object.keys(tempErrors).length === 0;
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (validateForm()) {
-            try {
-                await register(registerData);
-                navigate('/login');
-            } catch {
-                // Error is already handeled
-            }
-        } else {
-            // WHAT SHOULD HAPPEM HERE?
+        if (!validateForm()) return;
+
+        try {
+            await register(registerData);
+            navigate('/login');
+        } catch {
+            // Error is already handeled
         }
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target;
+        const fieldName = id as FieldName;
         setRegisterData({ ...registerData, [id]: value });
 
-        if (errors[id]) {
-            setErrors({ ...errors, [id]: '' });
-        }
+        const errorMessage = validateSingleField(fieldName, value);
+
+        setErrors((prevErrors) => ({
+            ...prevErrors,
+            [fieldName]: errorMessage,
+        }));
     };
 
     return (
@@ -77,14 +88,16 @@ export const RegisterPage: React.FC = () => {
                         <label htmlFor="username" className={styles.label}>
                             שם משתמש
                         </label>
-                        <input id="username" type="text" className={styles.input} required value={registerData.username} onChange={handleChange} />
+                        <input id="username" type="text" className={styles.input}  value={registerData.username} onChange={handleChange} />
+                        {errors.username && <span className={styles.fieldError}>{errors.username}</span>}
                     </div>
 
                     <div className={styles.inputGroup}>
                         <label htmlFor="email" className={styles.label}>
                             אימייל
                         </label>
-                        <input id="email" type="email" className={styles.input} required value={registerData.email} onChange={handleChange} />
+                        <input id="email" type="email" className={styles.input}  value={registerData.email} onChange={handleChange} />
+                        {errors.email && <span className={styles.fieldError}>{errors.email}</span>}
                     </div>
 
                     <div className={styles.inputGroup}>
@@ -95,10 +108,10 @@ export const RegisterPage: React.FC = () => {
                             id="password"
                             type="password"
                             className={styles.input}
-                            required
                             value={registerData.password}
                             onChange={handleChange}
                         />
+                        {errors.password && <span className={styles.fieldError}>{errors.password}</span>}
                     </div>
 
                     <button type="submit" className={styles.submitButton} disabled={isPending}>

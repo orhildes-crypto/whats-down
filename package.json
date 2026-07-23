@@ -5,6 +5,7 @@
     "system-service",
     "users-service",
     "backend-service",
+    "UI",
     "shared"
   ],
   "devDependencies": {

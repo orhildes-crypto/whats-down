@@ -49,6 +49,13 @@
     color: #374151;
 }
 
+.fieldError {
+    display: block;
+    color: #dc2626;
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+}
+
 .input,
 .select {
     padding: 0.75rem 1rem;
