@@ -7,7 +7,7 @@ import { createLocalUserSchema } from '@whats-down/shared/common';
 import { getErrorMessage } from '../../../../shared/utils/zodErrorMessages';
 
 export const RegisterPage: React.FC = () => {
-    const [registerData, setRegisterData] = useState<CreateLocalUserPayload>({ email: '', username: '', password: '', role: 'VIEWER' });
+    const [registerData, setRegisterData] = useState<CreateLocalUserPayload>({ email: '', username: '', password: ''});
     const [errors, setErrors] = useState<Record<string, string>>({});
 
     const navigate = useNavigate();

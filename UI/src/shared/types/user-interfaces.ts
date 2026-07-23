@@ -4,8 +4,11 @@ type BaseUser = {
     role: "ADMIN" | "EDITOR" | "VIEWER";
 };
 
-export interface CreateLocalUserPayload extends BaseUser {
-    password: string;
+// Does not have a role 
+export interface CreateLocalUserPayload {
+    username: string;
+    email: string;
+    password: string; 
 }
 
 export type SafeUserDocument = BaseUser & {
