@@ -46,7 +46,8 @@ export class SystemServiceController {
         }
 
         const createdBy = req.user.userId;
-        res.json(await SystemServiceManager.createOne(req.body, createdBy));
+        const createdByUsername = req.user.username;
+        res.json(await SystemServiceManager.createOne(req.body, createdBy, createdByUsername));
     };
 
     static renameService = async (req: TypedRequest<typeof editServiceRequestSchema>, res: Response) => {

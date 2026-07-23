@@ -31,7 +31,7 @@ export class UsersServiceController {
         const { user, token } = await UsersServiceManager.loginLocalUser(req.body.username, req.body.password);
         setAuthCookie(res, token);
 
-        const { rawToken } = await createInitialRefreshToken(user._id.toString());
+        const { rawToken } = await createInitialRefreshToken(user._id.toString(), user.username);
         setRefreshCookie(res, rawToken);
 
         res.json(user);
@@ -41,7 +41,7 @@ export class UsersServiceController {
         const { user, token } = await UsersServiceManager.loginWithGoogle(req.body.idToken);
         setAuthCookie(res, token);
 
-        const { rawToken } = await createInitialRefreshToken(user._id.toString());
+        const { rawToken } = await createInitialRefreshToken(user._id.toString(), user.username);
         setRefreshCookie(res, rawToken);
 
         res.json(user);

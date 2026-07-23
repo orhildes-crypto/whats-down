@@ -8,6 +8,10 @@ export const refreshTokenSchema = new Schema<RefreshTokenDocument>(
             required: true,
             ref: 'User',
         },
+        username: {
+            type: String,
+            required: true
+        },
         tokenHash: {
             type: String,
             required: true,

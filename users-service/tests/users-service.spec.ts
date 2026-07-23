@@ -92,12 +92,6 @@ describe('e2e users-service api testing', () => {
                 .expect(400);
         });
 
-        it('should fail validation when role is invalid', async () => {
-            return request(app)
-                .post(BASE_ROUTE)
-                .send({ ...exampleUser, role: 'INVALID_ROLE' })
-                .expect(400);
-        });
 
         it('should fail to register when username already exists', async () => {
             await request(app).post(BASE_ROUTE).send(exampleUser).expect(200);

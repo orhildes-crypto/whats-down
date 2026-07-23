@@ -1,38 +1,21 @@
-import mongoose, { PipelineStage } from 'mongoose';
+import mongoose from 'mongoose';
 import { DocumentNotFoundError, SystemWithChildrenError } from '../../utils/errors.js';
 import { CreateSystemServicePayload, SystemService, SystemServiceDocument, SystemCubeDTO } from './interface.js';
 import { SystemServiceModel } from './model.js';
 
 export class SystemServiceManager {
     static getByQuery = async (query: Partial<SystemService>, step: number, limit?: number): Promise<SystemCubeDTO[]> => {
-        const pipeline: PipelineStage[] = [{ $match: query }, { $sort: { status: 1, name: 1 } }];
+        const systems = await SystemServiceModel.find(query, {}, limit ? { limit, skip: limit * step } : {})
+            .sort('status name')
+            .lean()
+            .exec();
 
-        if (limit) {
-            pipeline.push({ $skip: limit * step }, { $limit: limit });
-        }
-
-        pipeline.push(
-            {
-                $lookup: {
-                    from: 'system-services',
-                    localField: '_id',
-                    foreignField: 'parentId',
-                    as: 'children',
-                },
-            },
-            {
-                $addFields: {
-                    hasChildren: { $gt: [{ $size: '$children' }, 0] },
-                },
-            },
-            {
-                $project: {
-                    children: 0,
-                },
-            },
+        return Promise.all(
+            systems.map(async (system) => ({
+                ...system,
+                hasChildren: await this.checkForKids(system._id.toString()),
+            })),
         );
-
-        return await SystemServiceModel.aggregate<SystemCubeDTO>().exec();
     };
 
     static getCount = async (query: Partial<SystemService>): Promise<number> => {
@@ -46,34 +29,17 @@ export class SystemServiceManager {
     };
 
     static getRoots = async (step: number, limit?: number): Promise<SystemCubeDTO[]> => {
-        const pipeline: PipelineStage[] = [{ $match: { parentId: null } }, { $sort: { status: 1, name: 1 } }];
+        const systems = await SystemServiceModel.find({ parentId: null }, {}, limit ? { limit, skip: limit * step } : {})
+            .sort('status name')
+            .lean()
+            .exec();
 
-        if (limit) {
-            pipeline.push({ $skip: limit * step }, { $limit: limit });
-        }
-
-        pipeline.push(
-            {
-                $lookup: {
-                    from: 'system-services',
-                    localField: '_id',
-                    foreignField: 'parentId',
-                    as: 'children',
-                },
-            },
-            {
-                $addFields: {
-                    hasChildren: { $gt: [{ $size: '$children' }, 0] },
-                },
-            },
-            {
-                $project: {
-                    children: 0,
-                },
-            },
+        return Promise.all(
+            systems.map(async (system) => ({
+                ...system,
+                hasChildren: await this.checkForKids(system._id.toString()),
+            })),
         );
-
-        return await SystemServiceModel.aggregate<SystemCubeDTO>().exec();
     };
 
     static getAncestors = async (systemId: string): Promise<SystemServiceDocument[]> => {
@@ -113,11 +79,16 @@ export class SystemServiceManager {
         return ancestors;
     };
 
-    static createOne = async (createSystemServicePayload: CreateSystemServicePayload, createdBy: string): Promise<SystemServiceDocument> => {
+    static createOne = async (
+        createSystemServicePayload: CreateSystemServicePayload,
+        createdBy: string,
+        createdByUsername: string,
+    ): Promise<SystemServiceDocument> => {
         const newSystem = await SystemServiceModel.create({
             createdBy: createdBy,
             name: createSystemServicePayload.name,
             parentId: createSystemServicePayload.parentId,
+            createdByUsername: createdByUsername,
         });
 
         await this.updateParentsStatus(newSystem.id, 'UP');

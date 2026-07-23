@@ -13,7 +13,7 @@ export const authenticateMiddleware = (secret: string) => {
         }
 
         try {
-            const verified = jwt.verify(token, secret) as { userId: string; role: 'ADMIN' | 'EDITOR' | 'VIEWER';};
+            const verified = jwt.verify(token, secret) as { userId: string; role: 'ADMIN' | 'EDITOR' | 'VIEWER'; username: string;};
 
             req.user = verified; 
 
