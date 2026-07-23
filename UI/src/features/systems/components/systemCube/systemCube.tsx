@@ -1,6 +1,7 @@
 import React from 'react';
 import { type SystemCubeDTO } from '../../../../shared/types/system-interfaces';
 import styles from './systemCube.module.css';
+import { useChangeStatus } from './hooks/useChangeStatus';
 
 export interface SystemCubeProps {
     system: SystemCubeDTO;
@@ -8,13 +9,23 @@ export interface SystemCubeProps {
 }
 
 export const SystemCube: React.FC<SystemCubeProps> = ({ system, role }) => {
+    const { mutate: changeStatus, isPending } = useChangeStatus();
+
     const isUp = system.status === 'UP';
+    const canEdit = role === 'ADMIN' || role === 'EDITOR';
 
     const containerStatusClass = isUp ? styles.statusUp : styles.statusDown;
     const badgeStatusClass = isUp ? styles.badgeUp : styles.badgeDown;
 
+    const handleStatusToggle = () => {
+        if (!canEdit || isPending) return;
+
+        const newStatus = isUp ? 'DOWN' : 'UP';
+        changeStatus({ systemId: system._id, status: newStatus });
+    };
+
     return (
-        <div className={`${styles.cubeContainer} ${containerStatusClass}`}>
+        <div className={`${styles.cubeContainer} ${containerStatusClass}`} onClick={handleStatusToggle}>
             <div className={`${styles.statusBadge} ${badgeStatusClass}`}>{system.status}</div>
 
             <div className={styles.cubeHeader}>
