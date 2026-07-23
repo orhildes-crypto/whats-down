@@ -67,6 +67,13 @@ export const LoginPage: React.FC = () => {
                         {isPending ? 'מתחבר...' : 'התחבר'}
                     </button>
                 </form>
+
+                <div className={styles.registerSection}>
+                    <p className={styles.registerText}>עדיין אין לך חשבון?</p>
+                    <button type="button" className={styles.registerButton} onClick={() => navigate('/register')}>
+                        הרשמה למערכת
+                    </button>
+                </div>
             </div>
         </div>
     );

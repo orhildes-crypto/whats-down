@@ -14,7 +14,7 @@
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
     width: 100%;
-    max-width: 400px;
+    max-width: 450px;
 }
 
 .title {
@@ -49,16 +49,19 @@
     color: #374151;
 }
 
-.input {
+.input,
+.select {
     padding: 0.75rem 1rem;
     border: 1px solid #d1d5db;
     border-radius: 6px;
     font-size: 1rem;
     transition: border-color 0.2s, box-shadow 0.2s;
     outline: none;
+    background-color: #ffffff;
 }
 
-.input:focus {
+.input:focus,
+.select:focus {
     border-color: #2563eb;
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
@@ -98,7 +101,7 @@
     cursor: not-allowed;
 }
 
-.registerSection {
+.loginSection {
     margin-top: 1.5rem;
     padding-top: 1.25rem;
     border-top: 1px solid #e5e7eb;
@@ -108,13 +111,13 @@
     gap: 0.5rem;
 }
 
-.registerText {
+.loginText {
     font-size: 0.875rem;
     color: #4b5563;
     margin: 0;
 }
 
-.registerButton {
+.loginButton {
     background: none;
     border: 1px solid #d1d5db;
     color: #374151;
@@ -126,7 +129,7 @@
     transition: background-color 0.2s, border-color 0.2s;
 }
 
-.registerButton:hover {
+.loginButton:hover {
     background-color: #f9fafb;
     border-color: #9ca3af;
 }
