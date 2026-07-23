@@ -1,12 +1,13 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { RequireAuth } from './components/RequireAuth';
 import { RequireAdmin } from './components/RequireAdmin';
+import { LoginPage } from '../features/users/components/loginForm/loginForm';
 
 
 export default createBrowserRouter([
     {
         path: "/login",
-        // element: <LoginPage />,
+        element: <LoginPage />,
     },
     {
         path: "/register",
