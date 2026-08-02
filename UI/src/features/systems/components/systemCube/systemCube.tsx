@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { type SystemCubeDTO } from '../../../../shared/types/system-interfaces';
 import styles from './systemCube.module.css';
 import { useChangeStatus } from './hooks/useChangeStatus';
 import { useNavigate } from 'react-router-dom';
+import { useRename } from './hooks/useRename';
 
 export interface SystemCubeProps {
     system: SystemCubeDTO;
@@ -12,7 +13,12 @@ export interface SystemCubeProps {
 export const SystemCube: React.FC<SystemCubeProps> = ({ system, role }) => {
     const navigate = useNavigate();
 
-    const { mutate: changeStatus, isPending } = useChangeStatus();
+    const { mutate: changeStatus, isPending: statusIsPending } = useChangeStatus();
+    const { mutate: rename, error } = useRename();
+
+    const [isEditingName, setIsEditingName] = useState(false);
+    const [nameValue, setNameValue] = useState(system.name);
+    const inputRef = useRef<HTMLInputElement>(null);
 
     const isUp = system.status === 'UP';
     const canEdit = role === 'ADMIN' || role === 'EDITOR';
@@ -20,11 +26,46 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role }) => {
     const containerStatusClass = isUp ? styles.statusUp : styles.statusDown;
     const badgeStatusClass = isUp ? styles.badgeUp : styles.badgeDown;
 
+    useEffect(() => {
+        if (isEditingName && inputRef.current) {
+            inputRef.current.focus();
+            inputRef.current.select();
+        }
+    }, [isEditingName]);
+
+    const handleStartEdit = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        setIsEditingName(true);
+    };
+
+    const handleSaveName = () => {
+        const newName = nameValue.trim();
+        if (newName && newName !== system.name) {
+            rename({ systemId: system._id, newName: newName }, { onError: () => {
+                setNameValue(system.name);
+                setIsEditingName(false);
+            }, onSuccess: () => setIsEditingName(false)});
+        } else {
+            setNameValue(system.name);
+        }
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            handleSaveName();
+        } else if (e.key === 'Escape') {
+            setNameValue(system.name);
+            setIsEditingName(false);
+        }
+    };
+
     const handleStatusToggle = () => {
+        if (isEditingName) return;
+
         if (system.hasChildren) {
             navigate(`/systems/${system._id}`);
         } else {
-            if (!canEdit || isPending) return;
+            if (!canEdit || statusIsPending) return;
 
             const newStatus = isUp ? 'DOWN' : 'UP';
             changeStatus({ systemId: system._id, status: newStatus });
@@ -36,7 +77,20 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role }) => {
             <div className={`${styles.statusBadge} ${badgeStatusClass}`}>{system.status}</div>
 
             <div className={styles.cubeHeader}>
-                <h3 className={styles.cubeTitle}>{system.name}</h3>
+                {isEditingName ? (
+                    <input
+                        ref={inputRef}
+                        type="text"
+                        className={styles.titleInput}
+                        value={nameValue}
+                        onChange={(e) => setNameValue(e.target.value)}
+                        onBlur={handleSaveName}
+                        onKeyDown={handleKeyDown}
+                        onClick={(e) => e.stopPropagation()}
+                    />
+                ) : (
+                    <h3 className={styles.cubeTitle}>{system.name}</h3>
+                )}
             </div>
 
             <div className={styles.cubeContent}>
@@ -61,8 +115,8 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role }) => {
                             type="button"
                             className={styles.actionButton}
                             aria-label="שנה שם מערכת"
-                            onClick={() => {
-                                /* TODO: rename */
+                            onClick={(e) => {
+                                handleStartEdit(e);
                             }}
                         >
                             ✏️
@@ -96,7 +150,7 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role }) => {
                     )}
                 </div>
 
-                <div className={styles.changeStatusMessage}>{system.hasChildren ? 'לחץ כדי לצפות בילדים' : 'לחץ כדי לשנות סטטוס'}</div>
+                <div className={styles.changeStatusMessage}>{system.hasChildren ? 'לחץ כדי לצפות בילדים' : canEdit ? 'לחץ כדי לשנות סטטוס' : ''}</div>
             </div>
         </div>
     );
