@@ -1,0 +1,67 @@
+.pageContainer {
+    min-height: 100vh;
+    background: #121212;
+    padding: 32px 40px;
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    direction: rtl;
+}
+
+.pageTitle {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #f5f6f7;
+}
+
+.addButton {
+    background: #1c2128;
+    border: 1px solid #2a2f36;
+    border-radius: 8px;
+    padding: 9px 18px;
+    color: #e4e7eb;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.addButton:hover {
+    background: #21262d;
+    border-color: #3a4048;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 18px;
+}
+
+.centeredState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    gap: 12px;
+    background: #0d0f12;
+}
+
+.loadingText {
+    color: #8b93a1;
+    font-size: 0.9rem;
+}
+
+.emptyState {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 30vh;
+    color: #8b93a1;
+    font-size: 1rem;
+}

@@ -1,0 +1,48 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 50vh;
+    padding: 40px 20px;
+    text-align: center;
+    color: #e4e7eb;
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+.icon {
+    font-size: 2.5rem;
+    margin-bottom: 16px;
+    opacity: 0.85;
+}
+
+.title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #f5f6f7;
+    margin-bottom: 8px;
+}
+
+.message {
+    font-size: 0.95rem;
+    color: #8b93a1;
+    max-width: 400px;
+    line-height: 1.5;
+    margin-bottom: 24px;
+}
+
+.retryButton {
+    background: transparent;
+    border: 1px solid #3a4048;
+    border-radius: 6px;
+    padding: 8px 20px;
+    color: #e4e7eb;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.retryButton:hover {
+    background: #21262d;
+    border-color: #4a5058;
+}

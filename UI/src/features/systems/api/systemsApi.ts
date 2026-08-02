@@ -4,20 +4,21 @@ import {
     type CreateSystemServicePayload,
     type SystemQueryParams,
     type SystemServiceFilters,
+    type SystemCubeDTO,
 } from '../../../shared/types/system-interfaces';
 
 export const systemsService = {
-    getByQuery: async (queryParams: SystemQueryParams): Promise<SystemServiceDocument[]> => {
+    getByQuery: async (queryParams: SystemQueryParams): Promise<SystemCubeDTO[]> => {
         return (
-            await apiClient.get<SystemServiceDocument[]>('/systems', {
+            await apiClient.get<SystemCubeDTO[]>('/systems', {
                 params: queryParams,
             })
         ).data;
     },
 
-    getRoots: async (step: number, limit?: number): Promise<SystemServiceDocument[]> => {
+    getRoots: async (step: number, limit?: number): Promise<SystemCubeDTO[]> => {
         return (
-            await apiClient.get<SystemServiceDocument[]>('/systems/roots', {
+            await apiClient.get<SystemCubeDTO[]>('/systems/roots', {
                 params: { step, limit },
             })
         ).data;

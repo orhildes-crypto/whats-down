@@ -14,7 +14,7 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role }) => {
     const navigate = useNavigate();
 
     const { mutate: changeStatus, isPending: statusIsPending } = useChangeStatus();
-    const { mutate: rename, error } = useRename();
+    const { mutate: rename } = useRename();
 
     const [isEditingName, setIsEditingName] = useState(false);
     const [nameValue, setNameValue] = useState(system.name);
@@ -114,7 +114,7 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role }) => {
                         <button
                             type="button"
                             className={styles.actionButton}
-                            aria-label="שנה שם מערכת"
+                            aria-label="rename"
                             onClick={(e) => {
                                 handleStartEdit(e);
                             }}
@@ -127,7 +127,7 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role }) => {
                         <button
                             type="button"
                             className={styles.actionButton}
-                            aria-label="מחק מערכת"
+                            aria-label="delete"
                             onClick={() => {
                                 /* TODO: delete modal */
                             }}
@@ -140,7 +140,7 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role }) => {
                         <button
                             type="button"
                             className={styles.actionButton}
-                            aria-label="הוסף מערכת חדשה"
+                            aria-label="create"
                             onClick={() => {
                                 /* TODO: create modal */
                             }}
