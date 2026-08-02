@@ -1,4 +1,3 @@
-// refresh-token.manager.ts
 import crypto from 'crypto';
 import { randomUUID } from 'crypto';
 import { RefreshTokenModel } from './model.js';

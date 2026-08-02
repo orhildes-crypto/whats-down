@@ -138,7 +138,7 @@ export class UsersServiceManager {
     };
 
     static generateJWTToken = (user: UserDocument): string => {
-        return jwt.sign({ userId: user._id, role: user.role, userName: user.username }, config.jwt.secret, { expiresIn: '1h' });
+        return jwt.sign({ userId: user._id, role: user.role, username: user.username }, config.jwt.secret, { expiresIn: '1h' });
     };
 
     static toSafeUser = (user: UserDocument): SafeUserDocument => {
