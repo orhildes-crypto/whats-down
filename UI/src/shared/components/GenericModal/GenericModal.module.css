@@ -20,20 +20,24 @@
 }
 
 .header {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    justify-content: space-between;
     padding: 16px 20px;
     border-bottom: 1px solid #e5e7eb;
 }
 
 .title {
+    grid-column: 2;
     font-size: 18px;
     font-weight: 600;
     margin: 0;
+    text-align: center;
 }
 
 .closeButton {
+    grid-column: 3;
+    justify-self: end;
     background: none;
     border: none;
     font-size: 22px;
@@ -53,7 +57,7 @@
 
 .footer {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     gap: 8px;
     padding: 16px 20px;
     border-top: 1px solid #e5e7eb;

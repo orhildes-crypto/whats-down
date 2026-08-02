@@ -9,9 +9,10 @@ import { formatDate } from '../../../../shared/utils/formatDate';
 export interface SystemCubeProps {
     system: SystemCubeDTO;
     role: 'ADMIN' | 'EDITOR' | 'VIEWER';
+    onAddChild: () => void;
 }
 
-export const SystemCube: React.FC<SystemCubeProps> = ({ system, role }) => {
+export const SystemCube: React.FC<SystemCubeProps> = ({ system, role, onAddChild }) => {
     const navigate = useNavigate();
 
     const { mutate: changeStatus, isPending: statusIsPending } = useChangeStatus();
@@ -112,6 +113,7 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role }) => {
             </div>
 
             <div className={styles.footerContainer}>
+                <div className={styles.changeStatusMessage}>{system.hasChildren ? 'לחץ כדי לצפות בילדים' : canEdit ? 'לחץ כדי לשנות סטטוס' : ''}</div>
                 <div className={styles.cubeActions} onClick={(e) => e.stopPropagation()}>
                     {canEdit && (
                         <button
@@ -144,16 +146,12 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role }) => {
                             type="button"
                             className={styles.actionButton}
                             aria-label="create"
-                            onClick={() => {
-                                /* TODO: create modal */
-                            }}
+                            onClick={onAddChild}
                         >
                             ➕
                         </button>
                     )}
                 </div>
-
-                <div className={styles.changeStatusMessage}>{system.hasChildren ? 'לחץ כדי לצפות בילדים' : canEdit ? 'לחץ כדי לשנות סטטוס' : ''}</div>
             </div>
         </div>
     );

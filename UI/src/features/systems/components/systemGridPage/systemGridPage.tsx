@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useMe } from '../../../users/hooks/useMe';
 import { useSystems } from '../../hooks/useSystems';
@@ -6,6 +6,7 @@ import { SystemCube } from '../systemCube/systemCube';
 import { Spinner } from '../../../../shared/components/Spinner';
 import { ErrorPage } from '../../../../shared/components/ErrorPage/ErrorPage';
 import styles from './systemGridPage.module.css';
+import { CreateSystemModal } from '../createSystemModal/CreateSystemModal';
 
 export const SystemsGridPage: React.FC = () => {
     const { id } = useParams<{ id?: string }>();
@@ -13,6 +14,22 @@ export const SystemsGridPage: React.FC = () => {
 
     const { data: user, isLoading: isUserLoading } = useMe();
     const { data: systems, isLoading: isSystemsLoading, isError, refetch } = useSystems({ parentId, step: 0 });
+
+    const [createModalState, setCreateModalState] = useState<{
+        isOpen: boolean;
+        parentId: string | null;
+    }>({
+        isOpen: false,
+        parentId: null,
+    });
+
+    const openCreateModal = (targetParentId: string | null) => {
+        setCreateModalState({ isOpen: true, parentId: targetParentId });
+    };
+
+    const closeCreateModal = () => {
+        setCreateModalState((prev) => ({ ...prev, isOpen: false }));
+    };
 
     if (isUserLoading || isSystemsLoading) {
         return (
@@ -38,9 +55,11 @@ export const SystemsGridPage: React.FC = () => {
             <header className={styles.header}>
                 <h1 className={styles.pageTitle}>{parentId ? 'תת-מערכות' : 'עמוד הבית'}</h1>
                 <h1 className={styles.pageTitle}>{`ברוך שובך, ${user.username}`}</h1>
-                <button type="button" className={styles.addButton}>
-                    ➕ הוסף מערכת
-                </button>
+                {(user.role === 'ADMIN' || user.role === 'EDITOR') && (
+                    <button type="button" className={styles.addButton} onClick={() => openCreateModal(parentId)}>
+                        ➕ הוסף מערכת
+                    </button>
+                )}
             </header>
 
             {isEmpty ? (
@@ -50,10 +69,21 @@ export const SystemsGridPage: React.FC = () => {
             ) : (
                 <main className={styles.grid}>
                     {systems.map((system) => (
-                        <SystemCube key={system._id} system={system} role={user.role} />
+                        <SystemCube
+                            key={system._id}
+                            system={system}
+                            role={user.role}
+                            onAddChild={() => openCreateModal(system._id)}
+                        />
                     ))}
                 </main>
             )}
+
+            <CreateSystemModal
+                isOpen={createModalState.isOpen}
+                onClose={closeCreateModal}
+                parentId={createModalState.parentId}
+            />
         </div>
     );
 };
