@@ -4,6 +4,7 @@ import styles from './systemCube.module.css';
 import { useChangeStatus } from './hooks/useChangeStatus';
 import { useNavigate } from 'react-router-dom';
 import { useRename } from './hooks/useRename';
+import { formatDate } from '../../../../shared/utils/formatDate';
 
 export interface SystemCubeProps {
     system: SystemCubeDTO;
@@ -98,11 +99,11 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role }) => {
             <div className={styles.cubeContent}>
                 <div className={styles.infoRow}>
                     <span className={styles.infoLabel}>זמן יצירה:</span>
-                    <span>{system.createdAt}</span>
+                    <span>{formatDate(system.createdAt)}</span>
                 </div>
                 <div className={styles.infoRow}>
                     <span className={styles.infoLabel}>עדכון סטטוס אחרון:</span>
-                    <span>{system.statusUpdatedAt}</span>
+                    <span>{formatDate(system.statusUpdatedAt)}</span>
                 </div>
                 <div className={styles.infoRow}>
                     <span className={styles.infoLabel}>יוצר:</span>
