@@ -10,7 +10,7 @@ export class SystemServiceManager {
             .lean()
             .exec();
 
-        return Promise.all(
+        return await Promise.all(
             systems.map(async (system) => ({
                 ...system,
                 hasChildren: await this.checkForKids(system._id.toString()),
@@ -34,7 +34,7 @@ export class SystemServiceManager {
             .lean()
             .exec();
 
-        return Promise.all(
+        return await Promise.all(
             systems.map(async (system) => ({
                 ...system,
                 hasChildren: await this.checkForKids(system._id.toString()),

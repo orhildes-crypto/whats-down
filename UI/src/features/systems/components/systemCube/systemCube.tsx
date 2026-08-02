@@ -53,6 +53,7 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role }) => {
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             handleSaveName();
+            setIsEditingName(false);
         } else if (e.key === 'Escape') {
             setNameValue(system.name);
             setIsEditingName(false);
@@ -81,6 +82,7 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role }) => {
                     <input
                         ref={inputRef}
                         type="text"
+                        maxLength={35}
                         className={styles.titleInput}
                         value={nameValue}
                         onChange={(e) => setNameValue(e.target.value)}

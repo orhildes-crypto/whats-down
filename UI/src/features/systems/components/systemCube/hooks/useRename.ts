@@ -15,7 +15,7 @@ export const useRename = () => {
             // TODO - If getById is implemented in front - add defense againt old data not being array
             queryClient.setQueriesData<SystemServiceDocument[]>({ queryKey: ['systems'] }, (oldData) => {
                 if (!oldData) return [];
-                return oldData.map((system) => (system._id === updatedSystem._id ? updatedSystem : system));
+                return oldData.map((system) => (system._id === updatedSystem._id ? { ...system, name: updatedSystem.name } : system));
             });
         },
     });

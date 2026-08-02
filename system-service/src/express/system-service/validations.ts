@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { zodMongoObjectId } from '@whats-down/shared';
 
 const MIN_NAME_LENGTH = 3;
-const MAX_NAME_LENGTH = 15;
+const MAX_NAME_LENGTH = 35;
 
 const requiredFields = z
     .object({
