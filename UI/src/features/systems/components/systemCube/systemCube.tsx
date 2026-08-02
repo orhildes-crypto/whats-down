@@ -2,6 +2,7 @@ import React from 'react';
 import { type SystemCubeDTO } from '../../../../shared/types/system-interfaces';
 import styles from './systemCube.module.css';
 import { useChangeStatus } from './hooks/useChangeStatus';
+import { useNavigate } from 'react-router-dom';
 
 export interface SystemCubeProps {
     system: SystemCubeDTO;
@@ -9,6 +10,8 @@ export interface SystemCubeProps {
 }
 
 export const SystemCube: React.FC<SystemCubeProps> = ({ system, role }) => {
+    const navigate = useNavigate();
+
     const { mutate: changeStatus, isPending } = useChangeStatus();
 
     const isUp = system.status === 'UP';
@@ -18,10 +21,14 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role }) => {
     const badgeStatusClass = isUp ? styles.badgeUp : styles.badgeDown;
 
     const handleStatusToggle = () => {
-        if (!canEdit || isPending) return;
+        if (system.hasChildren) {
+            navigate(`/systems/${system._id}`);
+        } else {
+            if (!canEdit || isPending) return;
 
-        const newStatus = isUp ? 'DOWN' : 'UP';
-        changeStatus({ systemId: system._id, status: newStatus });
+            const newStatus = isUp ? 'DOWN' : 'UP';
+            changeStatus({ systemId: system._id, status: newStatus });
+        }
     };
 
     return (
@@ -47,7 +54,50 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role }) => {
                 </div>
             </div>
 
-            <div className={styles.cubeActions}>{/* לוגיקת כפתורים בהמשך */}</div>
+            <div className={styles.footerContainer}>
+                <div className={styles.cubeActions} onClick={(e) => e.stopPropagation()}>
+                    {canEdit && (
+                        <button
+                            type="button"
+                            className={styles.actionButton}
+                            aria-label="שנה שם מערכת"
+                            onClick={() => {
+                                /* TODO: rename */
+                            }}
+                        >
+                            ✏️
+                        </button>
+                    )}
+
+                    {role === 'ADMIN' && (
+                        <button
+                            type="button"
+                            className={styles.actionButton}
+                            aria-label="מחק מערכת"
+                            onClick={() => {
+                                /* TODO: delete modal */
+                            }}
+                        >
+                            🗑️
+                        </button>
+                    )}
+
+                    {canEdit && (
+                        <button
+                            type="button"
+                            className={styles.actionButton}
+                            aria-label="הוסף מערכת חדשה"
+                            onClick={() => {
+                                /* TODO: create modal */
+                            }}
+                        >
+                            ➕
+                        </button>
+                    )}
+                </div>
+
+                <div className={styles.changeStatusMessage}>{system.hasChildren ? 'לחץ כדי לצפות בילדים' : 'לחץ כדי לשנות סטטוס'}</div>
+            </div>
         </div>
     );
 };
