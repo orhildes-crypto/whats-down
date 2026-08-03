@@ -17,7 +17,6 @@ export const config = {
             : env.get('GOOGLE_CLIENT_ID').default('local-dev-client-id-123').asString(),
     },
     jwt: {
-        
         secret: isProduction 
             ? env.get('JWT_SECRET').required().asString()
             : env.get('JWT_SECRET').default('local-dev-secret-key-123').asString(),

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './LoginForm.module.css';
-import { useLogin } from './useLogin';
+import { useLogin } from './hooks/useLogin';
+import { GoogleLoginButton } from './GoogleLoginButton/GoogleLoginButton';
 
 export const LoginPage: React.FC = () => {
     const [username, setUsername] = useState<string>('');
@@ -14,12 +15,8 @@ export const LoginPage: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        try {
-            await login({ username, password });
-            navigate('/');
-        } catch {
-            // Error is already handeled
-        }
+        await login({ username, password });
+        navigate('/');
     };
 
     return (
@@ -67,6 +64,8 @@ export const LoginPage: React.FC = () => {
                         {isPending ? 'מתחבר...' : 'התחבר'}
                     </button>
                 </form>
+
+                <GoogleLoginButton />
 
                 <div className={styles.registerSection}>
                     <p className={styles.registerText}>עדיין אין לך חשבון?</p>
