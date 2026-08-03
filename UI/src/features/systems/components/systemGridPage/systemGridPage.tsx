@@ -7,13 +7,20 @@ import { Spinner } from '../../../../shared/components/Spinner';
 import { ErrorPage } from '../../../../shared/components/ErrorPage/ErrorPage';
 import styles from './systemGridPage.module.css';
 import { CreateSystemModal } from '../createSystemModal/CreateSystemModal';
+import { useGetById } from '../../hooks/useGetById';
+import { useAncestors } from '../../hooks/useAncestors';
+import { Breadcrumbs, type BreadcrumbItem } from '../Breadcrumbs/Breadcrumbs';
 
 export const SystemsGridPage: React.FC = () => {
     const { id } = useParams<{ id?: string }>();
     const parentId = id ?? null;
 
     const { data: user, isLoading: isUserLoading } = useMe();
+    const { data: parentSystem, isLoading: isParentSystemLoading } = useGetById(parentId);
+    const { data: ancestors, isLoading: isAncestorsLoading } = useAncestors(parentId);
     const { data: systems, isLoading: isSystemsLoading, isError, refetch } = useSystems({ parentId, step: 0 });
+
+    const items: BreadcrumbItem[] = ancestors ? [...ancestors].reverse().map((anc) => ({ id: anc._id, name: anc.name })) : [];
 
     const [createModalState, setCreateModalState] = useState<{
         isOpen: boolean;
@@ -49,6 +56,7 @@ export const SystemsGridPage: React.FC = () => {
     }
 
     const isEmpty = !systems || systems.length === 0;
+    const isBreadcrumbsLoading = parentId ? (isParentSystemLoading || isAncestorsLoading) : false;
 
     return (
         <div className={styles.pageContainer}>
@@ -61,6 +69,14 @@ export const SystemsGridPage: React.FC = () => {
                     </button>
                 )}
             </header>
+            {isBreadcrumbsLoading ? (
+                    <div className={styles.breadcrumbsSkeleton}>טוען נתיב...</div>
+                ) : (
+                    <Breadcrumbs 
+                        items={items} 
+                        currentSystem={parentSystem ? { id: parentSystem._id, name: parentSystem.name } : null} 
+                    />
+                )}
 
             {isEmpty ? (
                 <div className={styles.emptyState}>
@@ -69,21 +85,12 @@ export const SystemsGridPage: React.FC = () => {
             ) : (
                 <main className={styles.grid}>
                     {systems.map((system) => (
-                        <SystemCube
-                            key={system._id}
-                            system={system}
-                            role={user.role}
-                            onAddChild={() => openCreateModal(system._id)}
-                        />
+                        <SystemCube key={system._id} system={system} role={user.role} onAddChild={() => openCreateModal(system._id)} />
                     ))}
                 </main>
             )}
 
-            <CreateSystemModal
-                isOpen={createModalState.isOpen}
-                onClose={closeCreateModal}
-                parentId={createModalState.parentId}
-            />
+            <CreateSystemModal isOpen={createModalState.isOpen} onClose={closeCreateModal} parentId={createModalState.parentId} />
         </div>
     );
 };

@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './Breadcrumbs.module.css';
 import { useNavigate } from 'react-router-dom';
 
-type BreadcrumbItem = {
+export type BreadcrumbItem = {
     id: string | null;
     name: string;
 };
