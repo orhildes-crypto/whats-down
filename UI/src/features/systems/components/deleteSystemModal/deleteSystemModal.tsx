@@ -1,4 +1,4 @@
-import { GenericModal } from '../../../../../shared/components/GenericModal/GenericModal';
+import { GenericModal } from '../../../../shared/components/GenericModal/GenericModal';
 import { useDeleteSystem } from './useDeleteSystem';
 import styles from './deleteSystemModal.module.css';
 

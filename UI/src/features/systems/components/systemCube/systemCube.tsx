@@ -5,7 +5,7 @@ import { useChangeStatus } from './hooks/useChangeStatus';
 import { useNavigate } from 'react-router-dom';
 import { useRename } from './hooks/useRename';
 import { formatDate } from '../../../../shared/utils/formatDate';
-import { DeleteSystemModal } from '../deleteSystemDialog/deleteSystemModal/deleteSystemModal';
+import { DeleteSystemModal } from '../deleteSystemModal/deleteSystemModal';
 
 export interface SystemCubeProps {
     system: SystemCubeDTO;
