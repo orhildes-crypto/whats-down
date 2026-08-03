@@ -9,7 +9,7 @@ export const config = {
     },
     mongo: {
         uri: env.get('MONGO_URI').default('mongodb://localhost').required().asString(),
-        userCollectionName: env.get('USER_COLLECTION_NAME').default('users').required().asString(),
+        userCollectionName: env.get('USERS_SERVICE_COLLECTION_NAME').default('users').required().asString(),
     },
     google: {
         clientId: isProduction 
