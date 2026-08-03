@@ -27,7 +27,6 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role, onAddChild
     const canEdit = role === 'ADMIN' || role === 'EDITOR';
 
     const containerStatusClass = isUp ? styles.statusUp : styles.statusDown;
-    const badgeStatusClass = isUp ? styles.badgeUp : styles.badgeDown;
 
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
@@ -94,7 +93,7 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role, onAddChild
 
     return (
         <div className={`${styles.cubeContainer} ${containerStatusClass}`} onClick={handleStatusToggle}>
-            <div className={`${styles.statusBadge} ${badgeStatusClass}`}>{system.status}</div>
+            <div className={`${styles.statusBadge}`}>{system.status}</div>
 
             <div className={styles.cubeHeader}>
                 {isEditingName ? (
