@@ -1,0 +1,29 @@
+.breadcrumbsContainer {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 8px 0;
+    font-size: 14px;
+}
+
+.breadcrumbLink {
+    color: #363c49;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.breadcrumbLink:hover {
+    text-decoration: underline;
+}
+
+.separator {
+    color: #9ca3af;
+    user-select: none;
+}
+
+.currentSystem {
+    color: #374151;
+    font-weight: 600;
+    white-space: nowrap;
+}
