@@ -5,6 +5,7 @@ import { useChangeStatus } from './hooks/useChangeStatus';
 import { useNavigate } from 'react-router-dom';
 import { useRename } from './hooks/useRename';
 import { formatDate } from '../../../../shared/utils/formatDate';
+import { DeleteSystemModal } from '../deleteSystemDialog/deleteSystemModal/deleteSystemModal';
 
 export interface SystemCubeProps {
     system: SystemCubeDTO;
@@ -28,6 +29,16 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role, onAddChild
     const containerStatusClass = isUp ? styles.statusUp : styles.statusDown;
     const badgeStatusClass = isUp ? styles.badgeUp : styles.badgeDown;
 
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+    const openDeleteModal = () => {
+        setIsDeleteModalOpen(true);
+    };
+
+    const closeDeleteModal = () => {
+        setIsDeleteModalOpen(false);
+    };
+
     useEffect(() => {
         if (isEditingName && inputRef.current) {
             inputRef.current.focus();
@@ -43,10 +54,16 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role, onAddChild
     const handleSaveName = () => {
         const newName = nameValue.trim();
         if (newName && newName !== system.name) {
-            rename({ systemId: system._id, newName: newName }, { onError: () => {
-                setNameValue(system.name);
-                setIsEditingName(false);
-            }, onSuccess: () => setIsEditingName(false)});
+            rename(
+                { systemId: system._id, newName: newName },
+                {
+                    onError: () => {
+                        setNameValue(system.name);
+                        setIsEditingName(false);
+                    },
+                    onSuccess: () => setIsEditingName(false),
+                },
+            );
         } else {
             setNameValue(system.name);
         }
@@ -128,13 +145,13 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role, onAddChild
                         </button>
                     )}
 
-                    {role === 'ADMIN' && (
+                    {role === 'ADMIN' && !system.hasChildren && (
                         <button
                             type="button"
                             className={styles.actionButton}
                             aria-label="delete"
                             onClick={() => {
-                                /* TODO: delete modal */
+                                openDeleteModal()
                             }}
                         >
                             🗑️
@@ -142,17 +159,17 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role, onAddChild
                     )}
 
                     {canEdit && (
-                        <button
-                            type="button"
-                            className={styles.actionButton}
-                            aria-label="create"
-                            onClick={onAddChild}
-                        >
+                        <button type="button" className={styles.actionButton} aria-label="create" onClick={onAddChild}>
                             ➕
                         </button>
                     )}
                 </div>
             </div>
+            <DeleteSystemModal 
+                isOpen={isDeleteModalOpen} 
+                onClose={closeDeleteModal} 
+                systemId={system._id} 
+                systemName={system.name} />
         </div>
     );
 };
