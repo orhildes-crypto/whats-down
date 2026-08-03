@@ -56,27 +56,15 @@ export const SystemsGridPage: React.FC = () => {
     }
 
     const isEmpty = !systems || systems.length === 0;
-    const isBreadcrumbsLoading = parentId ? (isParentSystemLoading || isAncestorsLoading) : false;
+    const isBreadcrumbsLoading = parentId ? isParentSystemLoading || isAncestorsLoading : false;
 
     return (
         <div className={styles.pageContainer}>
-            <header className={styles.header}>
-                <h1 className={styles.pageTitle}>{parentId ? 'תת-מערכות' : 'עמוד הבית'}</h1>
-                <h1 className={styles.pageTitle}>{`ברוך שובך, ${user.username}`}</h1>
-                {(user.role === 'ADMIN' || user.role === 'EDITOR') && (
-                    <button type="button" className={styles.addButton} onClick={() => openCreateModal(parentId)}>
-                        ➕ הוסף מערכת
-                    </button>
-                )}
-            </header>
             {isBreadcrumbsLoading ? (
-                    <div className={styles.breadcrumbsSkeleton}>טוען נתיב...</div>
-                ) : (
-                    <Breadcrumbs 
-                        items={items} 
-                        currentSystem={parentSystem ? { id: parentSystem._id, name: parentSystem.name } : null} 
-                    />
-                )}
+                <div className={styles.breadcrumbsSkeleton}>טוען נתיב...</div>
+            ) : (
+                <Breadcrumbs items={items} currentSystem={parentSystem ? { id: parentSystem._id, name: parentSystem.name } : null} />
+            )}
 
             {isEmpty ? (
                 <div className={styles.emptyState}>
@@ -88,6 +76,11 @@ export const SystemsGridPage: React.FC = () => {
                         <SystemCube key={system._id} system={system} role={user.role} onAddChild={() => openCreateModal(system._id)} />
                     ))}
                 </main>
+            )}
+            {(user.role === 'ADMIN' || user.role === 'EDITOR') && (
+                <button type="button" className={styles.addButton} onClick={() => openCreateModal(parentId)}>
+                    ➕ הוסף מערכת
+                </button>
             )}
 
             <CreateSystemModal isOpen={createModalState.isOpen} onClose={closeCreateModal} parentId={createModalState.parentId} />
