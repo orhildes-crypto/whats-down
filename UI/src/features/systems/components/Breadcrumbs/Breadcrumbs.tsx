@@ -35,7 +35,7 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, currentSystem }
             )}
             {items.map((item) => (
                 <React.Fragment key={item.id ?? 'root'}>
-                    <span className={styles.separator}>/</span>
+                    <span className={styles.separator}>{`=>`}</span>
                     <span className={styles.breadcrumbLink} onClick={() => handleNavigate(item.id)}>
                         {item.name}
                     </span>
@@ -44,7 +44,7 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, currentSystem }
 
             {currentSystem && (
                 <>
-                    <span className={styles.separator}>/</span>
+                    <span className={styles.separator}>{`=>`}</span>
                     <span className={styles.currentSystem}>{currentSystem.name}</span>
                 </>
             )}

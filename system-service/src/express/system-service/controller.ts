@@ -36,7 +36,7 @@ export class SystemServiceController {
         res.json(await SystemServiceManager.getById(req.params.id));
     };
 
-    static getParents = async (req: TypedRequest<typeof getAncestorsByIdRequestSchema>, res: Response) => {
+    static getAncestors = async (req: TypedRequest<typeof getAncestorsByIdRequestSchema>, res: Response) => {
         res.json(await SystemServiceManager.getAncestors(req.params.id));
     };
 

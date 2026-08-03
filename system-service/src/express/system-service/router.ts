@@ -37,11 +37,11 @@ systemServiceRouter.get('/:id',
     authorizationMiddleware(['ADMIN', 'EDITOR', 'VIEWER']),
     validateRequest(getByIdRequestSchema), 
     wrapController(SystemServiceController.getById));
-systemServiceRouter.get('/:id/parents',
+systemServiceRouter.get('/:id/ancestors',
     authenticateMiddleware(config.jwt.secret),
     authorizationMiddleware(['ADMIN', 'EDITOR', 'VIEWER']),
     validateRequest(getAncestorsByIdRequestSchema),
-    wrapController(SystemServiceController.getParents));
+    wrapController(SystemServiceController.getAncestors));
 
 systemServiceRouter.post('/', 
     authenticateMiddleware(config.jwt.secret), 
