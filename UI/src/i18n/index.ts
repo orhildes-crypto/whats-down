@@ -14,6 +14,9 @@ import createSystemModalHe from '../features/systems/components/createSystemModa
 import createSystemModalEn from '../features/systems/components/createSystemModal/locales/createModal.en.json';
 import deleteSystemModalHe from '../features/systems/components/deleteSystemModal/locales/deleteModal.he.json';
 import deleteSystemModalEn from '../features/systems/components/deleteSystemModal/locales/deleteModal.en.json';
+import errorPageHe from '../shared/components/ErrorPage/locales/errorPage.he.json';
+import errorPageEn from '../shared/components/ErrorPage/locales/errorPage.en.json';
+
 const STORAGE_KEY = 'lang';
 
 const savedLang = localStorage.getItem(STORAGE_KEY);
@@ -27,7 +30,8 @@ i18next.use(initReactI18next).init({
             systemCube: systemCubeHe,
             systemsPage: systemsPageHe,
             createSystemModal: createSystemModalHe,
-            deleteSystemModal: deleteSystemModalHe
+            deleteSystemModal: deleteSystemModalHe,
+            errorPage: errorPageHe
         },
         en: {
             loginForm: loginFormEn,
@@ -36,7 +40,8 @@ i18next.use(initReactI18next).init({
             systemCube: systemCubeEn,
             systemsPage: systemsPageEn,
             createSystemModal: createSystemModalEn,
-            deleteSystemModal: deleteSystemModalEn
+            deleteSystemModal: deleteSystemModalEn,
+            errorPage: errorPageEn
         },
     },
     lng: savedLang ?? 'he',
