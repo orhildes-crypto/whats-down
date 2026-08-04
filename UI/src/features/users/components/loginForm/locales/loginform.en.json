@@ -1,0 +1,11 @@
+{
+    "title": "Login",
+    "subtitle": "Enter your login details to continue",
+    "username": "Username",
+    "password": "Password",
+    "loginButton": "Login",
+    "logingIn": "Logging in...",
+    "loginError": "Invalid username or password",
+    "registerText": "Don't have an account? ",
+    "registerLink": "Create a new account"
+}

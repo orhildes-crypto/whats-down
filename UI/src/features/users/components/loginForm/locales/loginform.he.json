@@ -1,0 +1,11 @@
+{
+    "title": "התחברות למערכת",
+    "subtitle": "הזן את פרטי ההתחברות שלך כדי להמשיך",
+    "username": "שם משתמש",
+    "password": "סיסמה",
+    "loginButton": "התחבר",
+    "logingIn": "מתחבר...",
+    "loginError": "שם המשתמש או הסיסמה שגויים",
+    "registerText": "אין לך חשבון? ",
+    "registerLink": "צור חשבון חדש"
+}

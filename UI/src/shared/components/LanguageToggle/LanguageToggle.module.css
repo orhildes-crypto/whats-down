@@ -1,13 +1,16 @@
 .toggleButton {
-    background: none;
-    border: 1px solid #d1d5db;
+    background: #2eaae6;
+    border: 1px solid #ffffff;
     border-radius: 6px;
     padding: 6px 12px;
     font-size: 13px;
     cursor: pointer;
-    color: #374151;
+    color: #ffffff;
+    width: 80px;
+
+    transition: background-color 0.3s ease;
 }
 
 .toggleButton:hover {
-    background-color: #f3f4f6;
+    background-color: rgb(57, 110, 201);
 }

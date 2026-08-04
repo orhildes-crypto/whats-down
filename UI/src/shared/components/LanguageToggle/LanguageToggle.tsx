@@ -13,7 +13,7 @@ export const LanguageToggle: React.FC = () => {
 
     return (
         <button type="button" className={styles.toggleButton} onClick={handleToggle}>
-            {isHebrew ? 'EN' : 'עברית'}
+            {isHebrew ? 'english' : 'עברית'}
         </button>
     );
 };
