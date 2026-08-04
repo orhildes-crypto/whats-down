@@ -1,0 +1,5 @@
+{
+    "welcome": "ברוך שובך {{username}}",
+    "logoutButton": "התנתקות",
+    "logoutPending": "מתנתק..."
+}

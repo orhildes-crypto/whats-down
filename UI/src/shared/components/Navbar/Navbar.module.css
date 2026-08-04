@@ -12,6 +12,8 @@
 
 .side:last-child {
     justify-self: end;
+    display: flex;
+    gap: 1rem;
 }
 
 .center {
