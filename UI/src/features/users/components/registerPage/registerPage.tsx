@@ -5,6 +5,8 @@ import { useRegister } from './useRegister';
 import { type CreateLocalUserPayload } from '../../../../shared/types/user-interfaces';
 import { createLocalUserSchema } from '@whats-down/shared/common';
 import { getErrorMessage } from '../../../../shared/utils/zodErrorMessages';
+import { LanguageToggle } from '../../../../shared/components/LanguageToggle/LanguageToggle';
+import { useTranslation } from 'react-i18next';
 
 export const RegisterPage: React.FC = () => {
     const [registerData, setRegisterData] = useState<CreateLocalUserPayload>({ email: '', username: '', password: '' });
@@ -12,6 +14,8 @@ export const RegisterPage: React.FC = () => {
     const [showPassword, setShowPassword] = useState<boolean>(false);
 
     const navigate = useNavigate();
+
+    const { t } = useTranslation('registerPage');
 
     type FieldName = keyof CreateLocalUserPayload;
 
@@ -77,16 +81,19 @@ export const RegisterPage: React.FC = () => {
 
     return (
         <div className={styles.container}>
+            <div className={styles.buttonContainer}>
+                <LanguageToggle />
+            </div>
             <div className={styles.card}>
-                <h1 className={styles.title}>הרשמה למערכת</h1>
-                <p className={styles.subtitle}>צור חשבון חדש כדי להתחיל</p>
+                <h1 className={styles.title}>{t('title')}</h1>
+                <p className={styles.subtitle}>{t('subtitle')}</p>
 
-                {error && <div className={styles.errorMessage}>{`could not register - ${error.message}`}</div>}
+                {error && <div className={styles.errorMessage}>{`t('registerError') - ${error.message}`}</div>}
 
                 <form className={styles.form} onSubmit={handleSubmit}>
                     <div className={styles.inputGroup}>
                         <label htmlFor="username" className={styles.label}>
-                            שם משתמש
+                            {t('username')}
                         </label>
                         <input id="username" type="text" className={styles.input} value={registerData.username} onChange={handleChange} />
                         {errors.username && <span className={styles.fieldError}>{errors.username}</span>}
@@ -94,7 +101,7 @@ export const RegisterPage: React.FC = () => {
 
                     <div className={styles.inputGroup}>
                         <label htmlFor="email" className={styles.label}>
-                            אימייל
+                            {t('email')}
                         </label>
                         <input id="email" type="email" className={styles.input} value={registerData.email} onChange={handleChange} />
                         {errors.email && <span className={styles.fieldError}>{errors.email}</span>}
@@ -102,7 +109,7 @@ export const RegisterPage: React.FC = () => {
 
                     <div className={styles.inputGroup}>
                         <label htmlFor="password" className={styles.label}>
-                            סיסמה
+                            {t('password')}
                         </label>
                         <div className={styles.passwordWrapper}>
                             <input
@@ -112,11 +119,7 @@ export const RegisterPage: React.FC = () => {
                                 value={registerData.password}
                                 onChange={handleChange}
                             />
-                            <button
-                                type="button" 
-                                className={styles.togglePasswordButton}
-                                onClick={() => setShowPassword((prev) => !prev)}
-                            >
+                            <button type="button" className={styles.togglePasswordButton} onClick={() => setShowPassword((prev) => !prev)}>
                                 {'👁️'}
                             </button>
                         </div>
@@ -124,12 +127,12 @@ export const RegisterPage: React.FC = () => {
                     </div>
 
                     <button type="submit" className={styles.submitButton} disabled={isPending}>
-                        {isPending ? 'נרשם...' : 'הרשם'}
+                        {isPending ? t('registerPending') : t('registerButton')}
                     </button>
                 </form>
 
                 <div className={styles.loginSection}>
-                    <p className={styles.loginText}>כבר יש לך חשבון?</p>
+                    <p className={styles.loginText}>{t('loginText')}</p>
                     <button
                         type="button"
                         className={styles.loginButton}
@@ -137,7 +140,7 @@ export const RegisterPage: React.FC = () => {
                             navigate('/login');
                         }}
                     >
-                        התחברות למערכת
+                        {t('loginLink')}
                     </button>
                 </div>
             </div>

@@ -8,6 +8,12 @@
     font-family: system-ui, -apple-system, sans-serif;
 }
 
+.buttonContainer {
+    position: fixed;
+    top: 3rem;
+    right: 3rem;
+}
+
 .card {
     background-color: #ffffff;
     padding: 2.5rem;
