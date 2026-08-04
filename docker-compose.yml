@@ -37,9 +37,9 @@ services:
       PORT: 5000
       NODE_ENV: production
       MONGO_URI: mongodb://mongo:27017/whats-down
-      JWT_SECRET: ${JWT_SECRET:-local-dev-secret-key-123}
+      JWT_SECRET: ${JWT_SECRET}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-560795352096-014p20nb8gq6rfe5h1pujlc93ljebrb4.apps.googleusercontent.com}
-      SYSTEM_SERVICE_COLLECTION_NAME: system-service
+      USERS_SERVICE_COLLECTION_NAME: users
     depends_on:
       mongo:
         condition: service_healthy
@@ -57,7 +57,7 @@ services:
       PORT: 8000
       NODE_ENV: production
       MONGO_URI: mongodb://mongo:27017/whats-down
-      JWT_SECRET: ${JWT_SECRET:-local-dev-secret-key-123}
+      JWT_SECRET: ${JWT_SECRET}
       SYSTEM_SERVICE_COLLECTION_NAME: system-service
     depends_on:
       mongo:
@@ -77,7 +77,7 @@ services:
       NODE_ENV: production
       USERS_SERVICE_URL: http://users-service:5000
       SYSTEMS_SERVICE_URL: http://system-service:8000
-      JWT_SECRET: ${JWT_SECRET:-local-dev-secret-key-123}
+      JWT_SECRET: ${JWT_SECRET}
     depends_on:
       - users-service
       - system-service
