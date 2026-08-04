@@ -9,6 +9,23 @@
     cursor: pointer;
 }
 
+.cancelButton {
+    background-color: #888383;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-size: 15px;
+    font-weight: 799;
+    cursor: pointer;
+
+    transition: background-color 0.3s ease;
+}
+
+.cancelButton:hover {
+    background-color: #494545;
+}
+
 .validationMessage {
     display: flex;
     justify-content: center;

@@ -3,13 +3,16 @@ import { z } from 'zod';
 import { GenericModal } from '../../../../shared/components/GenericModal/GenericModal';
 import { useCreateSystem } from './useCreateSystem';
 import styles from './CreateSystemModal.module.css';
+import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 
-const createSystemSchema = z.object({
-    name: z
-        .string()
-        .min(3, 'שם המערכת חייב להכיל לפחות 3 תווים')
-        .max(35, 'שם המערכת יכול להכיל עד 35 תווים'),
-});
+const createSystemSchema = (t: TFunction<'createSystemModal'>) =>
+    z.object({
+        name: z
+            .string()
+            .min(3, t('nameTooShort', { min: 3 }))
+            .max(35, t('nameTooLong', { max: 35 })),
+    });
 
 type CreateSystemModalProps = {
     isOpen: boolean;
@@ -18,6 +21,8 @@ type CreateSystemModalProps = {
 };
 
 export const CreateSystemModal = ({ isOpen, onClose, parentId }: CreateSystemModalProps) => {
+    const { t } = useTranslation('createSystemModal');
+
     const [name, setName] = useState('');
     const [error, setError] = useState<string | null>(null);
 
@@ -30,7 +35,8 @@ export const CreateSystemModal = ({ isOpen, onClose, parentId }: CreateSystemMod
     };
 
     const handleSubmit = () => {
-        const result = createSystemSchema.safeParse({ name });
+        const schema = createSystemSchema(t);
+        const result = schema.safeParse({ name });
 
         if (!result.success) {
             setError(result.error.issues[0].message);
@@ -40,12 +46,12 @@ export const CreateSystemModal = ({ isOpen, onClose, parentId }: CreateSystemMod
         setError(null);
 
         createSystem(
-            { payload: { name: result.data.name, parentId }},
+            { payload: { name: result.data.name, parentId } },
             {
                 onSuccess: () => {
                     handleClose();
                 },
-            }
+            },
         );
     };
 
@@ -53,21 +59,16 @@ export const CreateSystemModal = ({ isOpen, onClose, parentId }: CreateSystemMod
         <GenericModal
             isOpen={isOpen}
             onClose={handleClose}
-            title="הוספת מערכת חדשה"
+            title={t('title')}
             confirmButton={
-                <button
-                    type="button"
-                    className={styles.confirmButton}
-                    onClick={handleSubmit}
-                    disabled={isPending}
-                >
-                    {isPending ? 'יוצר...' : 'צור מערכת'}
+                <button type="button" className={styles.confirmButton} onClick={handleSubmit} disabled={isPending}>
+                    {isPending ? t('submitting') : t('submitButton')}
                 </button>
             }
         >
             <div className={styles.field}>
                 <label htmlFor="system-name" className={styles.label}>
-                    שם המערכת
+                    {t('systemName')}
                 </label>
                 <input
                     id="system-name"

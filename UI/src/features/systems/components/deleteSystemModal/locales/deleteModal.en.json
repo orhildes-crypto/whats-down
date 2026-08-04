@@ -1,0 +1,7 @@
+{
+    "title": "Delete system {{systemName}}",
+    "confirmButton": "Delete system",
+    "deleting": "deleting...",
+    "validationMessage": "Are you certain you want to delete system {{systemName}}?",
+    "cancelDelete": "Cancel"
+}

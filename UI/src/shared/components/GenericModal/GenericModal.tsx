@@ -8,9 +8,10 @@ type ModalProps = {
     title: string;
     children: ReactNode;
     confirmButton: ReactNode;
+    cancelButton?: ReactNode; 
 };
 
-export const GenericModal = ({ isOpen, onClose, title, children, confirmButton }: ModalProps) => {
+export const GenericModal = ({ isOpen, onClose, title, children, confirmButton, cancelButton }: ModalProps) => {
     if (!isOpen) {
         return null;
     }
@@ -32,7 +33,7 @@ export const GenericModal = ({ isOpen, onClose, title, children, confirmButton }
 
                 <div className={styles.body}>{children}</div>
 
-                <div className={styles.footer}>{confirmButton}</div>
+                <div className={styles.footer}>{cancelButton}{confirmButton}</div>
             </div>
         </div>,
         document.body

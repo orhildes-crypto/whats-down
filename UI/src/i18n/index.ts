@@ -10,7 +10,10 @@ import systemCubeHe from '../features/systems/components/systemCube/locales/syst
 import systemCubeEn from '../features/systems/components/systemCube/locales/systemCube.en.json';
 import systemsPageHe from '../features/systems/components/systemGridPage/locales/systemPage.he.json';
 import systemsPageEn from '../features/systems/components/systemGridPage/locales/systemPage.en.json';
-
+import createSystemModalHe from '../features/systems/components/createSystemModal/locales/createModal.he.json';
+import createSystemModalEn from '../features/systems/components/createSystemModal/locales/createModal.en.json';
+import deleteSystemModalHe from '../features/systems/components/deleteSystemModal/locales/deleteModal.he.json';
+import deleteSystemModalEn from '../features/systems/components/deleteSystemModal/locales/deleteModal.en.json';
 const STORAGE_KEY = 'lang';
 
 const savedLang = localStorage.getItem(STORAGE_KEY);
@@ -22,14 +25,18 @@ i18next.use(initReactI18next).init({
             registerPage: registerPageHe,
             navbar: navbarHe,
             systemCube: systemCubeHe,
-            systemsPage: systemsPageHe
+            systemsPage: systemsPageHe,
+            createSystemModal: createSystemModalHe,
+            deleteSystemModal: deleteSystemModalHe
         },
         en: {
             loginForm: loginFormEn,
             registerPage: registerPageEn,
             navbar: navbarEn,
             systemCube: systemCubeEn,
-            systemsPage: systemsPageEn
+            systemsPage: systemsPageEn,
+            createSystemModal: createSystemModalEn,
+            deleteSystemModal: deleteSystemModalEn
         },
     },
     lng: savedLang ?? 'he',

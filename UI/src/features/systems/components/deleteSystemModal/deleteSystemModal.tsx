@@ -1,6 +1,7 @@
 import { GenericModal } from '../../../../shared/components/GenericModal/GenericModal';
 import { useDeleteSystem } from './useDeleteSystem';
 import styles from './deleteSystemModal.module.css';
+import { useTranslation } from 'react-i18next';
 
 type DeleteSystemModalProps = {
     isOpen: boolean;
@@ -10,7 +11,7 @@ type DeleteSystemModalProps = {
 };
 
 export const DeleteSystemModal = ({ isOpen, onClose, systemId, systemName }: DeleteSystemModalProps) => {
-
+    const { t } = useTranslation('deleteSystemModal');
     const { mutate: deleteSystem, isPending } = useDeleteSystem();
 
     const handleClose = () => {
@@ -32,14 +33,19 @@ export const DeleteSystemModal = ({ isOpen, onClose, systemId, systemName }: Del
         <GenericModal
             isOpen={isOpen}
             onClose={handleClose}
-            title={`מחיקת מערכת ${systemName}`}
+            title={t('title', { systemName: systemName })}
             confirmButton={
                 <button type="button" className={styles.confirmButton} onClick={handleSubmit} disabled={isPending}>
-                    {isPending ? 'מוחק' : 'מחק מערכת'}
+                    {isPending ? t('deleting') : t('confirmButton')}
+                </button>
+            }
+            cancelButton={
+                <button type="button" className={styles.cancelButton} onClick={onClose} disabled={isPending}>
+                    {t('cancelDelete')}
                 </button>
             }
         >
-            <div className={styles.validationMessage}>{`האם אתם בטוחים שאתם רוצים למחוק את המערכת ${systemName}?`}</div>
+            <div className={styles.validationMessage}>{t('validationMessage', { systemName: systemName })}</div>
         </GenericModal>
     );
 };
