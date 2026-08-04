@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useTransition } from 'react';
 import { type SystemCubeDTO } from '../../../../shared/types/system-interfaces';
 import styles from './systemCube.module.css';
 import { useChangeStatus } from './hooks/useChangeStatus';
@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useRename } from './hooks/useRename';
 import { formatDate } from '../../../../shared/utils/formatDate';
 import { DeleteSystemModal } from '../deleteSystemModal/deleteSystemModal';
+import { useTranslation } from 'react-i18next';
 
 export interface SystemCubeProps {
     system: SystemCubeDTO;
@@ -15,6 +16,8 @@ export interface SystemCubeProps {
 
 export const SystemCube: React.FC<SystemCubeProps> = ({ system, role, onAddChild }) => {
     const navigate = useNavigate();
+
+    const { t } = useTranslation('systemCube');
 
     const { mutate: changeStatus, isPending: statusIsPending } = useChangeStatus();
     const { mutate: rename } = useRename();
@@ -115,21 +118,21 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role, onAddChild
 
             <div className={styles.cubeContent}>
                 <div className={styles.infoRow}>
-                    <span className={styles.infoLabel}>זמן יצירה:</span>
+                    <span className={styles.infoLabel}>{t('creationTime')}</span>
                     <span>{formatDate(system.createdAt)}</span>
                 </div>
                 <div className={styles.infoRow}>
-                    <span className={styles.infoLabel}>עדכון סטטוס אחרון:</span>
+                    <span className={styles.infoLabel}>{t('statusUpdateTime')}</span>
                     <span>{formatDate(system.statusUpdatedAt)}</span>
                 </div>
                 <div className={styles.infoRow}>
-                    <span className={styles.infoLabel}>יוצר:</span>
+                    <span className={styles.infoLabel}>{t('createdByUsername')}</span>
                     <span>{system.createdByUsername}</span>
                 </div>
             </div>
 
             <div className={styles.footerContainer}>
-                <div className={styles.changeStatusMessage}>{system.hasChildren ? 'לחץ כדי לצפות בילדים' : canEdit ? 'לחץ כדי לשנות סטטוס' : ''}</div>
+                <div className={styles.changeStatusMessage}>{system.hasChildren ? t('changeStatusMessage') : canEdit ? t('watchChildrenMessage'): ''}</div>
                 <div className={styles.cubeActions} onClick={(e) => e.stopPropagation()}>
                     {canEdit && (
                         <button

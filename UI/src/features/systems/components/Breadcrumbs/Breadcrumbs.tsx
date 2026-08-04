@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './Breadcrumbs.module.css';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 export type BreadcrumbItem = {
     id: string | null;
@@ -13,6 +14,8 @@ export interface BreadcrumbsProps {
 
 export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, currentSystem }) => {
     const navigate = useNavigate();
+
+    const { t } = useTranslation('systemCube');
 
     const isAtRoot = items.length === 0 && !currentSystem;
 
@@ -27,10 +30,10 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, currentSystem }
     return (
         <nav className={styles.breadcrumbsContainer} aria-label="Breadcrumb">
             {isAtRoot ? (
-                <span className={styles.currentSystem}>בית</span>
+                <span className={styles.currentSystem}>{t('breadcrumbsHome')}</span>
             ) : (
                 <span className={styles.breadcrumbLink} onClick={() => handleNavigate(null)}>
-                    בית
+                    {t('breadcrumbsHome')}
                 </span>
             )}
             {items.map((item) => (
