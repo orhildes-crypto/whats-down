@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import { useMe } from '../../../features/users/hooks/useMe';
-import { Spinner } from '../Spinner';
+import { Spinner } from '../Spinner/Spinner';
 
 export const RequireAuth = () => {
     const { data: user, isLoading, isError } = useMe();

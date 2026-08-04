@@ -7,5 +7,6 @@
     "logingIn": "מתחבר...",
     "loginError": "שם המשתמש או הסיסמה שגויים",
     "registerText": "אין לך חשבון? ",
-    "registerLink": "צור חשבון חדש"
+    "registerLink": "צור חשבון חדש",
+    "googleErrorMessage": "ההתחברות עם Google נכשלה. ודא שיש לך חשבון רשום במערכת."
 }

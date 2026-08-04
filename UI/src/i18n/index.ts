@@ -16,6 +16,8 @@ import deleteSystemModalHe from '../features/systems/components/deleteSystemModa
 import deleteSystemModalEn from '../features/systems/components/deleteSystemModal/locales/deleteModal.en.json';
 import errorPageHe from '../shared/components/ErrorPage/locales/errorPage.he.json';
 import errorPageEn from '../shared/components/ErrorPage/locales/errorPage.en.json';
+import spinnerHe from '../shared/components/Spinner/locales/spinner.he.json';
+import spinnerEn from '../shared/components/Spinner/locales/spinner.en.json';
 
 const STORAGE_KEY = 'lang';
 
@@ -31,7 +33,8 @@ i18next.use(initReactI18next).init({
             systemsPage: systemsPageHe,
             createSystemModal: createSystemModalHe,
             deleteSystemModal: deleteSystemModalHe,
-            errorPage: errorPageHe
+            errorPage: errorPageHe,
+            spinner: spinnerHe
         },
         en: {
             loginForm: loginFormEn,
@@ -41,7 +44,8 @@ i18next.use(initReactI18next).init({
             systemsPage: systemsPageEn,
             createSystemModal: createSystemModalEn,
             deleteSystemModal: deleteSystemModalEn,
-            errorPage: errorPageEn
+            errorPage: errorPageEn,
+            spinner: spinnerEn
         },
     },
     lng: savedLang ?? 'he',

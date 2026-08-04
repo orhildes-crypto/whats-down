@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useMe } from '../../../users/hooks/useMe';
 import { useSystems } from '../../hooks/useSystems';
 import { SystemCube } from '../systemCube/systemCube';
-import { Spinner } from '../../../../shared/components/Spinner';
+import { Spinner } from '../../../../shared/components/Spinner/Spinner';
 import { ErrorPage } from '../../../../shared/components/ErrorPage/ErrorPage';
 import styles from './systemGridPage.module.css';
 import { CreateSystemModal } from '../createSystemModal/CreateSystemModal';

@@ -3,10 +3,13 @@ import { GoogleLogin, type CredentialResponse } from '@react-oauth/google';
 import { useNavigate } from 'react-router-dom';
 import { useLoginWithGoogle } from '../hooks/useLoginWithGoogle';
 import styles from './GoogleLoginButton.module.css';
+import { useTranslation } from 'react-i18next';
 
 export const GoogleLoginButton: React.FC = () => {
     const navigate = useNavigate();
     const { mutate: loginWithGoogle, error } = useLoginWithGoogle();
+
+    const { t } = useTranslation('loginForm');
 
     const handleSuccess = (credentialResponse: CredentialResponse) => {
         if (!credentialResponse.credential) {
@@ -27,7 +30,7 @@ export const GoogleLoginButton: React.FC = () => {
             />
             {error && (
                 <p className={styles.errorText}>
-                    ההתחברות עם Google נכשלה. ודא שיש לך חשבון רשום במערכת.
+                    {t('googleErrorMessage')}
                 </p>
             )}
         </div>

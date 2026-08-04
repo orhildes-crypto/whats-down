@@ -7,5 +7,6 @@
     "logingIn": "Logging in...",
     "loginError": "Invalid username or password",
     "registerText": "Don't have an account? ",
-    "registerLink": "Create a new account"
+    "registerLink": "Create a new account",
+    "googleErrorMessage": "Google identification failed, make sure you are resitered in the system"
 }
