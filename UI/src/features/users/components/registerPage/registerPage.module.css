@@ -4,14 +4,13 @@
     align-items: center;
     min-height: 100vh;
     background-color: #f3f4f6;
-    direction: rtl;
     font-family: system-ui, -apple-system, sans-serif;
 }
 
 .buttonContainer {
     position: fixed;
     top: 3rem;
-    right: 3rem;
+    inset-inline-end: 3rem;
 }
 
 .card {
@@ -53,6 +52,7 @@
     font-size: 0.875rem;
     font-weight: 600;
     color: #374151;
+    text-align: start;
 }
 
 .fieldError {
@@ -156,12 +156,12 @@
 
 .passwordInput {
     width: 100%;
-    padding-left: 2.5rem; 
+    padding-inline-end: 2.5rem;
 }
 
 .togglePasswordButton {
     position: absolute;
-    left: 0.75rem;
+    inset-inline-end: 0.75rem;
     background: none;
     border: none;
     cursor: pointer;

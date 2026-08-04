@@ -21,7 +21,13 @@ import spinnerEn from '../shared/components/Spinner/locales/spinner.en.json';
 
 const STORAGE_KEY = 'lang';
 
-const savedLang = localStorage.getItem(STORAGE_KEY);
+const savedLang = (localStorage.getItem(STORAGE_KEY) as 'he' | 'en') || 'he';
+
+const updateDocumentAttributes = (lang: string) => {
+    const dir = i18next.dir(lang);
+    document.documentElement.dir = dir;
+    document.documentElement.lang = lang;
+};
 
 i18next.use(initReactI18next).init({
     resources: {
@@ -34,7 +40,7 @@ i18next.use(initReactI18next).init({
             createSystemModal: createSystemModalHe,
             deleteSystemModal: deleteSystemModalHe,
             errorPage: errorPageHe,
-            spinner: spinnerHe
+            spinner: spinnerHe,
         },
         en: {
             loginForm: loginFormEn,
@@ -45,7 +51,7 @@ i18next.use(initReactI18next).init({
             createSystemModal: createSystemModalEn,
             deleteSystemModal: deleteSystemModalEn,
             errorPage: errorPageEn,
-            spinner: spinnerEn
+            spinner: spinnerEn,
         },
     },
     lng: savedLang ?? 'he',
@@ -53,6 +59,12 @@ i18next.use(initReactI18next).init({
     interpolation: {
         escapeValue: false, // React already escapes values, no need for i18next to do it too
     },
+});
+
+updateDocumentAttributes(savedLang);
+
+i18next.on('languageChanged', (lang) => {
+    updateDocumentAttributes(lang);
 });
 
 export const changeLanguage = (lang: 'he' | 'en') => {

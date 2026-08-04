@@ -18,7 +18,7 @@
 .addButton {
     position: fixed;
     bottom: 28px;
-    left: 28px;
+    inset-inline-start: 28px;
     z-index: 1000; 
 
     background: #ffffff;
