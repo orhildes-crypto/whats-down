@@ -8,6 +8,8 @@ import navbarHe from '../shared/components/Navbar/locales/navbar.he.json';
 import navbarEn from '../shared/components/Navbar/locales/navbar.en.json';
 import systemCubeHe from '../features/systems/components/systemCube/locales/systemCube.he.json';
 import systemCubeEn from '../features/systems/components/systemCube/locales/systemCube.en.json';
+import systemsPageHe from '../features/systems/components/systemGridPage/locales/systemPage.he.json';
+import systemsPageEn from '../features/systems/components/systemGridPage/locales/systemPage.en.json';
 
 const STORAGE_KEY = 'lang';
 
@@ -20,12 +22,14 @@ i18next.use(initReactI18next).init({
             registerPage: registerPageHe,
             navbar: navbarHe,
             systemCube: systemCubeHe,
+            systemsPage: systemsPageHe
         },
         en: {
             loginForm: loginFormEn,
             registerPage: registerPageEn,
             navbar: navbarEn,
             systemCube: systemCubeEn,
+            systemsPage: systemsPageEn
         },
     },
     lng: savedLang ?? 'he',

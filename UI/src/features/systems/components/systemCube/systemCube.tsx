@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useTransition } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { type SystemCubeDTO } from '../../../../shared/types/system-interfaces';
 import styles from './systemCube.module.css';
 import { useChangeStatus } from './hooks/useChangeStatus';
@@ -132,7 +132,7 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role, onAddChild
             </div>
 
             <div className={styles.footerContainer}>
-                <div className={styles.changeStatusMessage}>{system.hasChildren ? t('changeStatusMessage') : canEdit ? t('watchChildrenMessage'): ''}</div>
+                <div className={styles.changeStatusMessage}>{system.hasChildren ? t('watchChildrenMessage') : canEdit ? t('changeStatusMessage'): ''}</div>
                 <div className={styles.cubeActions} onClick={(e) => e.stopPropagation()}>
                     {canEdit && (
                         <button

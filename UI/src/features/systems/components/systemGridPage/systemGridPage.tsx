@@ -10,8 +10,11 @@ import { CreateSystemModal } from '../createSystemModal/CreateSystemModal';
 import { useGetById } from '../../hooks/useGetById';
 import { useAncestors } from '../../hooks/useAncestors';
 import { Breadcrumbs, type BreadcrumbItem } from '../Breadcrumbs/Breadcrumbs';
+import { useTranslation } from 'react-i18next';
 
 export const SystemsGridPage: React.FC = () => {
+    const { t } = useTranslation('systemsPage');
+
     const { id } = useParams<{ id?: string }>();
     const parentId = id ?? null;
 
@@ -42,17 +45,17 @@ export const SystemsGridPage: React.FC = () => {
         return (
             <div className={styles.centeredState}>
                 <Spinner size="lg" />
-                <p className={styles.loadingText}>טוען מערכות...</p>
+                <p className={styles.loadingText}>{t('loadingSystem')}</p>
             </div>
         );
     }
 
     if (isError) {
-        return <ErrorPage message="לא הצלחנו לטעון את המערכות" onRetry={refetch} />;
+        return <ErrorPage message={t('loadingError')} onRetry={refetch} />;
     }
 
     if (!user) {
-        return <ErrorPage message="לא הצלחנו לזהות את המשתמש המחובר" />;
+        return <ErrorPage message={t('userError')} />;
     }
 
     const isEmpty = !systems || systems.length === 0;
@@ -61,14 +64,14 @@ export const SystemsGridPage: React.FC = () => {
     return (
         <div className={styles.pageContainer}>
             {isBreadcrumbsLoading ? (
-                <div className={styles.breadcrumbsSkeleton}>טוען נתיב...</div>
+                <div className={styles.breadcrumbsSkeleton}>{t('loadingBreacrumbs')}</div>
             ) : (
                 <Breadcrumbs items={items} currentSystem={parentSystem ? { id: parentSystem._id, name: parentSystem.name } : null} />
             )}
 
             {isEmpty ? (
                 <div className={styles.emptyState}>
-                    <p>אין מערכות כאן עדיין</p>
+                    <p>{t('emptyPage')}</p>
                 </div>
             ) : (
                 <main className={styles.grid}>
@@ -79,7 +82,7 @@ export const SystemsGridPage: React.FC = () => {
             )}
             {(user.role === 'ADMIN' || user.role === 'EDITOR') && (
                 <button type="button" className={styles.addButton} onClick={() => openCreateModal(parentId)}>
-                    ➕ הוסף מערכת
+                    ➕ {t(`addSystemButton`)}
                 </button>
             )}
 

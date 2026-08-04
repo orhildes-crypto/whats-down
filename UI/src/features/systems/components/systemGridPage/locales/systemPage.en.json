@@ -1,0 +1,8 @@
+{
+    "loadingSystem": "loading system...",
+    "loadingError": "could not load systems",
+    "userError": "could not find connected user",
+    "loadingBreacrumbs": "loading path...",
+    "emptyPage": "no service yet",
+    "addSystemButton": "add service"
+}
