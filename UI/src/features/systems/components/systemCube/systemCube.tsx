@@ -7,6 +7,7 @@ import { useRename } from './hooks/useRename';
 import { formatDate } from '../../../../shared/utils/formatDate';
 import { DeleteSystemModal } from '../deleteSystemModal/deleteSystemModal';
 import { useTranslation } from 'react-i18next';
+import { PencilLine, Trash2, Plus } from 'lucide-react';
 
 export interface SystemCubeProps {
     system: SystemCubeDTO;
@@ -119,15 +120,15 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role, onAddChild
             <div className={styles.cubeContent}>
                 <div className={styles.infoRow}>
                     <span className={styles.infoLabel}>{t('creationTime')}</span>
-                    <span>{formatDate(system.createdAt)}</span>
+                    <span className={styles.infoLabel}>{formatDate(system.createdAt)}</span>
                 </div>
                 <div className={styles.infoRow}>
                     <span className={styles.infoLabel}>{t('statusUpdateTime')}</span>
-                    <span>{formatDate(system.statusUpdatedAt)}</span>
+                    <span className={styles.infoLabel}>{formatDate(system.statusUpdatedAt)}</span>
                 </div>
                 <div className={styles.infoRow}>
                     <span className={styles.infoLabel}>{t('createdByUsername')}</span>
-                    <span>{system.createdByUsername}</span>
+                    <span className={styles.infoLabel}>{system.createdByUsername}</span>
                 </div>
             </div>
 
@@ -143,7 +144,7 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role, onAddChild
                                 handleStartEdit(e);
                             }}
                         >
-                            ✏️
+                            <PencilLine size={16} color='#34383b'/>
                         </button>
                     )}
 
@@ -156,13 +157,13 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role, onAddChild
                                 openDeleteModal()
                             }}
                         >
-                            🗑️
+                            <Trash2 size={16} color='#34383b'/>
                         </button>
                     )}
 
                     {canEdit && (
                         <button type="button" className={styles.actionButton} aria-label="create" onClick={onAddChild}>
-                            ➕
+                            <Plus size={16} color='#34383b'/>
                         </button>
                     )}
                 </div>

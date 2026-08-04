@@ -7,6 +7,7 @@ import { createLocalUserSchema } from '@whats-down/shared/common';
 import { getErrorMessage } from '../../../../shared/utils/zodErrorMessages';
 import { LanguageToggle } from '../../../../shared/components/LanguageToggle/LanguageToggle';
 import { useTranslation } from 'react-i18next';
+import { Eye, EyeOff } from 'lucide-react';
 
 export const RegisterPage: React.FC = () => {
     const [registerData, setRegisterData] = useState<CreateLocalUserPayload>({ email: '', username: '', password: '' });
@@ -58,12 +59,8 @@ export const RegisterPage: React.FC = () => {
 
         if (!validateForm()) return;
 
-        try {
-            await register(registerData);
-            navigate('/login');
-        } catch {
-            // Error is already handeled
-        }
+        await register(registerData);
+        navigate('/login');
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -120,7 +117,7 @@ export const RegisterPage: React.FC = () => {
                                 onChange={handleChange}
                             />
                             <button type="button" className={styles.togglePasswordButton} onClick={() => setShowPassword((prev) => !prev)}>
-                                {'👁️'}
+                                {showPassword ? <EyeOff /> : <Eye />}
                             </button>
                         </div>
                         {errors.password && <span className={styles.fieldError}>{errors.password}</span>}

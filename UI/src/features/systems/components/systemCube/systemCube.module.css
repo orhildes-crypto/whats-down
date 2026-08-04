@@ -98,14 +98,9 @@
 .infoLabel {
     color: #fafafa;
     font-weight: 500;
-    font-size: larger;
+    font-size: 0.95rem;
 }
 
-.infoRow span:last-child {
-    font-family: 'SF Mono', 'Roboto Mono', ui-monospace, monospace;
-    color: #f4f5f6;
-    font-size: 0.78rem;
-}
 
 .footerContainer {
     display: flex;
@@ -113,7 +108,6 @@
 
     margin-top: 14px;
     padding-top: 12px;
-    border-top: 1px solid #2a2f36;
 }
 
 .cubeActions {
