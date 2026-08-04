@@ -1,5 +1,5 @@
 # Build
-FROM node:20.10.0-alpine AS build
+FROM node:20-alpine AS build
 
 WORKDIR /app
 
@@ -14,7 +14,6 @@ RUN npm ci
 # Copying the relevant source code (shared + users-service)
 COPY shared ./shared
 COPY users-service ./users-service
-COPY tsconfig.json ./
 
 # Building the shared package and the users-service
 RUN npm run build --workspace=@whats-down/shared

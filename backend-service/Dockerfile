@@ -1,5 +1,5 @@
 # Stage 1: Build
-FROM node:20.10.0-alpine AS build
+FROM node:20-alpine AS build
 
 WORKDIR /app
 
@@ -14,7 +14,6 @@ RUN npm ci
 # 3. העתקת ה-source code הרלוונטי (shared + backend-service)
 COPY shared ./shared
 COPY backend-service ./backend-service
-COPY tsconfig.json ./
 
 # 4. בניית החבילה המשותפת והשירות
 RUN npm run build --workspace=@whats-down/shared

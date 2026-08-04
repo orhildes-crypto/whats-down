@@ -1,5 +1,5 @@
 # Stage 1: Build Vite Application
-FROM node:20.10.0-alpine AS build
+FROM node:20-alpine AS build
 
 WORKDIR /app
 
@@ -7,6 +7,9 @@ WORKDIR /app
 COPY package*.json ./
 COPY shared/package*.json ./shared/
 COPY UI/package*.json ./UI/
+COPY backend-service/package*.json ./backend-service/
+COPY system-service/package*.json ./system-service/
+COPY users-service/package*.json ./users-service/
 
 # Installing dependencies
 RUN npm ci
@@ -14,7 +17,6 @@ RUN npm ci
 # Copying the source files
 COPY shared ./shared
 COPY UI ./UI
-COPY tsconfig.json ./
 
 # Building the shared package and the UI application
 ARG VITE_GOOGLE_CLIENT_ID
