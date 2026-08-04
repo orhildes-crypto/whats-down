@@ -1,0 +1,9 @@
+{
+  "time": {
+    "justNow": "just now",
+    "minute_one": "1 minute ago",
+    "minute_other": "{{count}} minutes ago",
+    "hour_one": "1 hour ago",
+    "hour_other": "{{count}} hours ago"
+  }
+}

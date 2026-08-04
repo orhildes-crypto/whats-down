@@ -1,31 +1,32 @@
 import { z } from 'zod';
+import i18next from 'i18next';
 
-export const getErrorMessage = (issue: z.ZodIssue, fieldNameOverride?: string): string => {
+export const getErrorMessage = (issue: z.ZodIssue, fieldNameOverride?: string, namespace = 'loginForm'): string => {
     const field = fieldNameOverride ?? issue.path[0];
 
     if (issue.code === 'too_small' && issue.minimum === 1 && issue.type === 'string') {
-        return 'שדה חובה';
+        return i18next.t(`${namespace}:validation.required`);
     }
 
     switch (field) {
         case 'username':
             if (issue.code === 'too_small') {
-                return `שם המשתמש חייב להכיל לפחות ${issue.minimum} תווים`;
+                return i18next.t(`${namespace}:validation.usernameMin`, { min: issue.minimum });
             }
             break;
 
         case 'email':
             if (issue.code === 'invalid_string' && issue.validation === 'email') {
-                return 'כתובת אימייל לא תקינה';
+                return i18next.t(`${namespace}:validation.invalidEmail`);
             }
             break;
 
         case 'password':
             if (issue.code === 'too_small') {
-                return `הסיסמה חייבת להכיל לפחות ${issue.minimum} תווים`;
+                return i18next.t(`${namespace}:validation.passwordMin`, { min: issue.minimum });
             }
             break;
     }
 
-    return issue.message || 'שדה לא תקין';
-}
+    return issue.message || i18next.t(`${namespace}:validation.invalidField`);
+};
