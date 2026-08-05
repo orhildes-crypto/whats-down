@@ -45,7 +45,7 @@ export const SystemsGridPage: React.FC = () => {
     if (isUserLoading || isSystemsLoading) {
         return (
             <div className={styles.centeredState}>
-                <Spinner size="lg" />
+                <Spinner size="lg" className={styles.spinner}/>
                 <p className={styles.loadingText}>{t('loadingSystem')}</p>
             </div>
         );

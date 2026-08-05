@@ -61,13 +61,17 @@
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    gap: 12px;
-    background: #0d0f12;
+    gap: 100px;
 }
 
 .loadingText {
-    color: #8b93a1;
-    font-size: 0.9rem;
+    color: #e5e7ea;
+    font-size: 1.3rem;
+}
+
+.spinner {
+    color: #ffffff; 
+    flex-shrink: 0; 
 }
 
 .emptyState {
