@@ -1,15 +1,13 @@
 import { z } from 'zod';
 import { zodMongoObjectId } from '@whats-down/shared';
+import { createLocalUserSchema } from '@whats-down/shared/common';
 
-const baseUserSchema = z.object({
-    username: z.string(),
-    email: z.string().email(),
-    role: z.enum(['ADMIN', 'EDITOR', 'VIEWER']).default('VIEWER'),
-});
-
-export const createLocalUserSchema = baseUserSchema.extend({
-    password: z.string().min(8),
-});
+// GET /users-service/me
+export const getMeRequestSchema = z.object({
+    body: z.object({}),
+    query: z.object({}),
+    params: z.object({}),
+})
 
 // POST /users-service/signup
 export const createOneRequestSchema = z.object({

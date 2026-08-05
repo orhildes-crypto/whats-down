@@ -1,0 +1,19 @@
+{
+    "title": "Login",
+    "subtitle": "Enter your login details to continue",
+    "username": "Username",
+    "password": "Password",
+    "loginButton": "Login",
+    "logingIn": "Logging in...",
+    "loginError": "Invalid username or password",
+    "registerText": "Don't have an account? ",
+    "registerLink": "Create a new account",
+    "googleErrorMessage": "Google identification failed, make sure you are resitered in the system",
+    "validation": {
+        "required": "Required field",
+        "invalidEmail": "Invalid email address",
+        "usernameMin": "Username must be at least {{min}} characters",
+        "passwordMin": "Password must be at least {{min}} characters",
+        "invalidField": "Invalid field"
+    }
+}

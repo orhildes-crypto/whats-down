@@ -10,6 +10,7 @@ import {
     editServiceRequestSchema,
     changeStatusRequestSchema,
     getRootsByQueryRequestSchema,
+    getAncestorsByIdRequestSchema,
 } from './validations.js';
 import { DeveloperError } from '@whats-down/shared';
 
@@ -35,17 +36,23 @@ export class SystemServiceController {
         res.json(await SystemServiceManager.getById(req.params.id));
     };
 
+    static getAncestors = async (req: TypedRequest<typeof getAncestorsByIdRequestSchema>, res: Response) => {
+        res.json(await SystemServiceManager.getAncestors(req.params.id));
+    };
+
+    // denormalized copy of username at creation time. assumes usernames can not be changed — revisit if that changes
     static createOne = async (req: TypedRequest<typeof createOneRequestSchema>, res: Response) => {
         if (!req.user) {
             throw new DeveloperError("User context is missing. Make sure authenticateMiddleware is applied to this route.");
         }
 
         const createdBy = req.user.userId;
-        res.json(await SystemServiceManager.createOne(req.body, createdBy));
+        const createdByUsername = req.user.username;
+        res.json(await SystemServiceManager.createOne(req.body, createdBy, createdByUsername));
     };
 
-    static editService = async (req: TypedRequest<typeof editServiceRequestSchema>, res: Response) => {
-        res.json(await SystemServiceManager.editService(req.params.id, req.body));
+    static renameService = async (req: TypedRequest<typeof editServiceRequestSchema>, res: Response) => {
+        res.json(await SystemServiceManager.renameService(req.params.id, req.body.name));
     };
 
     static changeStatus = async (req: TypedRequest<typeof changeStatusRequestSchema>, res: Response) => {

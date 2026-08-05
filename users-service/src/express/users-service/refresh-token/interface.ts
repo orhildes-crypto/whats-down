@@ -5,6 +5,7 @@ export type RevocationReason = 'USER_LOGOUT' | 'ADMIN_ACTION' | 'FAMILY_COMPROMI
 export interface RefreshTokenDocument {
   _id: Types.ObjectId;
   userId: Types.ObjectId;
+  username: string;
 
   tokenHash: string;
 

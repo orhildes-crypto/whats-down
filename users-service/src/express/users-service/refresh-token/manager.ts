@@ -1,4 +1,3 @@
-// refresh-token.manager.ts
 import crypto from 'crypto';
 import { randomUUID } from 'crypto';
 import { RefreshTokenModel } from './model.js';
@@ -16,12 +15,13 @@ export const generateRawToken = (): string => {
     return crypto.randomBytes(64).toString('hex');
 };
 
-export const createInitialRefreshToken = async (userId: string): Promise<{ rawToken: string; record: RefreshTokenDocument }> => {
+export const createInitialRefreshToken = async (userId: string, username: string): Promise<{ rawToken: string; record: RefreshTokenDocument }> => {
     const rawToken = generateRawToken();
     const now = new Date();
 
     const record = await RefreshTokenModel.create({
         userId,
+        username,
         tokenHash: hashToken(rawToken),
         familyId: randomUUID(),
         generation: 0,
@@ -76,6 +76,7 @@ export const rotateRefreshToken = async (rawToken: string): Promise<{rawToken: s
 
     const nextTokenRecord = await RefreshTokenModel.create({
         userId: updatedOldToken.userId,
+        username: updatedOldToken.username,
         tokenHash: nextTokenHash, 
         familyId: updatedOldToken.familyId, 
         generation: updatedOldToken.generation + 1, 

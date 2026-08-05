@@ -8,6 +8,12 @@ export class ServiceError extends Error {
     }
 }
 
+export class InternalServerError extends ServiceError {
+    constructor(){
+        super(500, "An unexpected error occurred on the server.");
+    }
+}
+
 export class AuthorizationError extends ServiceError {
     constructor(){
         super(403, 'Forbidden. You do not have permission to access this resource.');

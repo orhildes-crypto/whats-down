@@ -10,6 +10,7 @@ import {
     changeStatusRequestSchema,
     editServiceRequestSchema,
     getRootsByQueryRequestSchema,
+    getAncestorsByIdRequestSchema,
 } from './validations.js';
 import { authenticateMiddleware, authorizationMiddleware } from '@whats-down/shared';
 import { config } from '../../config.js';
@@ -36,17 +37,22 @@ systemServiceRouter.get('/:id',
     authorizationMiddleware(['ADMIN', 'EDITOR', 'VIEWER']),
     validateRequest(getByIdRequestSchema), 
     wrapController(SystemServiceController.getById));
+systemServiceRouter.get('/:id/ancestors',
+    authenticateMiddleware(config.jwt.secret),
+    authorizationMiddleware(['ADMIN', 'EDITOR', 'VIEWER']),
+    validateRequest(getAncestorsByIdRequestSchema),
+    wrapController(SystemServiceController.getAncestors));
 
 systemServiceRouter.post('/', 
     authenticateMiddleware(config.jwt.secret), 
     authorizationMiddleware(['ADMIN', 'EDITOR']),
     validateRequest(createOneRequestSchema), 
     wrapController(SystemServiceController.createOne));
-systemServiceRouter.put('/:id', 
+systemServiceRouter.patch('/:id/name', 
     authenticateMiddleware(config.jwt.secret), 
     authorizationMiddleware(['ADMIN', 'EDITOR']),
     validateRequest(editServiceRequestSchema), 
-    wrapController(SystemServiceController.editService));
+    wrapController(SystemServiceController.renameService));
 systemServiceRouter.patch('/:id/status', 
     authenticateMiddleware(config.jwt.secret), 
     authorizationMiddleware(['ADMIN', 'EDITOR']),

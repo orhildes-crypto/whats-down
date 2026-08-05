@@ -1,0 +1,12 @@
+{
+    "title": "הרשמה למערכת",
+    "subtitle": "צור חשבון חדש כדי להתחיל",
+    "username": "שם משתמש",
+    "password": "סיסמה",
+    "email": "אימייל",
+    "registerButton": "הרשם",
+    "registerPending": "נרשם...",
+    "registerError": "לא הצלחנו לרשום אותך, ",
+    "loginText":"?כבר יש לך חשבון",
+    "loginLink": "התחברות למערכת"
+}

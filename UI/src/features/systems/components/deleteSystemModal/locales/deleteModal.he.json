@@ -1,0 +1,7 @@
+{
+    "title": "מחיקת מערכת {{systemName}}",
+    "confirmButton": "מחק מערכת",
+    "deleting": "מוחק...",
+    "validationMessage": "האם אתם בטוחים שאתם רוצים למחוק את המערכת {{systemName}}?",
+    "cancelDelete": "ביטול"
+}

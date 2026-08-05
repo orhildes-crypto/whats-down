@@ -16,7 +16,7 @@ import { REFRESH_COOKIE_NAME } from '../src/utils/express/cookie.js';
 const { mongo, jwt: jwtConfig } = config;
 
 const fakeObjectId = '111111111111111111111111';
-const BASE_ROUTE = '/api/users-services';
+const BASE_ROUTE = '/api/users-service';
 
 const generateTestToken = (role: 'ADMIN' | 'EDITOR' | 'VIEWER' = 'ADMIN') => {
     return jwt.sign({ userId: 'test-admin-id', role }, jwtConfig.secret);
@@ -37,7 +37,7 @@ const exampleUser = {
     username: 'testuser',
     email: 'test@example.com',
     password: 'SecurePassword123!',
-    role: 'EDITOR',
+    role: 'VIEWER',
 };
 
 describe('e2e users-service api testing', () => {
@@ -71,7 +71,7 @@ describe('e2e users-service api testing', () => {
                 expect.objectContaining({
                     username: exampleUser.username,
                     email: exampleUser.email,
-                    role: 'EDITOR',
+                    role: 'VIEWER',
                 }),
             );
             expect(body.passwordHash).toBeUndefined();
@@ -92,12 +92,6 @@ describe('e2e users-service api testing', () => {
                 .expect(400);
         });
 
-        it('should fail validation when role is invalid', async () => {
-            return request(app)
-                .post(BASE_ROUTE)
-                .send({ ...exampleUser, role: 'INVALID_ROLE' })
-                .expect(400);
-        });
 
         it('should fail to register when username already exists', async () => {
             await request(app).post(BASE_ROUTE).send(exampleUser).expect(200);
@@ -213,7 +207,7 @@ describe('e2e users-service api testing', () => {
         });
     });
 
-    describe('POST /api/users-services/auth/refresh', () => {
+    describe('POST /api/users-service/auth/refresh', () => {
         const mockGoogleToken = 'mock-google-id-token-123';
         let validRefreshTokenCookie: string;
 

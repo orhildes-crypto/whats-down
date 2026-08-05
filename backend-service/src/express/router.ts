@@ -1,4 +1,3 @@
-// backend-service/src/express/router.ts
 import { Router } from 'express';
 import { backendUsersRouter } from './backend-service/routes/users.routes.js';
 import { backendSystemsRouter } from './backend-service/routes/systems.routes.js';

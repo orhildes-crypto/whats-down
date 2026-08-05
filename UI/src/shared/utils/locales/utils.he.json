@@ -1,0 +1,12 @@
+{
+  "time": {
+    "justNow": "לפני רגע",
+    "minute_one": "לפני דקה",
+    "minute_two": "לפני שתי דקות",
+    "minute_other": "לפני {{count}} דקות",
+    "hour_one": "לפני שעה",
+    "hour_two": "לפני שעתיים",
+    "hour_other": "לפני {{count}} שעות"
+  }
+
+}

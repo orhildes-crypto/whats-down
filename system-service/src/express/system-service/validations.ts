@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { zodMongoObjectId } from '@whats-down/shared';
 
 const MIN_NAME_LENGTH = 3;
-const MAX_NAME_LENGTH = 15;
+const MAX_NAME_LENGTH = 35;
 
 const requiredFields = z
     .object({
@@ -57,6 +57,15 @@ export const getByIdRequestSchema = z.object({
     }),
 });
 
+// GET /api/system-service/:id/ancestors
+export const getAncestorsByIdRequestSchema = z.object({
+    body: z.object({}),
+    query: z.object({}),
+    params: z.object({
+        id: zodMongoObjectId,
+    }),
+});
+
 // POST /api/system-service
 export const createOneRequestSchema = z.object({
     body: requiredFields.merge(z.object({
@@ -66,12 +75,9 @@ export const createOneRequestSchema = z.object({
     params: z.object({}),
 });
 
-// PUT /api/system-service/:id
+// PATCH /api/system-service/:id/name
 export const editServiceRequestSchema = z.object({
-    body: requiredFields.partial().merge(optionalFields).refine(
-        (data) => Object.keys(data).length > 0,
-        { message: "At least one field must be provided for update" }
-    ),
+    body: requiredFields,
     query: z.object({}),
     params: z.object({
         id: zodMongoObjectId,

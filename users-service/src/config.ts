@@ -9,7 +9,7 @@ export const config = {
     },
     mongo: {
         uri: env.get('MONGO_URI').default('mongodb://localhost').required().asString(),
-        userCollectionName: env.get('USER_COLLECTION_NAME').default('users').required().asString(),
+        userCollectionName: env.get('USERS_SERVICE_COLLECTION_NAME').default('users').required().asString(),
     },
     google: {
         clientId: isProduction 
@@ -17,7 +17,6 @@ export const config = {
             : env.get('GOOGLE_CLIENT_ID').default('local-dev-client-id-123').asString(),
     },
     jwt: {
-        
         secret: isProduction 
             ? env.get('JWT_SECRET').required().asString()
             : env.get('JWT_SECRET').default('local-dev-secret-key-123').asString(),
