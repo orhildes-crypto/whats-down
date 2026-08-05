@@ -19,7 +19,6 @@ export const forwardRequest = async (req: Request, res: Response, options: Proxy
         const response = await axios({
             method: req.method,
             url: options.targetUrl,
-            params: req.query, 
             headers,
             data: req.body,
             validateStatus: () => true,

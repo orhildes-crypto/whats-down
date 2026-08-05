@@ -15,5 +15,8 @@ export const config = {
         secret: isProduction 
             ? env.get('JWT_SECRET').required().asString()
             : env.get('JWT_SECRET').default('local-dev-secret-key-123').asString(),
+    },
+    auth: {
+        cookieRewritePath: '/api/users/auth/refresh',
     }
 };

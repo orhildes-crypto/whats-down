@@ -1,62 +1,26 @@
 import { Router } from 'express';
-import { forwardRequest } from '../proxy/proxy-handler.js';
-import { authenticateMiddleware } from '../middleware/auth.middleware.js';
 import { config } from '../../../config.js';
+import { authenticateMiddleware } from '../middleware/auth.middleware.js';
+import { forwardRequest } from '../proxy/proxy-handler.js';
 
-export const backendUsersRouter = Router();
+export const backendUsersRouter = Router({ mergeParams: true });
 
-const JWT_SECRET = config.jwt.secret;
-const USERS_SERVICE_URL = config.services.usersServiceUrl;
-const COOKIE_REWRITE_PATH = '/api/users/auth/refresh';
+const USERS_SERVICE_BASE_URL = `${config.services.usersServiceUrl}/api/users-service`;
 
-backendUsersRouter.get('/me', (req, res) => {
+const forwardToUsersService = (req: any, res: any) => {
     forwardRequest(req, res, {
-        targetUrl: `${USERS_SERVICE_URL}/api/users-service/me`,
-    })
-})
-
-backendUsersRouter.post('/', (req, res) => {
-    forwardRequest(req, res, {
-        targetUrl: `${USERS_SERVICE_URL}/api/users-service`,
+        targetUrl: `${USERS_SERVICE_BASE_URL}${req.url}`,
+        cookieRewritePath: config.auth.cookieRewritePath,
     });
+};
+
+backendUsersRouter.all('*', (req, res) => {
+    forwardToUsersService(req, res);
 });
-
-backendUsersRouter.post('/auth/refresh', (req, res) => {
-    forwardRequest(req, res, {
-        targetUrl: `${USERS_SERVICE_URL}/api/users-service/auth/refresh`,
-        cookieRewritePath: COOKIE_REWRITE_PATH,
-    });
-});
-
-backendUsersRouter.post('/login', (req, res) => {
-    forwardRequest(req, res, {
-        targetUrl: `${USERS_SERVICE_URL}/api/users-service/login`,
-        cookieRewritePath: COOKIE_REWRITE_PATH,
-    });
-});
-
-backendUsersRouter.post('/login/google', (req, res) => {
-    forwardRequest(req, res, {
-        targetUrl: `${USERS_SERVICE_URL}/api/users-service/login/google`,
-        cookieRewritePath: COOKIE_REWRITE_PATH,
-    });
-});
-
-backendUsersRouter.delete('/:id', authenticateMiddleware(JWT_SECRET), (req, res) => {
-    forwardRequest(req, res, {
-        targetUrl: `${USERS_SERVICE_URL}/api/users-service/${req.params.id}`,
-    });
+backendUsersRouter.delete('/:id', authenticateMiddleware(config.jwt.secret), (req, res) => {
+    forwardToUsersService(req, res);
 });
 
 backendUsersRouter.patch('/:id/role', authenticateMiddleware(config.jwt.secret), (req, res) => {
-    forwardRequest(req, res, {
-        targetUrl: `${USERS_SERVICE_URL}/api/users-service/${req.params.id}/role`,
-    });
-});
-
-backendUsersRouter.post('/logout', (req, res) => {
-    forwardRequest(req, res, {
-        targetUrl: `${USERS_SERVICE_URL}/api/users-service/logout`,
-        cookieRewritePath: COOKIE_REWRITE_PATH,
-    });
+    forwardToUsersService(req, res);
 });
