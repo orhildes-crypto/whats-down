@@ -6,7 +6,7 @@ import bcrypt from 'bcryptjs';
 import { config } from '../../config.js';
 import { TokenPayload } from 'google-auth-library';
 import jwt from 'jsonwebtoken';
-import { AuthenticationError, ConflictError } from '@whats-down/shared';
+import { AuthenticationError, ConflictError, UserRole } from '@whats-down/shared';
 
 export class UsersServiceManager {
     static getMe = async (id: string): Promise<SafeUserDocument> => {
@@ -101,7 +101,7 @@ export class UsersServiceManager {
         return { user: safeUser, token };
     };
 
-    static changeUserRole = async (targetId: string, role: 'ADMIN' | 'EDITOR' | 'VIEWER', requestingUserId: string): Promise<SafeUserDocument> => {
+    static changeUserRole = async (targetId: string, role: UserRole, requestingUserId: string): Promise<SafeUserDocument> => {
         if (targetId === requestingUserId) {
             throw new SelfDemotionError();
         }

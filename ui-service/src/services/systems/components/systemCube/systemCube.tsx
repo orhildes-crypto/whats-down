@@ -8,10 +8,11 @@ import { formatDate } from '../../../../shared/utils/formatDate';
 import { DeleteSystemModal } from '../deleteSystemModal/deleteSystemModal';
 import { useTranslation } from 'react-i18next';
 import { PencilLine, Trash2, Plus } from 'lucide-react';
+import type { UserRole } from '@whats-down/shared';
 
 export interface SystemCubeProps {
     system: SystemCubeDTO;
-    role: 'ADMIN' | 'EDITOR' | 'VIEWER';
+    role: UserRole;
     onAddChild: () => void;
 }
 

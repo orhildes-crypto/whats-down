@@ -1,11 +1,12 @@
 import 'express';
+import { UserRole } from './index.js';
 
 declare global {
   namespace Express {
     interface Request {
       user?: {
         userId: string;
-        role: 'ADMIN' | 'EDITOR' | 'VIEWER';
+        role: UserRole;
         username: string;
       };
     }

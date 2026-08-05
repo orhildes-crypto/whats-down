@@ -1,7 +1,9 @@
+import type { UserRole } from "../../../../shared/dist/userInterfaces";
+
 type BaseUser = {
     username: string;
     email: string;
-    role: "ADMIN" | "EDITOR" | "VIEWER";
+    role: UserRole;
 };
 
 // Does not have a role 

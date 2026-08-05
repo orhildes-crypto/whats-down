@@ -1,7 +1,9 @@
+import { UserRole } from "../../../../shared/dist/userInterfaces.js";
+
 type BaseUser = {
     username: string;
     email: string;
-    role: "ADMIN" | "EDITOR" | "VIEWER";
+    role: UserRole;
 };
 
 // Does not have a role 

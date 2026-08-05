@@ -1,8 +1,7 @@
-import jwt from 'jsonwebtoken';
-import { AuthenticationError } from '@whats-down/shared';
-import { COOKIE_NAME } from '@whats-down/shared';
 import '@whats-down/shared';
-import { Request, Response, NextFunction } from 'express';
+import { AuthenticationError, COOKIE_NAME, UserRole } from '@whats-down/shared';
+import { NextFunction, Request, Response } from 'express';
+import jwt from 'jsonwebtoken';
 
 export const authenticateMiddleware = (secret: string) => {
     return (req: Request, res: Response, next: NextFunction): void => {
@@ -11,7 +10,7 @@ export const authenticateMiddleware = (secret: string) => {
 
             if (!token) return next(new AuthenticationError());
 
-            const verified = jwt.verify(token, secret) as { userId: string; role: 'ADMIN' | 'EDITOR' | 'VIEWER'; username: string};
+            const verified = jwt.verify(token, secret) as { userId: string; role: UserRole; username: string};
 
             req.user = verified; 
 

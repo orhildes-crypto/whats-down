@@ -12,18 +12,19 @@ import { Server } from '../src/express/server.js';
 import { COOKIE_NAME } from '@whats-down/shared';
 import { RefreshTokenModel } from '../src/express/users-service/refresh-token/model.js';
 import { REFRESH_COOKIE_NAME } from '../src/utils/express/cookie.js';
+import { UserRole } from '@whats-down/shared';
 
 const { mongo, jwt: jwtConfig } = config;
 
 const fakeObjectId = '111111111111111111111111';
 const BASE_ROUTE = '/api/users-service';
 
-const generateTestToken = (role: 'ADMIN' | 'EDITOR' | 'VIEWER' = 'ADMIN') => {
+const generateTestToken = (role: UserRole) => {
     return jwt.sign({ userId: 'test-admin-id', role }, jwtConfig.secret);
 };
 
-const adminToken = generateTestToken('ADMIN');
-const editorToken = generateTestToken('EDITOR');
+const adminToken = generateTestToken(UserRole.ADMIN);
+const editorToken = generateTestToken(UserRole.EDITOR);
 
 const removeAllCollections = async () => {
     const collections = Object.keys(mongoose.connection.collections);
@@ -37,7 +38,7 @@ const exampleUser = {
     username: 'testuser',
     email: 'test@example.com',
     password: 'SecurePassword123!',
-    role: 'VIEWER',
+    role: UserRole.VIEWER,
 };
 
 describe('e2e users-service api testing', () => {
@@ -71,7 +72,7 @@ describe('e2e users-service api testing', () => {
                 expect.objectContaining({
                     username: exampleUser.username,
                     email: exampleUser.email,
-                    role: 'VIEWER',
+                    role: UserRole.VIEWER,
                 }),
             );
             expect(body.passwordHash).toBeUndefined();

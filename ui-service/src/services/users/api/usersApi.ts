@@ -1,3 +1,4 @@
+import type { UserRole } from '../../../../../shared/dist/userInterfaces';
 import { apiClient } from '../../../shared/api/apiClient';
 import { type SafeUserDocument, type CreateLocalUserPayload } from '../../../shared/types/user-interfaces';
 
@@ -38,7 +39,7 @@ export const usersService = {
         ).data;
     },
 
-    changeRole: async (newRole: "ADMIN" | "EDITOR" | "VIEWER", userId: string): Promise<SafeUserDocument> => {
+    changeRole: async (newRole: UserRole, userId: string): Promise<SafeUserDocument> => {
         return (
             await apiClient.patch<SafeUserDocument>(
                 `/users/${userId}/role`, 
