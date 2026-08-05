@@ -1,5 +1,5 @@
 {
-  "name": "@whats-down/UI",
+  "name": "@whats-down/ui-service",
   "private": true,
   "version": "0.0.0",
   "type": "module",

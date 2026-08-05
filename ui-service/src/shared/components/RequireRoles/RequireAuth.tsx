@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { useMe } from '../../../features/users/hooks/useMe';
+import { useMe } from '../../../services/users/hooks/useMe';
 import { Spinner } from '../Spinner/Spinner';
 
 export const RequireAuth = () => {

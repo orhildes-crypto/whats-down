@@ -3,10 +3,10 @@ FROM node:20-alpine AS build
 
 WORKDIR /app
 
-# Copying workspace settings from the root and from UI/shared.
+# Copying workspace settings from the root and from ui-service/shared.
 COPY package*.json ./
 COPY shared/package*.json ./shared/
-COPY UI/package*.json ./UI/
+COPY ui-service/package*.json ./ui-service/
 COPY backend-service/package*.json ./backend-service/
 COPY system-service/package*.json ./system-service/
 COPY users-service/package*.json ./users-service/
@@ -16,7 +16,7 @@ RUN npm ci
 
 # Copying the source files
 COPY shared ./shared
-COPY UI ./UI
+COPY ui-service ./ui-service
 
 # Building the shared package and the UI application
 ARG VITE_GOOGLE_CLIENT_ID
@@ -24,16 +24,16 @@ ENV VITE_GOOGLE_CLIENT_ID=$VITE_GOOGLE_CLIENT_ID
 
 # Building the shared package and the UI application
 RUN npm run build --workspace=@whats-down/shared
-RUN npm run build --workspace=@whats-down/UI
+RUN npm run build --workspace=@whats-down/ui-service
 
 # Serve with Nginx
 FROM nginx:alpine
 
 # Copying the Nginx configuration file
-COPY UI/nginx.conf /etc/nginx/conf.d/default.conf
+COPY ui-service/nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copying the built UI application to the Nginx html directory
-COPY --from=build /app/UI/dist /usr/share/nginx/html
+COPY --from=build /app/ui-service/dist /usr/share/nginx/html
 
 EXPOSE 80
 

@@ -1,6 +1,6 @@
 import React from 'react';
-import { useMe } from '../../../features/users/hooks/useMe';
-import { useLogout } from '../../../features/users/hooks/useLogout';
+import { useMe } from '../../../services/users/hooks/useMe';
+import { useLogout } from '../../../services/users/hooks/useLogout';
 import styles from './Navbar.module.css';
 import { useTranslation } from 'react-i18next';
 import { LanguageToggle } from '../LanguageToggle/LanguageToggle';

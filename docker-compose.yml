@@ -85,10 +85,10 @@ services:
       - whats-down-network
 
   # 5. UI Frontend + Nginx Proxy
-  ui:
+  ui-service:
     build:
       context: .
-      dockerfile: UI/Dockerfile
+      dockerfile: ui-service/Dockerfile
       args:
         VITE_GOOGLE_CLIENT_ID: ${VITE_GOOGLE_CLIENT_ID:-560795352096-014p20nb8gq6rfe5h1pujlc93ljebrb4.apps.googleusercontent.com}
     container_name: whats-down-ui

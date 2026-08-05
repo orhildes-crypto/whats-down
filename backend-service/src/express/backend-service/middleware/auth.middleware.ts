@@ -9,9 +9,7 @@ export const authenticateMiddleware = (secret: string) => {
         try {
             const token = req.cookies[COOKIE_NAME];
 
-            if (!token) {
-                return next(new AuthenticationError());
-            }
+            if (!token) return next(new AuthenticationError());
 
             const verified = jwt.verify(token, secret) as { userId: string; role: 'ADMIN' | 'EDITOR' | 'VIEWER'; username: string};
 

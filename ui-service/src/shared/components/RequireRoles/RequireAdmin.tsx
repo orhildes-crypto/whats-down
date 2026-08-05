@@ -1,10 +1,10 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { useMe } from '../../../features/users/hooks/useMe';
+import { useMe } from '../../../services/users/hooks/useMe';
 
-export const RequireGuest = () => {
+export const RequireAdmin = () => {
     const { data: user } = useMe();
 
-    if (user) {
+    if (user?.role !== 'ADMIN') {
         return <Navigate to="/" replace />;
     }
 

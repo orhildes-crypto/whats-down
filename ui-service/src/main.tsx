@@ -1,5 +1,5 @@
 import './index.css';
-import './i18n'; 
+import './i18n/index.ts';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { QueryClientProvider } from '@tanstack/react-query';
