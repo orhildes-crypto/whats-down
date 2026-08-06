@@ -53,7 +53,7 @@ systemServiceRouter.patch('/:id/name',
     authenticateMiddleware(config.jwt.secret), 
     authorizationMiddleware([UserRole.ADMIN, UserRole.EDITOR]),
     validateRequest(editServiceRequestSchema), 
-    wrapController(SystemServiceController.renameService));
+    wrapController(SystemServiceController.renameSystem));
 systemServiceRouter.patch('/:id/status', 
     authenticateMiddleware(config.jwt.secret), 
     authorizationMiddleware([UserRole.ADMIN, UserRole.EDITOR]),

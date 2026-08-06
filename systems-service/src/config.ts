@@ -15,5 +15,9 @@ export const config = {
         secret: isProduction 
             ? env.get('JWT_SECRET').required().asString()
             : env.get('JWT_SECRET').default('local-dev-secret-key-123').asString(),
+    },
+    model: {
+        name: env.get('MODEL_NAME').default('SystemServiceModel').required().asString(),
     }
 };
+

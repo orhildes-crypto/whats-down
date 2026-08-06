@@ -44,12 +44,13 @@ export class SystemServiceController {
             throw new DeveloperError("User context is missing. Make sure authenticateMiddleware is applied to this route.");
         }
 
-        const { userId, username } = req.user;
-        res.json(await SystemServiceManager.createOne(req.body, userId, username));
+        const { userId, username: createdByUsername } = req.user;
+        
+        res.json(await SystemServiceManager.createOne(req.body, userId, createdByUsername));
     };
 
-    static renameService = async (req: TypedRequest<typeof editServiceRequestSchema>, res: Response) => {
-        res.json(await SystemServiceManager.renameService(req.params.id, req.body.name));
+    static renameSystem = async (req: TypedRequest<typeof editServiceRequestSchema>, res: Response) => {
+        res.json(await SystemServiceManager.renameSystem(req.params.id, req.body.name));
     };
 
     static changeStatus = async (req: TypedRequest<typeof changeStatusRequestSchema>, res: Response) => {

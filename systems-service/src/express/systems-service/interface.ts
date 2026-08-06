@@ -11,6 +11,7 @@ export interface System extends CreateSystemPayload {
     createdAt: Date;
     statusUpdatedAt: Date;
     createdByUsername: string;
+    statusPriority: number;
 }
 
 export interface SystemDocument extends System {

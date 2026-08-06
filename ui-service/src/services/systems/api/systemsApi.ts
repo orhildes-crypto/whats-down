@@ -1,11 +1,12 @@
 import { apiClient } from '@/shared/api/apiClient';
 import type {
-    CreateSystemServicePayload,
+    CreateSystemPayload,
     SystemCubeDTO,
-    SystemServiceDocument,
-    SystemServiceFilters,
+    SystemDocument,
+    SystemFilters,
     SystemQueryParams,
 } from '@/shared/types/system-interfaces';
+import type { SystemStatus } from '@whats-down/shared';
 
 export const systemsService = {
     getByQuery: async (params: SystemQueryParams): Promise<SystemCubeDTO[]> => {
@@ -30,7 +31,7 @@ export const systemsService = {
         ).data;
     },
 
-    getCountByQuery: async (params: SystemServiceFilters): Promise<number> => {
+    getCountByQuery: async (params: SystemFilters): Promise<number> => {
         return (
             await apiClient.get<number>('/systems/count', {
                 params: params,
@@ -38,35 +39,35 @@ export const systemsService = {
         ).data;
     },
 
-    getAncestors: async (systemId: string): Promise<SystemServiceDocument[]> => {
-        return (await apiClient.get<SystemServiceDocument[]>(`/systems/${systemId}/ancestors`)).data;
+    getAncestors: async (systemId: string): Promise<SystemDocument[]> => {
+        return (await apiClient.get<SystemDocument[]>(`/systems/${systemId}/ancestors`)).data;
     },
 
-    rename: async (systemId: string, newName: string): Promise<SystemServiceDocument> => {
+    rename: async (systemId: string, newName: string): Promise<SystemDocument> => {
         return (
-            await apiClient.patch<SystemServiceDocument>(`/systems/${systemId}/name`, {
+            await apiClient.patch<SystemDocument>(`/systems/${systemId}/name`, {
                 name: newName,
             })
         ).data;
     },
 
-    getById: async (systemId: string): Promise<SystemServiceDocument> => {
-        return (await apiClient.get<SystemServiceDocument>(`/systems/${systemId}`)).data;
+    getById: async (systemId: string): Promise<SystemDocument> => {
+        return (await apiClient.get<SystemDocument>(`/systems/${systemId}`)).data;
     },
 
-    create: async (payload: CreateSystemServicePayload): Promise<SystemServiceDocument> => {
-        return (await apiClient.post<SystemServiceDocument>('/systems', payload)).data;
+    create: async (payload: CreateSystemPayload): Promise<SystemDocument> => {
+        return (await apiClient.post<SystemDocument>('/systems', payload)).data;
     },
 
-    changeStatus: async (systemId: string, status: 'UP' | 'DOWN'): Promise<SystemServiceDocument> => {
+    changeStatus: async (systemId: string, status: SystemStatus): Promise<SystemDocument> => {
         return (
-            await apiClient.patch<SystemServiceDocument>(`/systems/${systemId}/status`, {
+            await apiClient.patch<SystemDocument>(`/systems/${systemId}/status`, {
                 status: status,
             })
         ).data;
     },
 
-    delete: async (systemId: string): Promise<SystemServiceDocument> => {
-        return (await apiClient.delete<SystemServiceDocument>(`/systems/${systemId}`)).data;
+    delete: async (systemId: string): Promise<SystemDocument> => {
+        return (await apiClient.delete<SystemDocument>(`/systems/${systemId}`)).data;
     },
 };

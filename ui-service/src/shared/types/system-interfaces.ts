@@ -12,6 +12,7 @@ export interface SystemDocument extends CreateSystemPayload {
     createdAt: string;
     statusUpdatedAt: string;
     createdByUsername: string;
+    statusPriority: number;
 }
 
 export interface SystemCubeDTO extends SystemDocument {

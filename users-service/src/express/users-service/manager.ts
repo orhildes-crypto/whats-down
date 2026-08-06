@@ -22,7 +22,7 @@ export class UsersServiceManager {
         const newUser = await UserModel.create({
             username: payload.username,
             email: payload.email,
-            role: 'VIEWER',
+            role: UserRole.VIEWER,
             passwordHash: await bcrypt.hash(payload.password, 10),
         }).catch((err) => {
             if (err.code === 11000) {
@@ -32,9 +32,6 @@ export class UsersServiceManager {
             throw err;
         });
 
-        console.log('Registered to DB:', UserModel.db.name);
-        console.log('Registered to Collection:', UserModel.collection.name);
-        
         return this.toSafeUser(newUser.toObject() as UserDocument);
     };
 
@@ -66,7 +63,7 @@ export class UsersServiceManager {
                     $setOnInsert: {
                         username: 'google_mock_user',
                         email: 'google-test@example.com',
-                        role: 'VIEWER',
+                        role: UserRole.VIEWER,
                         googleId: 'mock-google-id-123',
                     },
                 },
@@ -150,7 +147,7 @@ export class UsersServiceManager {
     };
 
     static generateTokenForUserId = async (userId: string): Promise<string> => {
-        const user = await UserModel.findById(userId).select('role').lean().exec();
+        const user = await UserModel.findById(userId).select('-passwordHash').lean().exec();
 
         if (!user) {
             throw new DocumentNotFoundError(userId);

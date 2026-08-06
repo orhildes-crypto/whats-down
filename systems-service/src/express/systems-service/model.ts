@@ -13,12 +13,8 @@ const SystemServiceSchema = new mongoose.Schema<SystemDocument>(
         },
         parentId: {
             type: Schema.Types.ObjectId,
-            ref: 'SystemServiceModel',
+            ref: config.model.name,
             default: null,
-        },
-        createdAt: {
-            type: Date,
-            default: Date.now,
         },
         createdBy: {
             type: String,
@@ -26,12 +22,17 @@ const SystemServiceSchema = new mongoose.Schema<SystemDocument>(
         },
         createdByUsername: {
             type: String,
-            required: true,
+            required: false,
         },
         status: {
             type: String,
             enum: Object.values(SystemStatus),
             default: SystemStatus.UP,
+        },
+        statusPriority: {
+            type: Number,
+            required: true,
+            default: 1, 
         },
         statusUpdatedAt: {
             type: Date,
@@ -41,9 +42,10 @@ const SystemServiceSchema = new mongoose.Schema<SystemDocument>(
     },
     {
         versionKey: false,
+        timestamps: true,
     },
 );
 
-SystemServiceSchema.index({ status: 1, name: 1 }); // Relies on DOWN < UP alphabetically — should be changed if a third status is added.
+SystemServiceSchema.index({ statusPriority: 1, name: 1 }); 
 
 export const SystemServiceModel = mongoose.model<SystemDocument>('System', SystemServiceSchema, config.mongo.systemServiceCollectionName);

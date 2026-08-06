@@ -13,6 +13,7 @@ import {
 import { setAuthCookie, clearAuthCookie, REFRESH_COOKIE_NAME, setRefreshCookie } from '../../utils/express/cookie.js';
 import { createInitialRefreshToken, rotateRefreshToken } from './refresh-token/manager.js';
 import { DocumentNotFoundError, InvalidOrExpiredTokenError } from '../../utils/errors.js';
+import { StatusCodes } from 'http-status-codes';
 
 export class UsersServiceController {
     static getMe = async (req: TypedRequest<typeof getMeRequestSchema>, res: Response) => {
@@ -62,7 +63,6 @@ export class UsersServiceController {
             nextAccessToken = await UsersServiceManager.generateTokenForUserId(record.userId.toString());
         } catch (err) {
             if (err instanceof DocumentNotFoundError) {
-                // If user was deleted by admin, his token is expired
                 throw new InvalidOrExpiredTokenError();
             }
             throw err;
@@ -71,7 +71,7 @@ export class UsersServiceController {
         setAuthCookie(res, nextAccessToken);
         setRefreshCookie(res, newRawToken);
 
-        res.status(200).json({ success: true });
+        res.status(StatusCodes.OK).json({ success: true });
     };
 
     static changeUserRole = async (req: TypedRequest<typeof changeUserRoleRequestSchema>, res: Response) => {
@@ -86,6 +86,6 @@ export class UsersServiceController {
 
     static logout = async (_req: TypedRequest<typeof logoutRequestSchema>, res: Response) => {
         clearAuthCookie(res);
-        res.status(200).json({ message: 'Logged out successfully' });
+        res.status(StatusCodes.OK).json({ message: 'Logged out successfully' });
     };
 }
