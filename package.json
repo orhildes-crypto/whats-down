@@ -2,7 +2,7 @@
   "name": "whats-down",
   "private": true,
   "workspaces": [
-    "system-service",
+    "systems-service",
     "users-service",
     "backend-service",
     "ui-service",

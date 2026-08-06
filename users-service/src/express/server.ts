@@ -20,13 +20,10 @@ export class Server {
 
     static createExpressApp() {
         const app = express();
-
         app.use(cookieParser()); 
-
         app.use(helmet());
         app.use(express.json());
         app.use(express.urlencoded({ extended: true }));
-
         app.use(loggerMiddleware);
         app.use(appRouter);
 

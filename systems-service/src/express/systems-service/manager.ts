@@ -49,7 +49,7 @@ export class SystemServiceManager {
             },
             {
                 $graphLookup: {
-                    from: 'system-services',
+                    from: 'systems-services',
                     startWith: '$parentId',
                     connectFromField: 'parentId',
                     connectToField: '_id',
@@ -178,7 +178,7 @@ export class SystemServiceManager {
             },
             {
                 $graphLookup: {
-                    from: 'system-services',
+                    from: 'systems-services',
                     startWith: '$_id',
                     connectFromField: 'parentId',
                     connectToField: '_id',

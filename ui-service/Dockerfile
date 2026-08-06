@@ -8,7 +8,7 @@ COPY package*.json ./
 COPY shared/package*.json ./shared/
 COPY ui-service/package*.json ./ui-service/
 COPY backend-service/package*.json ./backend-service/
-COPY system-service/package*.json ./system-service/
+COPY systems-service/package*.json ./systems-service/
 COPY users-service/package*.json ./users-service/
 
 # Installing dependencies

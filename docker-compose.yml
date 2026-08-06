@@ -47,18 +47,18 @@ services:
       - whats-down-network
 
   # 3. System Service
-  system-service:
+  systems-service:
     build:
       context: .
-      dockerfile: system-service/Dockerfile
-    container_name: whats-down-system-service
+      dockerfile: systems-service/Dockerfile
+    container_name: whats-down-systems-service
     restart: always
     environment:
       PORT: 8000
       NODE_ENV: production
       MONGO_URI: mongodb://mongo:27017/whats-down
       JWT_SECRET: ${JWT_SECRET}
-      SYSTEM_SERVICE_COLLECTION_NAME: system-service
+      SYSTEM_SERVICE_COLLECTION_NAME: systems-service
     depends_on:
       mongo:
         condition: service_healthy
@@ -76,11 +76,11 @@ services:
       PORT: 3000
       NODE_ENV: production
       USERS_SERVICE_URL: http://users-service:5000
-      SYSTEMS_SERVICE_URL: http://system-service:8000
+      SYSTEMS_SERVICE_URL: http://systems-service:8000
       JWT_SECRET: ${JWT_SECRET}
     depends_on:
       - users-service
-      - system-service
+      - systems-service
     networks:
       - whats-down-network
 

@@ -5,7 +5,7 @@ import { forwardRequest } from '../proxy/proxy-handler.js';
 
 export const backendSystemsRouter = Router({ mergeParams: true });
 
-const SYSTEM_SERVICE_BASE_URL = `${config.services.systemsServiceUrl}/api/system-service`;
+const SYSTEM_SERVICE_BASE_URL = `${config.services.systemsServiceUrl}/api/systems-service`;
 
 backendSystemsRouter.use(authenticateMiddleware(config.jwt.secret));
 

@@ -14,12 +14,17 @@ export const usersService = {
     },
 
     login: async (username: string, password: string): Promise<SafeUserDocument> => {
-        return (
+        console.log('fetching response from /users/login with username:', username, 'and password:', password);
+        const result =  (
             await apiClient.post<SafeUserDocument>('/users/login', {
                 username: username,
                 password: password,
             })
         ).data;
+
+        console.log(result);
+        return result;
+        
     },
 
     loginWithGoogle: async (idToken: string): Promise<SafeUserDocument> => {
