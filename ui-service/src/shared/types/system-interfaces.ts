@@ -1,3 +1,5 @@
+import type { SystemStatus } from "@whats-down/shared";
+
 export interface CreateSystemPayload {
     name: string;
     parentId: string | null;
@@ -6,7 +8,7 @@ export interface CreateSystemPayload {
 export interface SystemDocument extends CreateSystemPayload {
     _id: string;
     createdBy: string;
-    status: 'UP' | 'DOWN';
+    status: SystemStatus;
     createdAt: string;
     statusUpdatedAt: string;
     createdByUsername: string;
@@ -18,7 +20,7 @@ export interface SystemCubeDTO extends SystemDocument {
 
 export interface SystemFilters {
     createdBy?: string;
-    status?: 'UP' | 'DOWN';
+    status?: SystemStatus;
     parentId?: string | null;
     name?: string;
 }

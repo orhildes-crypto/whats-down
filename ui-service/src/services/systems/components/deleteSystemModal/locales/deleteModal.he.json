@@ -3,5 +3,6 @@
     "confirmButton": "מחק מערכת",
     "deleting": "מוחק...",
     "validationMessage": "האם אתם בטוחים שאתם רוצים למחוק את המערכת {{systemName}}?",
+    "validationMessageWithChildren": "המערכת {{systemName}} מכילה תת-מערכות. מחיקתה תמחק את כל תת-המערכות המשויכות אליה. האם להמשיך?",
     "cancelDelete": "ביטול"
 }

@@ -2,15 +2,15 @@ import { GenericModal } from '../../../../shared/components/GenericModal/Generic
 import { useDeleteSystem } from './useDeleteSystem';
 import styles from './deleteSystemModal.module.css';
 import { useTranslation } from 'react-i18next';
+import type { SystemCubeDTO } from '@/shared/types/system-interfaces';
 
 type DeleteSystemModalProps = {
     isOpen: boolean;
     onClose: () => void;
-    systemId: string;
-    systemName: string;
+    system: SystemCubeDTO;
 };
 
-export const DeleteSystemModal = ({ isOpen, onClose, systemId, systemName }: DeleteSystemModalProps) => {
+export const DeleteSystemModal = ({ isOpen, onClose, system }: DeleteSystemModalProps) => {
     const { t } = useTranslation('deleteSystemModal');
     const { mutate: deleteSystem, isPending } = useDeleteSystem();
 
@@ -20,7 +20,7 @@ export const DeleteSystemModal = ({ isOpen, onClose, systemId, systemName }: Del
 
     const handleSubmit = () => {
         deleteSystem(
-            { systemId: systemId },
+            { systemId: system._id },
             {
                 onSuccess: () => {
                     handleClose();
@@ -33,7 +33,7 @@ export const DeleteSystemModal = ({ isOpen, onClose, systemId, systemName }: Del
         <GenericModal
             isOpen={isOpen}
             onClose={handleClose}
-            title={t('title', { systemName: systemName })}
+            title={t('title', { systemName: system.name })}
             confirmButton={
                 <button type="button" className={styles.confirmButton} onClick={handleSubmit} disabled={isPending}>
                     {isPending ? t('deleting') : t('confirmButton')}
@@ -45,7 +45,9 @@ export const DeleteSystemModal = ({ isOpen, onClose, systemId, systemName }: Del
                 </button>
             }
         >
-            <div className={styles.validationMessage}>{t('validationMessage', { systemName: systemName })}</div>
+            <div className={styles.validationMessage}>
+                {t(system.hasChildren ? 'validationMessageWithChildren' : 'validationMessage', { systemName: system.name })}
+            </div>
         </GenericModal>
     );
 };

@@ -8,7 +8,7 @@ import { formatDate } from '../../../../shared/utils/formatDate';
 import { DeleteSystemModal } from '../deleteSystemModal/deleteSystemModal';
 import { useTranslation } from 'react-i18next';
 import { PencilLine, Trash2, Plus } from 'lucide-react';
-import { UserRole } from '@whats-down/shared/common';
+import { SystemStatus, UserRole } from '@whats-down/shared/common';
 
 export interface SystemCubeProps {
     system: SystemCubeDTO;
@@ -28,7 +28,7 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role, onAddChild
     const [nameValue, setNameValue] = useState(system.name);
     const inputRef = useRef<HTMLInputElement>(null);
 
-    const isUp = system.status === 'UP';
+    const isUp = system.status === SystemStatus.UP;
     const canEdit = role === UserRole.ADMIN || role === UserRole.EDITOR;
 
     const containerStatusClass = isUp ? styles.statusUp : styles.statusDown;
@@ -91,7 +91,7 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role, onAddChild
         } else {
             if (!canEdit || statusIsPending) return;
 
-            const newStatus = isUp ? 'DOWN' : 'UP';
+            const newStatus = isUp ? SystemStatus.DOWN : SystemStatus.UP;
             changeStatus({ systemId: system._id, status: newStatus });
         }
     };
@@ -149,7 +149,7 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role, onAddChild
                         </button>
                     )}
 
-                    {role === UserRole.ADMIN && !system.hasChildren && (
+                    {role === UserRole.ADMIN && (
                         <button
                             type="button"
                             className={styles.actionButton}
@@ -172,8 +172,7 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role, onAddChild
             <DeleteSystemModal 
                 isOpen={isDeleteModalOpen} 
                 onClose={closeDeleteModal} 
-                systemId={system._id} 
-                systemName={system.name} />
+                system={system} />
         </div>
     );
 };
