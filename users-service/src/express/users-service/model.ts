@@ -1,15 +1,16 @@
 import mongoose from 'mongoose';
 import { config } from '../../config.js';
 import { UserDocument } from './interface.js';
+import { UserRole } from '../../../../shared/dist/userInterfaces.js';
 
 
 const UserSchema = new mongoose.Schema<UserDocument>(
     {
         role: {
             type: String,
-            enum: ['ADMIN', 'EDITOR', 'VIEWER'],
+            enum: Object.values(UserRole),
             required: false,
-            default: 'VIEWER',
+            default: UserRole.VIEWER,
         },
         username: {
             type: String,

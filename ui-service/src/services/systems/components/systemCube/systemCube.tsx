@@ -8,7 +8,7 @@ import { formatDate } from '../../../../shared/utils/formatDate';
 import { DeleteSystemModal } from '../deleteSystemModal/deleteSystemModal';
 import { useTranslation } from 'react-i18next';
 import { PencilLine, Trash2, Plus } from 'lucide-react';
-import type { UserRole } from '@whats-down/shared';
+import { UserRole } from '@whats-down/shared/common';
 
 export interface SystemCubeProps {
     system: SystemCubeDTO;
@@ -29,7 +29,7 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role, onAddChild
     const inputRef = useRef<HTMLInputElement>(null);
 
     const isUp = system.status === 'UP';
-    const canEdit = role === 'ADMIN' || role === 'EDITOR';
+    const canEdit = role === UserRole.ADMIN || role === UserRole.EDITOR;
 
     const containerStatusClass = isUp ? styles.statusUp : styles.statusDown;
 
@@ -149,7 +149,7 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role, onAddChild
                         </button>
                     )}
 
-                    {role === 'ADMIN' && !system.hasChildren && (
+                    {role === UserRole.ADMIN && !system.hasChildren && (
                         <button
                             type="button"
                             className={styles.actionButton}

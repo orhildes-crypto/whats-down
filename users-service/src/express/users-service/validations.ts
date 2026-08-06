@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { zodMongoObjectId } from '@whats-down/shared';
+import { UserRole, zodMongoObjectId } from '@whats-down/shared';
 import { createLocalUserSchema } from '@whats-down/shared/common';
 
 // GET /users-service/me
@@ -38,7 +38,7 @@ export const googleAuthRequestSchema = z.object({
 // PATCH /users-service/:id/role
 export const changeUserRoleRequestSchema = z.object({
     body: z.object({
-        role: z.enum(['ADMIN', 'EDITOR', 'VIEWER']),
+        role: z.enum([UserRole.ADMIN, UserRole.EDITOR, UserRole.VIEWER]),
     }),
     query: z.object({}),
     params: z.object({

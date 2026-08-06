@@ -12,6 +12,7 @@ import { useAncestors } from '../../hooks/useAncestors';
 import { Breadcrumbs, type BreadcrumbItem } from '../Breadcrumbs/Breadcrumbs';
 import { useTranslation } from 'react-i18next';
 import { Plus } from 'lucide-react';
+import { UserRole } from '@whats-down/shared/common';
 
 export const SystemsGridPage: React.FC = () => {
     const { t } = useTranslation('systemsPage');
@@ -81,7 +82,7 @@ export const SystemsGridPage: React.FC = () => {
                     ))}
                 </main>
             )}
-            {(user.role === 'ADMIN' || user.role === 'EDITOR') && (
+            {(user.role === UserRole.ADMIN || user.role === UserRole.EDITOR) && (
                 <button type="button" className={styles.addButton} onClick={() => openCreateModal(parentId)}>
                     <Plus size={16} color='#34383b'/> {t(`addSystemButton`)}
                 </button>

@@ -12,20 +12,20 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { config } from '../src/config.js';
 import { SystemServiceDocument } from '../src/express/system-service/interface.js';
 import { Server } from '../src/express/server.js';
-import { COOKIE_NAME } from '@whats-down/shared';
+import { COOKIE_NAME, UserRole } from '@whats-down/shared';
 
 const { mongo, jwt: jwtConfig } = config;
 
 const fakeObjectId = '111111111111111111111111';
 const BASE_ROUTE = '/api/system-service';
 
-const generateTestToken = (role: 'ADMIN' | 'EDITOR' | 'VIEWER' = 'ADMIN') => {
+const generateTestToken = (role: UserRole = UserRole.ADMIN) => {
     return jwt.sign({ userId: 'test-user-id-123', role }, jwtConfig.secret);
 };
 
-const adminToken = generateTestToken('ADMIN');
-const editorToken = generateTestToken('EDITOR');
-const viewerToken = generateTestToken('VIEWER');
+const adminToken = generateTestToken(UserRole.ADMIN);
+const editorToken = generateTestToken(UserRole.EDITOR);
+const viewerToken = generateTestToken(UserRole.VIEWER);
 
 const removeAllCollections = async () => {
     const collections = Object.keys(mongoose.connection.collections);

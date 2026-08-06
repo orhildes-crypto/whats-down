@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { wrapController, validateRequest, authenticateMiddleware, authorizationMiddleware } from '@whats-down/shared';
+import { wrapController, validateRequest, authenticateMiddleware, authorizationMiddleware, UserRole } from '@whats-down/shared';
 import { UsersServiceController } from './controller.js';
 import {
     createOneRequestSchema,
@@ -36,13 +36,13 @@ usersServiceRouter.post('/login/google',
 
 usersServiceRouter.delete('/:id', 
     authenticateMiddleware(config.jwt.secret), 
-    authorizationMiddleware(['ADMIN']),
+    authorizationMiddleware([UserRole.ADMIN]),
     validateRequest(deleteOneRequestSchema), 
     wrapController(UsersServiceController.deleteOne));
 
 usersServiceRouter.patch('/:id/role',
     authenticateMiddleware(config.jwt.secret), 
-    authorizationMiddleware(['ADMIN']),
+    authorizationMiddleware([UserRole.ADMIN]),
     validateRequest(changeUserRoleRequestSchema), 
     wrapController(UsersServiceController.changeUserRole));
 
