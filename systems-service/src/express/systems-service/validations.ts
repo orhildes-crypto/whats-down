@@ -1,50 +1,39 @@
 import { z } from 'zod';
 import { SystemStatus, zodMongoObjectId } from '@whats-down/shared';
+import { config } from '../../config.js';
 
-const MIN_NAME_LENGTH = 3;
-const MAX_NAME_LENGTH = 35;
-
-const requiredFields = z
-    .object({
-        name: z.string().min(MIN_NAME_LENGTH).max(MAX_NAME_LENGTH),
-    })
-    .required();
-
-const optionalFields = z
-    .object({
-        parentId: zodMongoObjectId.nullish(),
-    })
-    .partial();
+const nameSchema = z.string().min(config.name.minLettersAmount).max(config.name.maxLettersAmount);
 
 // GET /api/system-service
 export const getByQueryRequestSchema = z.object({
     body: z.object({}),
-    query: z
-        .object({
-            step: z.coerce.number().min(0).default(0),
-            limit: z.coerce.number().optional(),
-        })
-        .merge(requiredFields.partial())
-        .merge(optionalFields),
+    query: z.object({
+        step: z.coerce.number().min(0).default(0),
+        limit: z.coerce.number().optional(),
+        name: nameSchema.optional(),
+        parentId: zodMongoObjectId.optional(),
+    }),
     params: z.object({}),
 });
 
 // GET /api/system-service/roots
 export const getRootsByQueryRequestSchema = z.object({
     body: z.object({}),
-    query: z
-        .object({
-            step: z.coerce.number().min(0).default(0),
-            limit: z.coerce.number().optional(),
-        })
-        .merge(requiredFields.partial()),
+    query: z.object({
+        step: z.coerce.number().min(0).default(0),
+        limit: z.coerce.number().optional(),
+        name: nameSchema.optional(),
+    }),
     params: z.object({}),
 });
 
 // GET /api/system-service/count
 export const getCountRequestSchema = z.object({
     body: z.object({}),
-    query: requiredFields.partial().merge(optionalFields),
+    query: z.object({
+        name: nameSchema.optional(),
+        parentId: zodMongoObjectId.optional(),
+    }),
     params: z.object({}),
 });
 
@@ -68,16 +57,19 @@ export const getAncestorsByIdRequestSchema = z.object({
 
 // POST /api/system-service
 export const createOneRequestSchema = z.object({
-    body: requiredFields.merge(z.object({
+    body: z.object({
+        name: nameSchema,
         parentId: zodMongoObjectId.nullable(),
-    })),
+    }),
     query: z.object({}),
     params: z.object({}),
 });
 
 // PUT /api/system-service/:id/name
 export const editServiceRequestSchema = z.object({
-    body: requiredFields,
+    body: z.object({
+        name: nameSchema,
+    }),
     query: z.object({}),
     params: z.object({
         id: zodMongoObjectId,
