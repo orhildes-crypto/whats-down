@@ -3,6 +3,7 @@ import { SystemStatus, zodMongoObjectId } from '@whats-down/shared';
 import { config } from '../../config.js';
 
 const nameSchema = z.string().min(config.name.minLettersAmount).max(config.name.maxLettersAmount);
+const statusSchema = z.nativeEnum(SystemStatus);
 
 // GET /api/system-service
 export const getByQueryRequestSchema = z.object({
@@ -11,6 +12,7 @@ export const getByQueryRequestSchema = z.object({
         step: z.coerce.number().min(0).default(0),
         limit: z.coerce.number().optional(),
         name: nameSchema.optional(),
+        status: statusSchema.optional(),
         parentId: zodMongoObjectId.optional(),
     }),
     params: z.object({}),
@@ -23,6 +25,7 @@ export const getRootsByQueryRequestSchema = z.object({
         step: z.coerce.number().min(0).default(0),
         limit: z.coerce.number().optional(),
         name: nameSchema.optional(),
+        status: statusSchema.optional(),
     }),
     params: z.object({}),
 });
@@ -33,6 +36,7 @@ export const getCountRequestSchema = z.object({
     query: z.object({
         name: nameSchema.optional(),
         parentId: zodMongoObjectId.optional(),
+        status: statusSchema.optional(),
     }),
     params: z.object({}),
 });
@@ -60,6 +64,7 @@ export const createOneRequestSchema = z.object({
     body: z.object({
         name: nameSchema,
         parentId: zodMongoObjectId.nullable(),
+        status: statusSchema.optional(),
     }),
     query: z.object({}),
     params: z.object({}),
@@ -79,7 +84,7 @@ export const editServiceRequestSchema = z.object({
 // PUT /api/system-service/:id/status
 export const changeStatusRequestSchema = z.object({
     body: z.object({
-        status: z.enum([SystemStatus.UP, SystemStatus.DOWN]),
+        status: statusSchema,
     }),
     query: z.object({}),
     params: z.object({
