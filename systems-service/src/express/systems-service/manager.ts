@@ -1,10 +1,11 @@
 import mongoose from 'mongoose';
 import { DocumentNotFoundError, SystemWithChildrenError } from '../../utils/errors.js';
-import { CreateSystemServicePayload, SystemService, SystemServiceDocument, SystemCubeDTO } from './interface.js';
+import { CreateSystemPayload, SystemDocument, System, SystemCubeDTO } from './interface.js';
 import { SystemServiceModel } from './model.js';
+import { SystemStatus } from '../../../../shared/dist/interfaces/systemInterfaces.js';
 
 export class SystemServiceManager {
-    static getByQuery = async (query: Partial<SystemService>, step: number, limit?: number): Promise<SystemCubeDTO[]> => {
+    static getByQuery = async (query: Partial<System>, step: number, limit?: number): Promise<SystemCubeDTO[]> => {
         const systems = await SystemServiceModel.find(query, {}, limit ? { limit, skip: limit * step } : {})
             .sort('status name')
             .lean()
@@ -18,7 +19,7 @@ export class SystemServiceManager {
         );
     };
 
-    static getCount = async (query: Partial<SystemService>): Promise<number> => {
+    static getCount = async (query: Partial<System>): Promise<number> => {
         return await SystemServiceModel.countDocuments(query).exec();
     };
 
@@ -42,7 +43,7 @@ export class SystemServiceManager {
         );
     };
 
-    static getAncestors = async (systemId: string): Promise<SystemServiceDocument[]> => {
+    static getAncestors = async (systemId: string): Promise<SystemDocument[]> => {
         const result = await SystemServiceModel.aggregate([
             {
                 $match: { _id: new mongoose.Types.ObjectId(systemId) },
@@ -80,14 +81,14 @@ export class SystemServiceManager {
     };
 
     static createOne = async (
-        createSystemServicePayload: CreateSystemServicePayload,
+        createSystemPayload: CreateSystemPayload,
         createdBy: string,
         createdByUsername: string,
-    ): Promise<SystemServiceDocument> => {
+    ): Promise<SystemDocument> => {
         const newSystem = await SystemServiceModel.create({
             createdBy: createdBy,
-            name: createSystemServicePayload.name,
-            parentId: createSystemServicePayload.parentId,
+            name: createSystemPayload.name,
+            parentId: createSystemPayload.parentId,
             createdByUsername: createdByUsername,
         });
 
@@ -96,7 +97,7 @@ export class SystemServiceManager {
         return newSystem;
     };
 
-    static deleteOne = async (systemId: string): Promise<SystemServiceDocument> => {
+    static deleteOne = async (systemId: string): Promise<SystemDocument> => {
         if (await this.checkForKids(systemId)) {
             throw new SystemWithChildrenError(systemId);
         }
@@ -115,7 +116,7 @@ export class SystemServiceManager {
             .exec();
     };
 
-    static changeStatus = async (systemId: string, status: 'UP' | 'DOWN'): Promise<SystemServiceDocument> => {
+    static changeStatus = async (systemId: string, status: SystemStatus): Promise<SystemDocument> => {
         if (await this.checkForKids(systemId)) {
             throw new SystemWithChildrenError(systemId);
         }
@@ -194,7 +195,7 @@ export class SystemServiceManager {
 
         const parents = result[0].parents; // only one object matches
 
-        return parents.some((parent: SystemServiceDocument) => new mongoose.Types.ObjectId(parent._id).equals(systemId));
+        return parents.some((parent: SystemDocument) => new mongoose.Types.ObjectId(parent._id).equals(systemId));
     };
 
     static checkForKids = async (systemId: string): Promise<boolean> => {

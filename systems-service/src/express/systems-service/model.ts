@@ -1,10 +1,11 @@
 import mongoose from 'mongoose';
 import { config } from '../../config.js';
-import { SystemServiceDocument } from './interface.js';
+import { SystemDocument } from './interface.js';
+import { SystemStatus } from '../../../../shared/dist/interfaces/systemInterfaces.js';
 
 const { Schema } = mongoose;
 
-const SystemServiceSchema = new mongoose.Schema<SystemServiceDocument>(
+const SystemServiceSchema = new mongoose.Schema<SystemDocument>(
     {
         name: {
             type: String,
@@ -29,8 +30,8 @@ const SystemServiceSchema = new mongoose.Schema<SystemServiceDocument>(
         },
         status: {
             type: String,
-            enum: ['UP', 'DOWN'],
-            default: 'UP',
+            enum: Object.values(SystemStatus),
+            default: SystemStatus.UP,
         },
         statusUpdatedAt: {
             type: Date,
@@ -45,4 +46,4 @@ const SystemServiceSchema = new mongoose.Schema<SystemServiceDocument>(
 
 SystemServiceSchema.index({ status: 1, name: 1 }); // Relies on DOWN < UP alphabetically — should be changed if a third status is added.
 
-export const SystemServiceModel = mongoose.model<SystemServiceDocument>(config.mongo.systemServiceCollectionName, SystemServiceSchema);
+export const SystemServiceModel = mongoose.model<SystemDocument>(config.mongo.systemServiceCollectionName, SystemServiceSchema);

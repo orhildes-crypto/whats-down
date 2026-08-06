@@ -1,9 +1,9 @@
-export interface CreateSystemServicePayload {
+export interface CreateSystemPayload {
     name: string;
     parentId: string | null;
 }
 
-export interface SystemServiceDocument extends CreateSystemServicePayload {
+export interface SystemDocument extends CreateSystemPayload {
     _id: string;
     createdBy: string;
     status: 'UP' | 'DOWN';
@@ -12,18 +12,18 @@ export interface SystemServiceDocument extends CreateSystemServicePayload {
     createdByUsername: string;
 }
 
-export interface SystemCubeDTO extends SystemServiceDocument {
+export interface SystemCubeDTO extends SystemDocument {
     hasChildren: boolean;
 }
 
-export interface SystemServiceFilters {
+export interface SystemFilters {
     createdBy?: string;
     status?: 'UP' | 'DOWN';
     parentId?: string | null;
     name?: string;
 }
 
-export interface SystemQueryParams extends SystemServiceFilters {
+export interface SystemQueryParams extends SystemFilters {
     step: number;
     limit?: number;
 }

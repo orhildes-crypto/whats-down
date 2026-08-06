@@ -1,11 +1,11 @@
 import { SystemStatus } from "../../../../shared/dist/interfaces/systemInterfaces.js";
 
-export interface CreateSystemServicePayload {
+export interface CreateSystemPayload {
     name: string;
     parentId: string | null;
 }
 
-export interface SystemService extends CreateSystemServicePayload {
+export interface System extends CreateSystemPayload {
     createdBy: string;
     status: SystemStatus;
     createdAt: Date;
@@ -13,10 +13,10 @@ export interface SystemService extends CreateSystemServicePayload {
     createdByUsername: string;
 }
 
-export interface SystemServiceDocument extends SystemService {
+export interface SystemDocument extends System {
     _id: string;
 }
 
-export interface SystemCubeDTO extends SystemServiceDocument {
+export interface SystemCubeDTO extends SystemDocument {
     hasChildren: boolean;
 }
