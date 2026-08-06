@@ -4,10 +4,11 @@ import { fromZodError } from 'zod-validation-error';
 import { ServiceError } from '@whats-down/shared';
 import { ReuseTokenAttackDetected, InvalidOrExpiredTokenError } from '../errors.js';
 import { clearAuthCookie } from './cookie.js';
+import { StatusCodes } from 'http-status-codes';
 
 export const errorMiddleware = (error: Error, _req: Request, res: Response, next: NextFunction) => {
     if (error instanceof ZodError) {
-        res.status(400).send({
+        res.status(StatusCodes.BAD_REQUEST).send({
             type: error.name,
             message: fromZodError(error).message,
         });
@@ -24,7 +25,7 @@ export const errorMiddleware = (error: Error, _req: Request, res: Response, next
         });
         /* v8 ignore start */
     } else {
-        res.status(500).send({
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
             type: error.name,
             message: error.message,
         });

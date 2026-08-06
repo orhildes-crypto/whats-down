@@ -1,3 +1,5 @@
+import { StatusCodes } from 'http-status-codes';
+
 export class ServiceError extends Error {
     constructor(
         public code: number,
@@ -10,30 +12,30 @@ export class ServiceError extends Error {
 
 export class InternalServerError extends ServiceError {
     constructor(){
-        super(500, "An unexpected error occurred on the server.");
+        super(StatusCodes.INTERNAL_SERVER_ERROR, "An unexpected error occurred on the server.");
     }
 }
 
 export class AuthorizationError extends ServiceError {
     constructor(){
-        super(403, 'Forbidden. You do not have permission to access this resource.');
+        super(StatusCodes.FORBIDDEN, 'Forbidden. You do not have permission to access this resource.');
     }
 }
 
 export class AuthenticationError extends ServiceError {
     constructor(){
-        super(401, 'Unauthorized. You must be authenticated to access this resource.');
+        super(StatusCodes.UNAUTHORIZED, 'Unauthorized. You must be authenticated to access this resource.');
     }
 }
 
 export class DeveloperError extends ServiceError {
     constructor(message: string){
-        super(500, `Developer Error: ${message}`);
+        super(StatusCodes.INTERNAL_SERVER_ERROR, `Developer Error: ${message}`);
     }
 }
 
 export class ConflictError extends ServiceError {
     constructor(message: string = 'Can not enter same document twice') {
-        super(409, message);
+        super(StatusCodes.CONFLICT, message);
     }
 }

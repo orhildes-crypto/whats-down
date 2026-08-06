@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { StatusCodes } from 'http-status-codes';
 
 declare module 'axios' {
     export interface AxiosError {
@@ -23,7 +24,7 @@ apiClient.interceptors.response.use(
     async (error) => {
         const originalReq = error.config;
 
-        if (error.response?.status === 401 && !originalReq._retry) {
+        if (error.response?.status === StatusCodes.UNAUTHORIZED && !originalReq._retry) {
             originalReq._retry = true;
             try {
                 if (!refreshPromise) {

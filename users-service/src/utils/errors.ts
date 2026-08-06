@@ -1,39 +1,40 @@
 /* eslint-disable max-classes-per-file */
 import {ServiceError} from '@whats-down/shared';
 import mongoose from 'mongoose';
+import { StatusCodes } from 'http-status-codes';
 
 export class DocumentNotFoundError extends ServiceError {
     constructor(identifier: string) {
-        super(404, `No user found with identifier ${identifier}`);
+        super(StatusCodes.NOT_FOUND, `No user found with identifier ${identifier}`);
     }
 }
 
 export class PasswordIncorrectError extends ServiceError {
     constructor() {
-        super(401, 'Invalid credentials');
+        super(StatusCodes.UNAUTHORIZED, 'Invalid credentials');
     }
 }
 
 export class GoogleAuthError extends ServiceError {
     constructor() {
-        super(401, 'Invalid Google authentication token');
+        super(StatusCodes.UNAUTHORIZED, 'Invalid Google authentication token');
     }
 }
 
 export class SelfDemotionError extends ServiceError {
     constructor() {
-        super(400, 'You cannot demote yourself');
+        super(StatusCodes.BAD_REQUEST, 'You cannot demote yourself');
     }
 }
 
 export class ReuseTokenAttackDetected extends ServiceError {
     constructor(userId: mongoose.Types.ObjectId) {
-        super(401, `reuse token hash attack detected for user id ${userId}`)
+        super(StatusCodes.UNAUTHORIZED, `reuse token hash attack detected for user id ${userId}`)
     }
 }
 
 export class InvalidOrExpiredTokenError extends ServiceError {
     constructor() {
-        super(401, `token is invalid or expired`)
+        super(StatusCodes.UNAUTHORIZED, `token is invalid or expired`)
     }
 }
