@@ -1,8 +1,8 @@
+import { systemsService } from '@/services/systems/api/systemsApi';
+import type { CreateSystemPayload, SystemDocument } from '@/shared/types/system-interfaces';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { systemsService } from '../../api/systemsApi';
-import type { CreateSystemServicePayload, SystemServiceDocument } from '../../../../shared/types/system-interfaces';
 
-const createSystem = async ({ payload }: { payload: CreateSystemServicePayload }): Promise<SystemServiceDocument> => {
+const createSystem = async ({ payload }: { payload: CreateSystemPayload }): Promise<SystemDocument> => {
     return await systemsService.create(payload);
 }
 

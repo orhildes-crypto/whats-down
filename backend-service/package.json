@@ -4,12 +4,9 @@
   "private": true,
   "main": "dist/index.js",
   "type": "module",
-  "imports": {
-    "#*": "./src/*"
-  },
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsc",
+    "build": "tsc && tsc-alias",
     "start": "node dist/index.js"
   },
   "dependencies": {

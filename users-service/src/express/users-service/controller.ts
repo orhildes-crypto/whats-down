@@ -1,19 +1,19 @@
-import { Response } from 'express';
+import { DocumentNotFoundError, InvalidOrExpiredTokenError } from '@/utils/errors.js';
+import { clearAuthCookie, REFRESH_COOKIE_NAME, setAuthCookie, setRefreshCookie } from '@/utils/express/cookie.js';
 import { InternalServerError, TypedRequest } from '@whats-down/shared';
+import { Response } from 'express';
+import { StatusCodes } from 'http-status-codes';
 import { UsersServiceManager } from './manager.js';
+import { createInitialRefreshToken, rotateRefreshToken } from './refresh-token/manager.js';
 import {
+    changeUserRoleRequestSchema,
     createOneRequestSchema,
     deleteOneRequestSchema,
-    loginRequestSchema,
-    googleAuthRequestSchema,
-    changeUserRoleRequestSchema,
-    logoutRequestSchema,
     getMeRequestSchema,
+    googleAuthRequestSchema,
+    loginRequestSchema,
+    logoutRequestSchema,
 } from './validations.js';
-import { setAuthCookie, clearAuthCookie, REFRESH_COOKIE_NAME, setRefreshCookie } from '../../utils/express/cookie.js';
-import { createInitialRefreshToken, rotateRefreshToken } from './refresh-token/manager.js';
-import { DocumentNotFoundError, InvalidOrExpiredTokenError } from '../../utils/errors.js';
-import { StatusCodes } from 'http-status-codes';
 
 export class UsersServiceController {
     static getMe = async (req: TypedRequest<typeof getMeRequestSchema>, res: Response) => {

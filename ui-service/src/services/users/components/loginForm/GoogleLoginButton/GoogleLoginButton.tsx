@@ -1,9 +1,9 @@
-import React from 'react';
 import { GoogleLogin, type CredentialResponse } from '@react-oauth/google';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useLoginWithGoogle } from '../hooks/useLoginWithGoogle';
 import styles from './GoogleLoginButton.module.css';
-import { useTranslation } from 'react-i18next';
 
 export const GoogleLoginButton: React.FC = () => {
     const navigate = useNavigate();

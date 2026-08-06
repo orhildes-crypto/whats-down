@@ -1,12 +1,12 @@
-import { OAuth2Client } from 'google-auth-library/build/src/auth/oauth2client.js';
-import { DocumentNotFoundError, GoogleAuthError, PasswordIncorrectError, SelfDemotionError } from '../../utils/errors.js';
-import { AuthResult, CreateLocalUserPayload, UserDocument, SafeUserDocument } from './interface.js';
-import { UserModel } from './model.js';
-import bcrypt from 'bcryptjs';
-import { config } from '../../config.js';
-import { TokenPayload } from 'google-auth-library';
-import jwt from 'jsonwebtoken';
+import { config } from '@/config.js';
+import { DocumentNotFoundError, GoogleAuthError, PasswordIncorrectError, SelfDemotionError } from '@/utils/errors.js';
 import { AuthenticationError, ConflictError, UserRole } from '@whats-down/shared';
+import bcrypt from 'bcryptjs';
+import { TokenPayload } from 'google-auth-library';
+import { OAuth2Client } from 'google-auth-library/build/src/auth/oauth2client.js';
+import jwt from 'jsonwebtoken';
+import { AuthResult, CreateLocalUserPayload, SafeUserDocument, UserDocument } from './interface.js';
+import { UserModel } from './model.js';
 
 export class UsersServiceManager {
     static getMe = async (id: string): Promise<SafeUserDocument> => {

@@ -5,10 +5,10 @@
   "license": "ISC",
   "type": "module",
   "scripts": {
-    "start": "node --async-stack-traces ./dist/index.js",
-    "dev": "npm run build && npm start",
-    "test": "vitest --ui --coverage",
-    "build": "tsc"
+  "start": "node --async-stack-traces ./dist/index.js",
+  "dev": "npm run build && npm start",
+  "test": "vitest --ui --coverage",
+  "build": "tsc && tsc-alias"
   },
   "dependencies": {
     "@whats-down/shared": "*",

@@ -1,10 +1,10 @@
-import { useState } from 'react';
-import { z } from 'zod';
-import { GenericModal } from '../../../../shared/components/GenericModal/GenericModal';
-import { useCreateSystem } from './useCreateSystem';
-import styles from './CreateSystemModal.module.css';
-import { useTranslation } from 'react-i18next';
+import { GenericModal } from '@/shared/components/GenericModal/GenericModal';
 import type { TFunction } from 'i18next';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { z } from 'zod';
+import styles from './CreateSystemModal.module.css';
+import { useCreateSystem } from './useCreateSystem';
 
 const createSystemSchema = (t: TFunction<'createSystemModal'>) =>
     z.object({
@@ -39,7 +39,7 @@ export const CreateSystemModal = ({ isOpen, onClose, parentId }: CreateSystemMod
         const result = schema.safeParse({ name });
 
         if (!result.success) {
-            setError(result.error.issues[0].message);
+            setError(result.error.issues[0]!.message);
             return;
         }
 

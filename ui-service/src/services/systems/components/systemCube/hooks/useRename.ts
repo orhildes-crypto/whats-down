@@ -1,6 +1,6 @@
+import { systemsService } from '@/services/systems/api/systemsApi';
+import type { SystemDocument } from '@/shared/types/system-interfaces';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { systemsService } from '../../../api/systemsApi';
-import type { SystemDocument } from '../../../../../shared/types/system-interfaces';
 
 const rename = async ({ systemId, newName }: { systemId: string; newName: string }): Promise<SystemDocument> => {
     return await systemsService.rename(systemId, newName);

@@ -1,14 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { type SystemCubeDTO } from '../../../../shared/types/system-interfaces';
-import styles from './systemCube.module.css';
-import { useChangeStatus } from './hooks/useChangeStatus';
-import { useNavigate } from 'react-router-dom';
-import { useRename } from './hooks/useRename';
-import { formatDate } from '../../../../shared/utils/formatDate';
-import { DeleteSystemModal } from '../deleteSystemModal/deleteSystemModal';
-import { useTranslation } from 'react-i18next';
-import { PencilLine, Trash2, Plus } from 'lucide-react';
+import { type SystemCubeDTO } from '@/shared/types/system-interfaces';
+import { formatDate } from '@/shared/utils/formatDate';
 import { SystemStatus, UserRole } from '@whats-down/shared/common';
+import { PencilLine, Plus, Trash2 } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import { DeleteSystemModal } from '../deleteSystemModal/deleteSystemModal';
+import { useChangeStatus } from './hooks/useChangeStatus';
+import { useRename } from './hooks/useRename';
+import styles from './systemCube.module.css';
 
 export interface SystemCubeProps {
     system: SystemCubeDTO;

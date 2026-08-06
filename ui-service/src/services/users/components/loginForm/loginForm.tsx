@@ -1,10 +1,10 @@
+import { LanguageToggle } from '@/shared/components/LanguageToggle/LanguageToggle';
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { GoogleLoginButton } from './GoogleLoginButton/GoogleLoginButton';
 import styles from './LoginForm.module.css';
 import { useLogin } from './hooks/useLogin';
-import { GoogleLoginButton } from './GoogleLoginButton/GoogleLoginButton';
-import { LanguageToggle } from '../../../../shared/components/LanguageToggle/LanguageToggle';
-import { useTranslation } from 'react-i18next';
 
 export const LoginPage: React.FC = () => {
     const [username, setUsername] = useState<string>('');

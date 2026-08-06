@@ -1,13 +1,13 @@
+import { LanguageToggle } from '@/shared/components/LanguageToggle/LanguageToggle';
+import { type CreateLocalUserPayload } from '@/shared/types/user-interfaces';
+import { getErrorMessage } from '@/shared/utils/zodErrorMessages';
+import { createLocalUserSchema } from '@whats-down/shared/common';
+import { Eye, EyeOff } from 'lucide-react';
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import styles from './registerPage.module.css';
 import { useRegister } from './useRegister';
-import { type CreateLocalUserPayload } from '../../../../shared/types/user-interfaces';
-import { createLocalUserSchema } from '@whats-down/shared/common';
-import { getErrorMessage } from '../../../../shared/utils/zodErrorMessages';
-import { LanguageToggle } from '../../../../shared/components/LanguageToggle/LanguageToggle';
-import { useTranslation } from 'react-i18next';
-import { Eye, EyeOff } from 'lucide-react';
 
 export const RegisterPage: React.FC = () => {
     const [registerData, setRegisterData] = useState<CreateLocalUserPayload>({ email: '', username: '', password: '' });
@@ -30,6 +30,8 @@ export const RegisterPage: React.FC = () => {
         const result = fieldSchema.safeParse(value);
 
         if (!result.success) {
+            if (!result.error.issues[0]) return '';
+
             return getErrorMessage(result.error.issues[0], name);
         }
 
@@ -46,7 +48,7 @@ export const RegisterPage: React.FC = () => {
             result.error.issues.forEach((issue) => {
                 setErrors((prevErrors) => ({
                     ...prevErrors,
-                    [issue.path[0]]: getErrorMessage(issue),
+                    [issue.path[0] as string]: getErrorMessage(issue),
                 }));
             });
 

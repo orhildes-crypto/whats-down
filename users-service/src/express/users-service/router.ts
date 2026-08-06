@@ -1,16 +1,16 @@
+import { config } from '@/config.js';
+import { authenticateMiddleware, authorizationMiddleware, UserRole, validateRequest, wrapController } from '@whats-down/shared';
 import { Router } from 'express';
-import { wrapController, validateRequest, authenticateMiddleware, authorizationMiddleware, UserRole } from '@whats-down/shared';
 import { UsersServiceController } from './controller.js';
 import {
+    changeUserRoleRequestSchema,
     createOneRequestSchema,
     deleteOneRequestSchema,
-    loginRequestSchema,
-    googleAuthRequestSchema,
-    changeUserRoleRequestSchema,
-    logoutRequestSchema,
     getMeRequestSchema,
+    googleAuthRequestSchema,
+    loginRequestSchema,
+    logoutRequestSchema,
 } from './validations.js';
-import { config } from '../../config.js';
 
 export const usersServiceRouter = Router();
 

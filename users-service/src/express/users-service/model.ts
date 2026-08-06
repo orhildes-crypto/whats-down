@@ -1,7 +1,7 @@
+import { config } from '@/config.js';
+import { UserRole } from '@whats-down/shared';
 import mongoose from 'mongoose';
-import { config } from '../../config.js';
 import { UserDocument } from './interface.js';
-import { UserRole } from '../../../../shared/dist/userInterfaces.js';
 
 const UserSchema = new mongoose.Schema<UserDocument>(
     {

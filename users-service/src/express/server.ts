@@ -1,11 +1,11 @@
+import { errorMiddleware } from '@/utils/express/error.js';
+import { loggerMiddleware } from '@/utils/logger/middleware.js';
+import cookieParser from 'cookie-parser';
 import { once } from 'events';
 import express from 'express';
 import helmet from 'helmet';
 import http from 'http';
-import { errorMiddleware } from '../utils/express/error.js';
-import { loggerMiddleware } from '../utils/logger/middleware.js';
 import { appRouter } from './router.js';
-import cookieParser from 'cookie-parser';
 
 /* v8 ignore start */
 export class Server {

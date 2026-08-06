@@ -8,7 +8,7 @@
     "start": "node --async-stack-traces ./dist/index.js",
     "dev": "npm run build && npm start",
     "test": "vitest --ui --coverage",
-    "build": "tsc"
+    "build": "tsc && tsc-alias"
   },
   "dependencies": {
     "@whats-down/shared": "*",

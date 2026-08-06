@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import type { SystemDocument } from '../../../../shared/types/system-interfaces';
 import { systemsService } from '../../api/systemsApi';
-import type { SystemServiceDocument } from '../../../../shared/types/system-interfaces';
 
-const deleteSystem = async ({ systemId }: { systemId: string }): Promise<SystemServiceDocument> => {
+const deleteSystem = async ({ systemId }: { systemId: string }): Promise<SystemDocument> => {
     return await systemsService.delete(systemId);
 };
 

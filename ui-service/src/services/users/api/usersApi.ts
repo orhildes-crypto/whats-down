@@ -1,6 +1,6 @@
-import type { UserRole } from '../../../../../shared/dist/userInterfaces';
-import { apiClient } from '../../../shared/api/apiClient';
-import { type SafeUserDocument, type CreateLocalUserPayload } from '../../../shared/types/user-interfaces';
+import { apiClient } from '@/shared/api/apiClient';
+import { type CreateLocalUserPayload, type SafeUserDocument } from '@/shared/types/user-interfaces';
+import type { UserRole } from '@whats-down/shared/common';
 
 export const usersService = {
     getMe: async (): Promise<SafeUserDocument> => {

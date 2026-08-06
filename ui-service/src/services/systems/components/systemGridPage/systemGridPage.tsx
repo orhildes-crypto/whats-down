@@ -1,18 +1,18 @@
-import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { useMe } from '../../../users/hooks/useMe';
-import { useSystems } from '../../hooks/useSystems';
-import { SystemCube } from '../systemCube/systemCube';
-import { Spinner } from '../../../../shared/components/Spinner/Spinner';
-import { ErrorPage } from '../../../../shared/components/ErrorPage/ErrorPage';
-import styles from './systemGridPage.module.css';
-import { CreateSystemModal } from '../createSystemModal/CreateSystemModal';
-import { useGetById } from '../../hooks/useGetById';
-import { useAncestors } from '../../hooks/useAncestors';
-import { Breadcrumbs, type BreadcrumbItem } from '../Breadcrumbs/Breadcrumbs';
-import { useTranslation } from 'react-i18next';
-import { Plus } from 'lucide-react';
+import { useAncestors } from '@/services/systems/hooks/useAncestors';
+import { useGetById } from '@/services/systems/hooks/useGetById';
+import { useSystems } from '@/services/systems/hooks/useSystems';
+import { useMe } from '@/services/users/hooks/useMe';
+import { ErrorPage } from '@/shared/components/ErrorPage/ErrorPage';
+import { Spinner } from '@/shared/components/Spinner/Spinner';
 import { UserRole } from '@whats-down/shared/common';
+import { Plus } from 'lucide-react';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
+import { Breadcrumbs, type BreadcrumbItem } from '../Breadcrumbs/Breadcrumbs';
+import { CreateSystemModal } from '../createSystemModal/CreateSystemModal';
+import { SystemCube } from '../systemCube/systemCube';
+import styles from './systemGridPage.module.css';
 
 export const SystemsGridPage: React.FC = () => {
     const { t } = useTranslation('systemsPage');

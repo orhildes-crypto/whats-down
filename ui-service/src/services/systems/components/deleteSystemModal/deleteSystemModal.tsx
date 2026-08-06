@@ -1,8 +1,8 @@
-import { GenericModal } from '../../../../shared/components/GenericModal/GenericModal';
-import { useDeleteSystem } from './useDeleteSystem';
-import styles from './deleteSystemModal.module.css';
-import { useTranslation } from 'react-i18next';
+import { GenericModal } from '@/shared/components/GenericModal/GenericModal';
 import type { SystemCubeDTO } from '@/shared/types/system-interfaces';
+import { useTranslation } from 'react-i18next';
+import styles from './deleteSystemModal.module.css';
+import { useDeleteSystem } from './useDeleteSystem';
 
 type DeleteSystemModalProps = {
     isOpen: boolean;

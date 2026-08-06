@@ -2,17 +2,16 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-restricted-syntax */
+import { COOKIE_NAME, UserRole } from '@whats-down/shared';
 import { Express } from 'express';
+import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
 import request from 'supertest';
-import jwt from 'jsonwebtoken';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { config } from '../src/config.js';
 import { Server } from '../src/express/server.js';
-import { COOKIE_NAME } from '@whats-down/shared';
 import { RefreshTokenModel } from '../src/express/users-service/refresh-token/model.js';
 import { REFRESH_COOKIE_NAME } from '../src/utils/express/cookie.js';
-import { UserRole } from '@whats-down/shared';
 
 const { mongo, jwt: jwtConfig } = config;
 

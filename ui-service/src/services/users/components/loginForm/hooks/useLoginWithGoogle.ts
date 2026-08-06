@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { usersService } from '../../../api/usersApi';
+import { usersService } from '@/services/users/api/usersApi';
 
 const loginWithGoogle = async (idToken: string) => {
     return await usersService.loginWithGoogle(idToken);

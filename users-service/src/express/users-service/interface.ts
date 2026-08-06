@@ -1,4 +1,4 @@
-import { UserRole } from "../../../../shared/dist/userInterfaces.js";
+import { UserRole } from '@whats-down/shared';
 
 type BaseUser = {
     username: string;

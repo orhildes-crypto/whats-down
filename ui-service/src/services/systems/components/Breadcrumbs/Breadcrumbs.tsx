@@ -1,7 +1,7 @@
 import React from 'react';
-import styles from './Breadcrumbs.module.css';
-import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import styles from './Breadcrumbs.module.css';
 
 export type BreadcrumbItem = {
     id: string | null;

@@ -16,7 +16,7 @@
     }
   },
   "scripts": {
-    "build": "tsc"
+    "build": "tsc && tsc-alias"
   },
   "dependencies": {
     "express": "^4.22.2",
