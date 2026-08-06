@@ -32,6 +32,9 @@ export class UsersServiceManager {
             throw err;
         });
 
+        console.log('Registered to DB:', UserModel.db.name);
+        console.log('Registered to Collection:', UserModel.collection.name);
+        
         return this.toSafeUser(newUser.toObject() as UserDocument);
     };
 

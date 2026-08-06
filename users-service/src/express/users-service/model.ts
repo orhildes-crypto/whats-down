@@ -3,7 +3,6 @@ import { config } from '../../config.js';
 import { UserDocument } from './interface.js';
 import { UserRole } from '../../../../shared/dist/userInterfaces.js';
 
-
 const UserSchema = new mongoose.Schema<UserDocument>(
     {
         role: {
@@ -23,12 +22,12 @@ const UserSchema = new mongoose.Schema<UserDocument>(
             unique: true,
         },
         passwordHash: {
-            type: String,  
+            type: String,
             required: true,
             select: false,
         },
         googleId: {
-            type: String,  
+            type: String,
             required: false,
             unique: true,
             sparse: true,
@@ -39,4 +38,4 @@ const UserSchema = new mongoose.Schema<UserDocument>(
     },
 );
 
-export const UserModel = mongoose.model<UserDocument>(config.mongo.userCollectionName, UserSchema);
+export const UserModel = mongoose.model<UserDocument>('User', UserSchema, config.mongo.userCollectionName);
