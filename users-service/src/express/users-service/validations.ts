@@ -35,7 +35,7 @@ export const googleAuthRequestSchema = z.object({
     params: z.object({}),
 });
 
-// PATCH /users-service/:id/role
+// PUT /users-service/:id/role
 export const changeUserRoleRequestSchema = z.object({
     body: z.object({
         role: z.enum([UserRole.ADMIN, UserRole.EDITOR, UserRole.VIEWER]),

@@ -75,7 +75,7 @@ export const createOneRequestSchema = z.object({
     params: z.object({}),
 });
 
-// PATCH /api/system-service/:id/name
+// PUT /api/system-service/:id/name
 export const editServiceRequestSchema = z.object({
     body: requiredFields,
     query: z.object({}),
@@ -84,7 +84,7 @@ export const editServiceRequestSchema = z.object({
     })
 })
 
-// PATCH /api/system-service/:id/status
+// PUT /api/system-service/:id/status
 export const changeStatusRequestSchema = z.object({
     body: z.object({
         status: z.enum([SystemStatus.UP, SystemStatus.DOWN]),

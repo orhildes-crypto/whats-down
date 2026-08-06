@@ -14,16 +14,12 @@ export const usersService = {
     },
 
     login: async (username: string, password: string): Promise<SafeUserDocument> => {
-        console.log('fetching response from /users/login with username:', username, 'and password:', password);
-        const result =  (
+        return  (
             await apiClient.post<SafeUserDocument>('/users/login', {
                 username: username,
                 password: password,
             })
         ).data;
-
-        console.log(result);
-        return result;
         
     },
 
@@ -46,7 +42,7 @@ export const usersService = {
 
     changeRole: async (newRole: UserRole, userId: string): Promise<SafeUserDocument> => {
         return (
-            await apiClient.patch<SafeUserDocument>(
+            await apiClient.put<SafeUserDocument>(
                 `/users/${userId}/role`, 
                 {
                     role: newRole

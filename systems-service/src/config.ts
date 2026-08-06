@@ -20,4 +20,3 @@ export const config = {
         name: env.get('MODEL_NAME').default('SystemServiceModel').required().asString(),
     }
 };
-

@@ -23,21 +23,25 @@ systemServiceRouter.get('/',
     authorizationMiddleware([UserRole.ADMIN, UserRole.EDITOR, UserRole.VIEWER]),
     validateRequest(getByQueryRequestSchema), 
     wrapController(SystemServiceController.getByQuery));
+
 systemServiceRouter.get('/count', 
     authenticateMiddleware(config.jwt.secret), 
     authorizationMiddleware([UserRole.ADMIN, UserRole.EDITOR, UserRole.VIEWER]),
     validateRequest(getCountRequestSchema), 
     wrapController(SystemServiceController.getCount));
+
 systemServiceRouter.get('/roots', 
     authenticateMiddleware(config.jwt.secret), 
     authorizationMiddleware([UserRole.ADMIN, UserRole.EDITOR, UserRole.VIEWER]),
     validateRequest(getRootsByQueryRequestSchema), 
     wrapController(SystemServiceController.getRoots));
+
 systemServiceRouter.get('/:id', 
     authenticateMiddleware(config.jwt.secret), 
     authorizationMiddleware([UserRole.ADMIN, UserRole.EDITOR, UserRole.VIEWER]),
     validateRequest(getByIdRequestSchema), 
     wrapController(SystemServiceController.getById));
+
 systemServiceRouter.get('/:id/ancestors',
     authenticateMiddleware(config.jwt.secret),
     authorizationMiddleware([UserRole.ADMIN, UserRole.EDITOR, UserRole.VIEWER]),
@@ -49,12 +53,14 @@ systemServiceRouter.post('/',
     authorizationMiddleware([UserRole.ADMIN, UserRole.EDITOR]),
     validateRequest(createOneRequestSchema), 
     wrapController(SystemServiceController.createOne));
-systemServiceRouter.patch('/:id/name', 
+
+systemServiceRouter.put('/:id/name', 
     authenticateMiddleware(config.jwt.secret), 
     authorizationMiddleware([UserRole.ADMIN, UserRole.EDITOR]),
     validateRequest(editServiceRequestSchema), 
     wrapController(SystemServiceController.renameSystem));
-systemServiceRouter.patch('/:id/status', 
+
+systemServiceRouter.put('/:id/status', 
     authenticateMiddleware(config.jwt.secret), 
     authorizationMiddleware([UserRole.ADMIN, UserRole.EDITOR]),
     validateRequest(changeStatusRequestSchema), 

@@ -44,9 +44,9 @@ export class SystemServiceController {
             throw new DeveloperError("User context is missing. Make sure authenticateMiddleware is applied to this route.");
         }
 
-        const { userId, username: createdByUsername } = req.user;
+        const { userId, username } = req.user;
         
-        res.json(await SystemServiceManager.createOne(req.body, userId, createdByUsername));
+        res.json(await SystemServiceManager.createOne(req.body, userId, username));
     };
 
     static renameSystem = async (req: TypedRequest<typeof editServiceRequestSchema>, res: Response) => {

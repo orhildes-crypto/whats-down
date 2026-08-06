@@ -21,6 +21,6 @@ backendUsersRouter.delete('/:id', authenticateMiddleware(config.jwt.secret), (re
     forwardToUsersService(req, res);
 });
 
-backendUsersRouter.patch('/:id/role', authenticateMiddleware(config.jwt.secret), (req, res) => {
+backendUsersRouter.put('/:id/role', authenticateMiddleware(config.jwt.secret), (req, res) => {
     forwardToUsersService(req, res);
 });

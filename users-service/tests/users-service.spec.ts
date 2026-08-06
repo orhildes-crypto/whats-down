@@ -290,7 +290,7 @@ describe('e2e users-service api testing', () => {
             }
         });
     });
-    describe('PATCH /api/users/:id/role', () => {
+    describe('PUT /api/users/:id/role', () => {
         let targetUserId: string;
 
         beforeEach(async () => {
@@ -303,7 +303,7 @@ describe('e2e users-service api testing', () => {
 
         it("should allow ADMIN to change another user's role", async () => {
             const { body } = await request(app)
-                .patch(`${BASE_ROUTE}/${targetUserId}/role`)
+                .put(`${BASE_ROUTE}/${targetUserId}/role`)
                 .set('Cookie', `${COOKIE_NAME}=${adminToken}`)
                 .send({ role: 'ADMIN' })
                 .expect(200);
@@ -313,19 +313,19 @@ describe('e2e users-service api testing', () => {
 
         it('should block EDITOR from changing a role', async () => {
             return request(app)
-                .patch(`${BASE_ROUTE}/${targetUserId}/role`)
+                .put(`${BASE_ROUTE}/${targetUserId}/role`)
                 .set('Cookie', `${COOKIE_NAME}=${editorToken}`)
                 .send({ role: 'ADMIN' })
                 .expect(403);
         });
 
         it('should return 401 when changing a role without a token', async () => {
-            return request(app).patch(`${BASE_ROUTE}/${targetUserId}/role`).send({ role: 'ADMIN' }).expect(401);
+            return request(app).put(`${BASE_ROUTE}/${targetUserId}/role`).send({ role: 'ADMIN' }).expect(401);
         });
 
         it('should return 404 for a non-existing user', async () => {
             return request(app)
-                .patch(`${BASE_ROUTE}/${fakeObjectId}/role`)
+                .put(`${BASE_ROUTE}/${fakeObjectId}/role`)
                 .set('Cookie', `${COOKIE_NAME}=${adminToken}`)
                 .send({ role: 'ADMIN' })
                 .expect(404);
@@ -333,7 +333,7 @@ describe('e2e users-service api testing', () => {
 
         it('should fail validation for an invalid role value', async () => {
             return request(app)
-                .patch(`${BASE_ROUTE}/${targetUserId}/role`)
+                .put(`${BASE_ROUTE}/${targetUserId}/role`)
                 .set('Cookie', `${COOKIE_NAME}=${adminToken}`)
                 .send({ role: 'SUPER_ADMIN' })
                 .expect(400);
@@ -350,7 +350,7 @@ describe('e2e users-service api testing', () => {
             const selfToken = jwt.sign({ userId: newUser._id, role: 'ADMIN' }, jwtConfig.secret);
 
             return request(app)
-                .patch(`${BASE_ROUTE}/${newUser._id}/role`)
+                .put(`${BASE_ROUTE}/${newUser._id}/role`)
                 .set('Cookie', `${COOKIE_NAME}=${selfToken}`)
                 .send({ role: 'VIEWER' })
                 .expect(400); // Bad Request due to self-demotion protection

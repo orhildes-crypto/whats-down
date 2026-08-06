@@ -10,7 +10,7 @@ import request from 'supertest';
 import jwt from 'jsonwebtoken';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { config } from '../src/config.js';
-import { SystemServiceDocument } from '../src/express/system-service/interface.js';
+import { SystemDocument } from '../src/express/systems-service/interface.js';
 import { Server } from '../src/express/server.js';
 import { COOKIE_NAME, UserRole } from '@whats-down/shared';
 
@@ -73,7 +73,7 @@ describe('e2e system-service api testing', () => {
     describe(BASE_ROUTE, () => {
         describe(`GET ${BASE_ROUTE}`, () => {
             it('should get all the system services', async () => {
-                const services: SystemServiceDocument[] = [];
+                const services: SystemDocument[] = [];
 
                 for (let i = 0; i < 3; i++) {
                     const { body: service } = await request(app)
@@ -119,7 +119,7 @@ describe('e2e system-service api testing', () => {
             });
 
             it('should get services with pagination', async () => {
-                const services: SystemServiceDocument[] = [];
+                const services: SystemDocument[] = [];
 
                 for (let i = 0; i < 15; i++) {
                     const { body: service } = await request(app)
@@ -266,7 +266,7 @@ describe('e2e system-service api testing', () => {
             });
         });
 
-        describe(`PATCH ${BASE_ROUTE}/:id/name`, () => {
+        describe(`PUT ${BASE_ROUTE}/:id/name`, () => {
             it('should edit service name', async () => {
                 const propertyForUpdate = 'renamed-service';
 
@@ -277,7 +277,7 @@ describe('e2e system-service api testing', () => {
                     .expect(200);
 
                 const { body } = await request(app)
-                    .patch(`${BASE_ROUTE}/${service._id}/name`)
+                    .put(`${BASE_ROUTE}/${service._id}/name`)
                     .set('Cookie', `${COOKIE_NAME}=${editorToken}`)
                     .send({ name: propertyForUpdate })
                     .expect(200);
@@ -293,7 +293,7 @@ describe('e2e system-service api testing', () => {
                     .expect(200);
 
                 return request(app)
-                    .patch(`${BASE_ROUTE}/${service._id}/name`)
+                    .put(`${BASE_ROUTE}/${service._id}/name`)
                     .set('Cookie', `${COOKIE_NAME}=${viewerToken}`)
                     .send({ name: 'hacked-name' })
                     .expect(403);
@@ -301,7 +301,7 @@ describe('e2e system-service api testing', () => {
 
             it('should fail for updating a non-existing service', async () => {
                 return request(app)
-                    .patch(`${BASE_ROUTE}/${fakeObjectId}/name`)
+                    .put(`${BASE_ROUTE}/${fakeObjectId}/name`)
                     .set('Cookie', `${COOKIE_NAME}=${adminToken}`)
                     .send({ name: 'system-x' })
                     .expect(404);
@@ -314,7 +314,7 @@ describe('e2e system-service api testing', () => {
                     .send(exampleSystemService)
                     .expect(200);
 
-                return request(app).patch(`${BASE_ROUTE}/${service._id}/name`).set('Cookie', `${COOKIE_NAME}=${adminToken}`).send({}).expect(400);
+                return request(app).put(`${BASE_ROUTE}/${service._id}/name`).set('Cookie', `${COOKIE_NAME}=${adminToken}`).send({}).expect(400);
             });
 
             it('should reject status field via editService endpoint (Omit<..., "status">)', async () => {
@@ -325,14 +325,14 @@ describe('e2e system-service api testing', () => {
                     .expect(200);
 
                 return request(app)
-                    .patch(`${BASE_ROUTE}/${service._id}/name`)
+                    .put(`${BASE_ROUTE}/${service._id}/name`)
                     .set('Cookie', `${COOKIE_NAME}=${adminToken}`)
                     .send({ status: 'DOWN' })
                     .expect(400);
             });
         });
 
-        describe(`PATCH ${BASE_ROUTE}/:id/status`, () => {
+        describe(`PUT ${BASE_ROUTE}/:id/status`, () => {
             it('should change status of a leaf service', async () => {
                 const { body: service } = await request(app)
                     .post(BASE_ROUTE)
@@ -341,7 +341,7 @@ describe('e2e system-service api testing', () => {
                     .expect(200);
 
                 const { body } = await request(app)
-                    .patch(`${BASE_ROUTE}/${service._id}/status`)
+                    .put(`${BASE_ROUTE}/${service._id}/status`)
                     .set('Cookie', `${COOKIE_NAME}=${adminToken}`)
                     .send({ status: 'DOWN' })
                     .expect(200);
@@ -363,7 +363,7 @@ describe('e2e system-service api testing', () => {
                     .expect(200);
 
                 const { body } = await request(app)
-                    .patch(`${BASE_ROUTE}/${parent._id}/status`)
+                    .put(`${BASE_ROUTE}/${parent._id}/status`)
                     .set('Cookie', `${COOKIE_NAME}=${adminToken}`)
                     .send({ status: 'DOWN' })
                     .expect(422);
@@ -373,7 +373,7 @@ describe('e2e system-service api testing', () => {
 
             it('should fail for a non-existing service', async () => {
                 return request(app)
-                    .patch(`${BASE_ROUTE}/${fakeObjectId}/status`)
+                    .put(`${BASE_ROUTE}/${fakeObjectId}/status`)
                     .set('Cookie', `${COOKIE_NAME}=${adminToken}`)
                     .send({ status: 'DOWN' })
                     .expect(404);
@@ -397,7 +397,7 @@ describe('e2e system-service api testing', () => {
                     .expect(200);
 
                 await request(app)
-                    .patch(`${BASE_ROUTE}/${child._id}/status`)
+                    .put(`${BASE_ROUTE}/${child._id}/status`)
                     .set('Cookie', `${COOKIE_NAME}=${adminToken}`)
                     .send({ status: 'DOWN' })
                     .expect(200);
@@ -433,18 +433,18 @@ describe('e2e system-service api testing', () => {
                     .expect(200);
 
                 await request(app)
-                    .patch(`${BASE_ROUTE}/${childA._id}/status`)
+                    .put(`${BASE_ROUTE}/${childA._id}/status`)
                     .set('Cookie', `${COOKIE_NAME}=${adminToken}`)
                     .send({ status: 'DOWN' })
                     .expect(200);
                 await request(app)
-                    .patch(`${BASE_ROUTE}/${childB._id}/status`)
+                    .put(`${BASE_ROUTE}/${childB._id}/status`)
                     .set('Cookie', `${COOKIE_NAME}=${adminToken}`)
                     .send({ status: 'DOWN' })
                     .expect(200);
 
                 await request(app)
-                    .patch(`${BASE_ROUTE}/${childA._id}/status`)
+                    .put(`${BASE_ROUTE}/${childA._id}/status`)
                     .set('Cookie', `${COOKIE_NAME}=${adminToken}`)
                     .send({ status: 'UP' })
                     .expect(200);
@@ -456,7 +456,7 @@ describe('e2e system-service api testing', () => {
                 expect(parentStillDown.status).toEqual('DOWN');
 
                 await request(app)
-                    .patch(`${BASE_ROUTE}/${childB._id}/status`)
+                    .put(`${BASE_ROUTE}/${childB._id}/status`)
                     .set('Cookie', `${COOKIE_NAME}=${adminToken}`)
                     .send({ status: 'UP' })
                     .expect(200);

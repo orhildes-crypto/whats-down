@@ -40,7 +40,7 @@ usersServiceRouter.delete('/:id',
     validateRequest(deleteOneRequestSchema), 
     wrapController(UsersServiceController.deleteOne));
 
-usersServiceRouter.patch('/:id/role',
+usersServiceRouter.put('/:id/role',
     authenticateMiddleware(config.jwt.secret), 
     authorizationMiddleware([UserRole.ADMIN]),
     validateRequest(changeUserRoleRequestSchema), 
