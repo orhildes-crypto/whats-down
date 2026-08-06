@@ -1,11 +1,13 @@
+import { SystemStatus } from "../../../../shared/dist/interfaces/systemInterfaces.js";
+
 export interface CreateSystemServicePayload {
     name: string;
-    parentId: string | null ;
+    parentId: string | null;
 }
 
 export interface SystemService extends CreateSystemServicePayload {
     createdBy: string;
-    status: "UP" | "DOWN";
+    status: SystemStatus;
     createdAt: Date;
     statusUpdatedAt: Date;
     createdByUsername: string;

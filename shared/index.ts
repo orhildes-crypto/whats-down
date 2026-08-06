@@ -7,4 +7,5 @@ export * from './mongoose.js';
 export * from './errors.js';
 export * from './JWTwrappers.js';
 export * from './constants.js';
-export * from './userInterfaces.js';
+export * from './interfaces/userInterfaces.js';
+export * from './interfaces/systemInterfaces.js';

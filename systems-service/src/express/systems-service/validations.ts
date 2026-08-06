@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { zodMongoObjectId } from '@whats-down/shared';
+import { SystemStatus, zodMongoObjectId } from '@whats-down/shared';
 
 const MIN_NAME_LENGTH = 3;
 const MAX_NAME_LENGTH = 35;
@@ -87,7 +87,7 @@ export const editServiceRequestSchema = z.object({
 // PATCH /api/system-service/:id/status
 export const changeStatusRequestSchema = z.object({
     body: z.object({
-        status: z.enum(["UP" , "DOWN"]),
+        status: z.enum([SystemStatus.UP, SystemStatus.DOWN]),
     }),
     query: z.object({}),
     params: z.object({

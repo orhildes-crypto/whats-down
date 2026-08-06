@@ -1,8 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { systemsService } from '../../../api/systemsApi';
 import type { SystemServiceDocument } from '../../../../../shared/types/system-interfaces';
+import type { SystemStatus } from '@whats-down/shared/common';
 
-const changeStatus = async ({systemId, status}: {systemId: string, status: "UP" | "DOWN"}): Promise<SystemServiceDocument> => {
+const changeStatus = async ({systemId, status}: {systemId: string, status: SystemStatus}): Promise<SystemServiceDocument> => {
     return await systemsService.changeStatus(systemId, status);
 }
 
