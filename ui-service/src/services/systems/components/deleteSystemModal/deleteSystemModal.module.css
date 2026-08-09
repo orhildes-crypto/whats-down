@@ -31,6 +31,7 @@
     justify-content: center;
     font-size: 21px;
     text-align: center;
+    font-family: var(--font-family-base);
 }
 
 .confirmButton:hover:not(:disabled) {

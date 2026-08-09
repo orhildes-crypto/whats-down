@@ -8,6 +8,7 @@
 
 .side:first-child {
     justify-self: start;
+    font-family: var(--font-family-display);
 }
 
 .side:last-child {
@@ -33,7 +34,7 @@
 
 .logoutButton {
     background: none;
-    border: 1px solid #d1d5db;
+    border: 1px solid #ffffff;
     border-radius: 6px;
     padding: 10px 14px;
     font-size: 14px;

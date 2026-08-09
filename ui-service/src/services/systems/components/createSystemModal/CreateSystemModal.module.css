@@ -9,6 +9,9 @@
     font-weight: 500;
     color: #374151;
     text-align: start;
+    font-size: 1rem;
+    font-weight: 500;
+    font-family: var(--font-family-base);
 }
 
 .input {
@@ -36,7 +39,7 @@
 }
 
 .confirmButton {
-    background-color: #2563eb;
+    background-color: #636e72;
     color: #ffffff;
     border: none;
     border-radius: 6px;
@@ -44,13 +47,14 @@
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
+    font-family: var(--font-family-base);
 }
 
 .confirmButton:hover:not(:disabled) {
-    background-color: #1d4ed8;
+    background-color: #404040;
 }
 
 .confirmButton:disabled {
-    background-color: #93c5fd;
+    background-color: #ededed;
     cursor: not-allowed;
 }

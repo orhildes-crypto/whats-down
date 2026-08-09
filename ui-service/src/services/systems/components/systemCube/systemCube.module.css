@@ -87,6 +87,7 @@
 }
 
 .infoLabel {
+    font-family: var(--font-family-base);
     color: #fafafa;
     font-weight: 500;
     font-size: 0.95rem;
@@ -99,6 +100,12 @@
 
     margin-top: 14px;
     padding-top: 12px;
+}
+
+.changeStatusMessage {
+    font-family: var(--font-family-base);
+    font-weight: 500;
+    font-size: 0.95rem;
 }
 
 .cubeActions {
