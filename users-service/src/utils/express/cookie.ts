@@ -1,12 +1,9 @@
-import { Response } from 'express';
+import { config } from '@/config.js';
 import { COOKIE_NAME } from '@whats-down/shared';
-import { REFRESH_TOKEN_TTL } from '../../express/users-service/refresh-token/manager.js';
 import env from 'env-var';
+import { Response } from 'express';
 
-export const REFRESH_COOKIE_NAME = 'refreshToken';
-const isProduction = env.get('NODE_ENV').asString() === 'production';;
-
-export const REFRESH_PATH = '/api/users-service/auth/refresh';
+const isProduction = env.get('NODE_ENV').asString() === 'production';
 
 export const setAuthCookie = (
     res: Response, 
@@ -25,9 +22,9 @@ export const setAuthCookie = (
 export const setRefreshCookie = (res: Response, token: string) => {
     
     setAuthCookie(res, token, {
-        name: REFRESH_COOKIE_NAME,
-        path: REFRESH_PATH, 
-        maxAge: REFRESH_TOKEN_TTL
+        name: config.refreshToken.cookieName,
+        path: config.refreshToken.refreshPath,
+        maxAge: config.refreshToken.refreshTokenTtl
     });
 };
 
@@ -39,10 +36,10 @@ export const clearAuthCookie = (res: Response) => {
         path: '/'
     });
 
-    res.clearCookie(REFRESH_COOKIE_NAME, {
+    res.clearCookie(config.refreshToken.cookieName, {
         httpOnly: true,
         sameSite: 'lax',
         secure: isProduction,
-        path: REFRESH_PATH,
+        path: config.refreshToken.refreshPath,
     });
 };

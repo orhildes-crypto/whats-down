@@ -18,5 +18,9 @@ export const config = {
     },
     auth: {
         cookieRewritePath: '/api/users/auth/refresh',
+    },
+    refreshToken: {
+        cookieName: env.get('REFRESH_TOKEN_COOKIE_NAME').default('refreshToken').required().asString(),
+        refreshPath: env.get('REFRESH_TOKEN_PATH').default('/api/users-service/auth/refresh').required().asString(),
     }
 };

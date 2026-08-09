@@ -1,11 +1,9 @@
-import crypto from 'crypto';
-import { randomUUID } from 'crypto';
-import { RefreshTokenModel } from './model.js';
+import { config } from '@/config.js';
+import { InvalidOrExpiredTokenError, ReuseTokenAttackDetected } from '@/utils/errors.js';
+import crypto, { randomUUID } from 'crypto';
 import { RefreshTokenDocument } from './interface.js';
-import { InvalidOrExpiredTokenError, ReuseTokenAttackDetected } from '../../../utils/errors.js';
+import { RefreshTokenModel } from './model.js';
 
-export const REFRESH_TOKEN_TTL = 7 * 24 * 60 * 60 * 1000; // one week
-export const AUDIT_RETENTION = 30 * 24 * 60 * 60 * 1000; // one month
 
 export const hashToken = (rawToken: string): string => {
     return crypto.createHash('sha256').update(rawToken).digest('hex');
@@ -26,8 +24,8 @@ export const createInitialRefreshToken = async (userId: string, username: string
         familyId: randomUUID(),
         generation: 0,
         isRevoked: false,
-        expiresAt: new Date(now.getTime() + REFRESH_TOKEN_TTL),
-        deleteAt: new Date(now.getTime() + REFRESH_TOKEN_TTL + AUDIT_RETENTION),
+        expiresAt: new Date(now.getTime() + config.refreshToken.refreshTokenTtl),
+        deleteAt: new Date(now.getTime() + config.refreshToken.refreshTokenTtl + config.refreshToken.auditRetention),
     });
 
     return { rawToken, record };
@@ -72,7 +70,7 @@ export const rotateRefreshToken = async (rawToken: string): Promise<{rawToken: s
     const newRawToken = generateRawToken();
     const nextTokenHash = hashToken(newRawToken);
 
-    const deleteAt = new Date(updatedOldToken.expiresAt.getTime() + AUDIT_RETENTION);
+    const deleteAt = new Date(updatedOldToken.expiresAt.getTime() + config.refreshToken.auditRetention);
 
     const nextTokenRecord = await RefreshTokenModel.create({
         userId: updatedOldToken.userId,

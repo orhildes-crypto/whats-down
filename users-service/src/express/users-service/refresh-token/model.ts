@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { RefreshTokenDocument } from './interface.js';
+import { RefreshTokenDocument, RevocationReason} from './interface.js';
 
 export const refreshTokenSchema = new Schema<RefreshTokenDocument>(
     {
@@ -31,7 +31,7 @@ export const refreshTokenSchema = new Schema<RefreshTokenDocument>(
         },
         revocationReason: {
             type: String,
-            enum: ['USER_LOGOUT', 'ADMIN_ACTION', 'FAMILY_COMPROMISED'],
+            enum: Object.values(RevocationReason),
         },
         expiresAt: {
             type: Date,

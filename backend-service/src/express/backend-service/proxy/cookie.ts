@@ -1,5 +1,6 @@
 import setCookieParser from 'set-cookie-parser';
 import cookie from 'cookie';
+import { config } from '../../../config.js';
 
 type ExplicitSameSite = 'lax' | 'strict' | 'none';
 
@@ -12,7 +13,7 @@ export const rewriteSetCookiePath = (rawCookies: string[], newPath: string): str
     const parsedCookies = setCookieParser.parse(rawCookies);
 
     const updatedCookies = parsedCookies.map((parsedCookie) => {
-        if (parsedCookie.name === 'refreshToken') {
+        if (parsedCookie.name === config.refreshToken.cookieName) {
             parsedCookie.path = newPath;
         }
 

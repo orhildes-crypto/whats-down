@@ -6,7 +6,6 @@ type BaseUser = {
     role: UserRole;
 };
 
-// Does not have a role 
 export interface CreateLocalUserPayload {
     username: string;
     email: string;

@@ -1,7 +1,7 @@
+import { SystemStatus } from '@whats-down/shared';
 import mongoose from 'mongoose';
 import { config } from '../../config.js';
 import { SystemDocument } from './interface.js';
-import { SystemStatus } from '../../../../shared/dist/interfaces/systemInterfaces.js';
 
 const { Schema } = mongoose;
 

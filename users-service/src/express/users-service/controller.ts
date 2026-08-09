@@ -1,5 +1,5 @@
 import { DocumentNotFoundError, InvalidOrExpiredTokenError } from '@/utils/errors.js';
-import { clearAuthCookie, REFRESH_COOKIE_NAME, setAuthCookie, setRefreshCookie } from '@/utils/express/cookie.js';
+import { clearAuthCookie, setAuthCookie, setRefreshCookie } from '@/utils/express/cookie.js';
 import { InternalServerError, TypedRequest } from '@whats-down/shared';
 import { Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
@@ -14,6 +14,7 @@ import {
     loginRequestSchema,
     logoutRequestSchema,
 } from './validations.js';
+import { config } from '@/config.js';
 
 export class UsersServiceController {
     static getMe = async (req: TypedRequest<typeof getMeRequestSchema>, res: Response) => {
@@ -49,7 +50,7 @@ export class UsersServiceController {
     };
 
     static refresh = async (req: TypedRequest<any>, res: Response) => {
-        const rawRefreshToken = req.cookies?.[REFRESH_COOKIE_NAME];
+        const rawRefreshToken = req.cookies?.[config.refreshToken.cookieName];
 
         if (!rawRefreshToken) {
             throw new InvalidOrExpiredTokenError();

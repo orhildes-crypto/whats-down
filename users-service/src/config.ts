@@ -20,5 +20,11 @@ export const config = {
         secret: isProduction 
             ? env.get('JWT_SECRET').required().asString()
             : env.get('JWT_SECRET').default('local-dev-secret-key-123').asString(),
+    },
+    refreshToken: {
+        cookieName: env.get('REFRESH_TOKEN_COOKIE_NAME').default('refreshToken').required().asString(),
+        refreshPath: env.get('REFRESH_TOKEN_PATH').default('/api/users-service/auth/refresh').required().asString(),
+        refreshTokenTtl: env.get('REFRESH_TOKEN_TTL').default(7 * 24 * 60 * 60 * 1000).required().asIntPositive(),
+        auditRetention: env.get('REFRESH_TOKEN_AUDIT_RETENTION').default(30 * 24 * 60 * 60 * 1000).required().asIntPositive(),
     }
 };
