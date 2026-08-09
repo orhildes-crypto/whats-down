@@ -8,11 +8,27 @@ html,
 body {
     margin: 0;
     padding: 0;
-    background: #121212; 
+    background: #636e72;
     min-height: 100vh;
     overflow-x: hidden;
 }
 
 #root {
     min-height: 100vh;
+
+    --font-family-display: 'Rubik', 'Heebo', system-ui, sans-serif;
+
+    --font-family-base: 'Assistant', 'Heebo', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+    --font-family-mono: 'IBM Plex Mono', 'JetBrains Mono', ui-monospace, monospace;
+
+    line-height: 1.55;
+
+    --color-bg-dark: #16191d;
+    --color-bg-light: #f3f4f6;
+    --color-text-main: #e4e7eb;
+
+    --color-bg-surface: #1e2227;
+    --color-border-subtle: #2a2f36;
+    --color-text-secondary: #9aa1ac;
 }

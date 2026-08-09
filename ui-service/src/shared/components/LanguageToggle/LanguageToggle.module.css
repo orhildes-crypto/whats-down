@@ -1,5 +1,5 @@
 .toggleButton {
-    background: #2eaae6;
+    background: #636e72;
     border: 1px solid #ffffff;
     border-radius: 6px;
     padding: 10px 14px;
@@ -12,5 +12,5 @@
 }
 
 .toggleButton:hover {
-    background-color: rgb(57, 110, 201);
+    background-color: #404040;
 }

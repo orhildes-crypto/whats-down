@@ -1,9 +1,9 @@
+import { useLogout } from '@/services/users/hooks/useLogout';
+import { useMe } from '@/services/users/hooks/useMe';
 import React from 'react';
-import { useMe } from '../../../services/users/hooks/useMe';
-import { useLogout } from '../../../services/users/hooks/useLogout';
-import styles from './Navbar.module.css';
 import { useTranslation } from 'react-i18next';
 import { LanguageToggle } from '../LanguageToggle/LanguageToggle';
+import styles from './Navbar.module.css';
 
 export const Navbar: React.FC = () => {
     const { data: user } = useMe();

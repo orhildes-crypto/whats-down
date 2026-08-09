@@ -1,12 +1,5 @@
 .pageContainer {
-    background: #121212;
     padding: 32px 40px;
-    font-family:
-        system-ui,
-        -apple-system,
-        'Segoe UI',
-        Roboto,
-        sans-serif;
 }
 
 .pageTitle {

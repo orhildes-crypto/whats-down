@@ -1,7 +1,7 @@
 import { config } from '@/config.js';
 import { InvalidOrExpiredTokenError, ReuseTokenAttackDetected } from '@/utils/errors.js';
 import crypto, { randomUUID } from 'crypto';
-import { RefreshTokenDocument } from './interface.js';
+import { RefreshTokenDocument, RevocationReason } from './interface.js';
 import { RefreshTokenModel } from './model.js';
 
 
@@ -89,6 +89,6 @@ export const rotateRefreshToken = async (rawToken: string): Promise<{rawToken: s
 export const reuseAttackDetected = async (existingToken: RefreshTokenDocument): Promise<void> => {
     await RefreshTokenModel.updateMany(
         { familyId: existingToken.familyId},
-        { $set: { isRevoked: true, revocationReason: 'FAMILY_COMPROMISED' } },
+        { $set: { isRevoked: true, revocationReason: RevocationReason.FAMILY_COMPROMISED } },
     ).exec();
 };

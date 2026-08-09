@@ -1,6 +1,6 @@
+import { changeLanguage } from '@/i18n';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { changeLanguage } from '../../../i18n';
 import styles from './LanguageToggle.module.css';
 
 export const LanguageToggle: React.FC = () => {
