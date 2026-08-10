@@ -2,7 +2,7 @@ import { config } from '@/config.js';
 import { SystemStatus, zodMongoObjectId } from '@whats-down/shared';
 import { z } from 'zod';
 
-const baseFields = z.object({
+const requiredFields = z.object({
     name: z.string().min(config.name.minLettersAmount).max(config.name.maxLettersAmount),
     parentId: zodMongoObjectId,
     createdBy: zodMongoObjectId,
@@ -22,7 +22,7 @@ export const getByQueryRequestSchema = z.object({
             step: z.coerce.number().min(0).default(0),
             limit: z.coerce.number().optional(),
         })
-        .merge(baseFields.partial()),
+        .merge(requiredFields.partial()),
     params: z.object({}),
 });
 
@@ -34,14 +34,14 @@ export const getRootsByQueryRequestSchema = z.object({
             step: z.coerce.number().min(0).default(0),
             limit: z.coerce.number().optional(),
         })
-        .merge(baseFields.omit({ parentId: true }).partial()),
+        .merge(requiredFields.omit({ parentId: true }).partial()),
     params: z.object({}),
 });
 
 // GET /api/system-service/count
 export const getCountRequestSchema = z.object({
     body: z.object({}),
-    query: baseFields.partial(),
+    query: requiredFields.partial(),
     params: z.object({}),
 });
 
@@ -65,7 +65,7 @@ export const getAncestorsByIdRequestSchema = z.object({
 
 // POST /api/system-service
 export const createOneRequestSchema = z.object({
-    body: baseFields.pick({ name: true, parentId: true }).extend({
+    body: requiredFields.pick({ name: true, parentId: true }).extend({
         parentId: zodMongoObjectId.nullable(),
     }),
     query: z.object({}),
@@ -74,7 +74,7 @@ export const createOneRequestSchema = z.object({
 
 // PUT /api/system-service/:id/name
 export const editServiceRequestSchema = z.object({
-    body: baseFields.pick({ name: true }),
+    body: requiredFields.pick({ name: true }),
     query: z.object({}),
     params: z.object({
         id: zodMongoObjectId,
@@ -83,7 +83,7 @@ export const editServiceRequestSchema = z.object({
 
 // PUT /api/system-service/:id/status
 export const changeStatusRequestSchema = z.object({
-    body: baseFields.pick({ status: true }),
+    body: requiredFields.pick({ status: true }),
     query: z.object({}),
     params: z.object({
         id: zodMongoObjectId,

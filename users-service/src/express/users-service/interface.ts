@@ -1,4 +1,6 @@
 import { UserRole } from '@whats-down/shared';
+import { createLocalUserSchema } from '@whats-down/shared/common';
+import z from 'zod';
 
 type BaseUser = {
     username: string;
@@ -6,9 +8,7 @@ type BaseUser = {
     role: UserRole;
 };
 
-export type CreateLocalUserPayload = Omit<BaseUser, 'role'> & {
-    password: string;
-};
+export type CreateLocalUserPayload = z.infer<typeof createLocalUserSchema>;
 
 type AuthMethod = {
     passwordHash: string; 
