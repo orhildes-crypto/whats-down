@@ -40,7 +40,7 @@ export class SystemServiceManager {
                     connectFromField: 'parentId',
                     connectToField: '_id',
                     as: 'ancestors',
-                    maxDepth: 10,
+                    maxDepth: 20,
                     depthField: 'distance',
                 },
             },
@@ -148,22 +148,29 @@ export class SystemServiceManager {
             return;
         }
 
-        let newParentStatus: SystemStatus;
-        if (childStatus === SystemStatus.DOWN) {
-            newParentStatus = SystemStatus.DOWN;
-        } else {
-            newParentStatus = (await this.hasKids(parentId, SystemStatus.DOWN)) ? SystemStatus.DOWN : SystemStatus.UP;
+        const higherAncestors = await this.getAncestors(parentId);
+        const ancestors = [parentSystem, ...higherAncestors];
+
+        let currentStatus = childStatus;
+
+        for (const ancestor of ancestors) {
+            let newStatus: SystemStatus;
+            if (currentStatus === SystemStatus.DOWN) {
+                newStatus = SystemStatus.DOWN;
+            } else {
+                newStatus = (await this.hasKids(ancestor._id.toString(), SystemStatus.DOWN)) ? SystemStatus.DOWN : SystemStatus.UP;
+            }
+
+            if (newStatus === ancestor.status) {
+                return;
+            }
+
+            await SystemServiceModel.findByIdAndUpdate(ancestor._id, { $set: buildStatusUpdate(newStatus) })
+                .lean()
+                .exec();
+
+            currentStatus = newStatus;
         }
-
-        if (newParentStatus === parentSystem.status) {
-            return;
-        }
-
-        await SystemServiceModel.findByIdAndUpdate(parentId, { $set: buildStatusUpdate(newParentStatus) }, { new: true })
-            .lean()
-            .exec();
-
-        this.updateAncestorsStatus(parentSystem.parentId ? parentSystem.parentId.toString() : null, newParentStatus);
     };
 
     static hasKids = async (parentId: string, status?: SystemStatus): Promise<boolean> => {
@@ -175,7 +182,6 @@ export class SystemServiceManager {
         return !!result;
     };
 }
-
 
 const buildStatusUpdate = (status: SystemStatus) => ({
     status,
