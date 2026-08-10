@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { PASSWORD_TOO_SHORT, USER_NAME_TOO_SHORT } from '../index.js';
+import { PASSWORD_TOO_SHORT, USER_NAME_TOO_SHORT } from '../constants.js';
 
 const baseUserSchema = z.object({
     username: z.string().min(USER_NAME_TOO_SHORT),

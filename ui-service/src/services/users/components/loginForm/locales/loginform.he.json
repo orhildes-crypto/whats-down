@@ -8,12 +8,5 @@
     "loginError": "שם המשתמש או הסיסמה שגויים",
     "registerText": "אין לך חשבון? ",
     "registerLink": "צור חשבון חדש",
-    "googleErrorMessage": "ההתחברות עם Google נכשלה. ודא שיש לך חשבון רשום במערכת.",
-    "validation": {
-        "required": "שדה חובה",
-        "invalidEmail": "כתובת אימייל לא תקינה",
-        "usernameMin": "שם המשתמש חייב להכיל לפחות {{min}} תווים",
-        "passwordMin": "הסיסמה חייבת להכיל לפחות {{min}} תווים",
-        "invalidField": "שדה לא תקין"
-    }
+    "googleErrorMessage": "ההתחברות עם Google נכשלה. ודא שיש לך חשבון רשום במערכת."
 }

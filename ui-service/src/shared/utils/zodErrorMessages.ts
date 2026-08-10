@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import i18next from 'i18next';
 
-export const getErrorMessage = (issue: z.ZodIssue, fieldNameOverride?: string, namespace = 'loginForm'): string => {
+export const getErrorMessage = (issue: z.ZodIssue, fieldNameOverride?: string, namespace = 'registerPage'): string => {
     const field = fieldNameOverride ?? issue.path[0];
 
     if (issue.code === 'too_small' && issue.minimum === 1 && issue.type === 'string') {

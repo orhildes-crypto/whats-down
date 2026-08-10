@@ -1,4 +1,6 @@
-import type { UserRole } from "../../../../shared/dist/userInterfaces";
+import type { UserRole } from "@whats-down/shared/common";
+import { createLocalUserSchema } from "@whats-down/shared/common";
+import { z } from 'zod';
 
 type BaseUser = {
     username: string;
@@ -6,12 +8,7 @@ type BaseUser = {
     role: UserRole;
 };
 
-// Does not have a role 
-export interface CreateLocalUserPayload {
-    username: string;
-    email: string;
-    password: string; 
-}
+export type CreateLocalUserPayload = z.infer<typeof createLocalUserSchema>;
 
 export type SafeUserDocument = BaseUser & {
     _id: string;

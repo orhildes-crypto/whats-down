@@ -5,7 +5,7 @@ import type {
     SystemFilters,
     SystemQueryParams,
 } from '@/shared/types/system-interfaces';
-import type { SystemStatus } from '@whats-down/shared';
+import type { SystemStatus } from '@whats-down/shared/common';
 
 export const systemsService = {
     getByQuery: async (params: SystemQueryParams): Promise<SystemDocument[]> => {
