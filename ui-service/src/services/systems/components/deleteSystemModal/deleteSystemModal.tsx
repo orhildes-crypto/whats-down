@@ -1,5 +1,5 @@
 import { GenericModal } from '@/shared/components/GenericModal/GenericModal';
-import type { SystemCubeDTO } from '@/shared/types/system-interfaces';
+import type { SystemDocument } from '@/shared/types/system-interfaces';
 import { useTranslation } from 'react-i18next';
 import styles from './deleteSystemModal.module.css';
 import { useDeleteSystem } from './useDeleteSystem';
@@ -7,7 +7,7 @@ import { useDeleteSystem } from './useDeleteSystem';
 type DeleteSystemModalProps = {
     isOpen: boolean;
     onClose: () => void;
-    system: SystemCubeDTO;
+    system: SystemDocument;
 };
 
 export const DeleteSystemModal = ({ isOpen, onClose, system }: DeleteSystemModalProps) => {

@@ -1,9 +1,8 @@
 import { SystemStatus } from "@whats-down/shared";
+import { createOneRequestSchema } from "./validations.js";
+import z from "zod";
 
-export interface CreateSystemPayload {
-    name: string;
-    parentId: string | null;
-}
+export type CreateSystemPayload = z.infer<typeof createOneRequestSchema>['body'];
 
 export interface System extends CreateSystemPayload {
     createdBy: string;
@@ -17,8 +16,4 @@ export interface System extends CreateSystemPayload {
 
 export interface SystemDocument extends System {
     _id: string;
-}
-
-export interface SystemCubeDTO extends SystemDocument {
-    hasChildren: boolean;
 }

@@ -1,4 +1,4 @@
-import { type SystemCubeDTO } from '@/shared/types/system-interfaces';
+import { type SystemDocument } from '@/shared/types/system-interfaces';
 import { formatDate } from '@/shared/utils/formatDate';
 import { SystemStatus, UserRole } from '@whats-down/shared/common';
 import { PencilLine, Plus, Trash2 } from 'lucide-react';
@@ -11,7 +11,7 @@ import { useRename } from './hooks/useRename';
 import styles from './systemCube.module.css';
 
 export interface SystemCubeProps {
-    system: SystemCubeDTO;
+    system: SystemDocument;
     role: UserRole;
     onAddChild: () => void;
 }

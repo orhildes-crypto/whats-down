@@ -2,42 +2,46 @@ import { config } from '@/config.js';
 import { SystemStatus, zodMongoObjectId } from '@whats-down/shared';
 import { z } from 'zod';
 
-const nameSchema = z.string().min(config.name.minLettersAmount).max(config.name.maxLettersAmount);
-const statusSchema = z.nativeEnum(SystemStatus);
+const baseFields = z.object({
+    name: z.string().min(config.name.minLettersAmount).max(config.name.maxLettersAmount),
+    parentId: zodMongoObjectId,
+    createdBy: zodMongoObjectId,
+    createdByUsername: z.string(),
+    status: z.nativeEnum(SystemStatus),
+    statusPriority: z.number(),
+    hasChildren: z.coerce.boolean(),
+    createdAt: z.coerce.date(),
+    statusUpdatedAt: z.coerce.date(),
+});
 
 // GET /api/system-service
 export const getByQueryRequestSchema = z.object({
     body: z.object({}),
-    query: z.object({
-        step: z.coerce.number().min(0).default(0),
-        limit: z.coerce.number().optional(),
-        name: nameSchema.optional(),
-        status: statusSchema.optional(),
-        parentId: zodMongoObjectId.optional(),
-    }),
+    query: z
+        .object({
+            step: z.coerce.number().min(0).default(0),
+            limit: z.coerce.number().optional(),
+        })
+        .merge(baseFields.partial()),
     params: z.object({}),
 });
 
 // GET /api/system-service/roots
 export const getRootsByQueryRequestSchema = z.object({
     body: z.object({}),
-    query: z.object({
-        step: z.coerce.number().min(0).default(0),
-        limit: z.coerce.number().optional(),
-        name: nameSchema.optional(),
-        status: statusSchema.optional(),
-    }),
+    query: z
+        .object({
+            step: z.coerce.number().min(0).default(0),
+            limit: z.coerce.number().optional(),
+        })
+        .merge(baseFields.omit({ parentId: true }).partial()),
     params: z.object({}),
 });
 
 // GET /api/system-service/count
 export const getCountRequestSchema = z.object({
     body: z.object({}),
-    query: z.object({
-        name: nameSchema.optional(),
-        parentId: zodMongoObjectId.optional(),
-        status: statusSchema.optional(),
-    }),
+    query: baseFields.partial(),
     params: z.object({}),
 });
 
@@ -61,10 +65,8 @@ export const getAncestorsByIdRequestSchema = z.object({
 
 // POST /api/system-service
 export const createOneRequestSchema = z.object({
-    body: z.object({
-        name: nameSchema,
+    body: baseFields.pick({ name: true, parentId: true }).extend({
         parentId: zodMongoObjectId.nullable(),
-        status: statusSchema.optional(),
     }),
     query: z.object({}),
     params: z.object({}),
@@ -72,20 +74,16 @@ export const createOneRequestSchema = z.object({
 
 // PUT /api/system-service/:id/name
 export const editServiceRequestSchema = z.object({
-    body: z.object({
-        name: nameSchema,
-    }),
+    body: baseFields.pick({ name: true }),
     query: z.object({}),
     params: z.object({
         id: zodMongoObjectId,
-    })
-})
+    }),
+});
 
 // PUT /api/system-service/:id/status
 export const changeStatusRequestSchema = z.object({
-    body: z.object({
-        status: statusSchema,
-    }),
+    body: baseFields.pick({ status: true }),
     query: z.object({}),
     params: z.object({
         id: zodMongoObjectId,

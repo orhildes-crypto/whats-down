@@ -1,7 +1,6 @@
 import { apiClient } from '@/shared/api/apiClient';
 import type {
     CreateSystemPayload,
-    SystemCubeDTO,
     SystemDocument,
     SystemFilters,
     SystemQueryParams,
@@ -9,11 +8,11 @@ import type {
 import type { SystemStatus } from '@whats-down/shared';
 
 export const systemsService = {
-    getByQuery: async (params: SystemQueryParams): Promise<SystemCubeDTO[]> => {
+    getByQuery: async (params: SystemQueryParams): Promise<SystemDocument[]> => {
         const { step = 0, limit = 10, ...filters } = params;
 
         return (
-            await apiClient.get<SystemCubeDTO[]>('/systems', {
+            await apiClient.get<SystemDocument[]>('/systems', {
                 params: {
                     step,
                     limit,
@@ -23,9 +22,9 @@ export const systemsService = {
         ).data;
     },
 
-    getRoots: async (step = 0, limit = 10): Promise<SystemCubeDTO[]> => {
+    getRoots: async (step = 0, limit = 10): Promise<SystemDocument[]> => {
         return (
-            await apiClient.get<SystemCubeDTO[]>('/systems/roots', {
+            await apiClient.get<SystemDocument[]>('/systems/roots', {
                 params: { step, limit },
             })
         ).data;

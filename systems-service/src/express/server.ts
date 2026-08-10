@@ -22,14 +22,11 @@ export class Server {
         const app = express();
 
         app.use(cookieParser());
-
         app.use(helmet());
         app.use(express.json());
         app.use(express.urlencoded({ extended: true }));
-
         app.use(loggerMiddleware);
         app.use(appRouter);
-
         app.use(errorMiddleware);
 
         return app;

@@ -13,9 +13,6 @@ export interface SystemDocument extends CreateSystemPayload {
     statusUpdatedAt: string;
     createdByUsername: string;
     statusPriority: number;
-}
-
-export interface SystemCubeDTO extends SystemDocument {
     hasChildren: boolean;
 }
 

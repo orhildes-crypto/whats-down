@@ -14,9 +14,9 @@ import {
 } from './validations.js';
 import { config } from '@/config.js';
 
-export const systemServiceRouter = Router();
+export const systemRouter = Router();
 
-systemServiceRouter.get(
+systemRouter.get(
     '/',
     authenticateMiddleware(config.jwt.secret),
     authorizationMiddleware([UserRole.ADMIN, UserRole.EDITOR, UserRole.VIEWER]),
@@ -24,7 +24,7 @@ systemServiceRouter.get(
     wrapController(SystemServiceController.getByQuery),
 );
 
-systemServiceRouter.get(
+systemRouter.get(
     '/count',
     authenticateMiddleware(config.jwt.secret),
     authorizationMiddleware([UserRole.ADMIN, UserRole.EDITOR, UserRole.VIEWER]),
@@ -32,7 +32,7 @@ systemServiceRouter.get(
     wrapController(SystemServiceController.getCount),
 );
 
-systemServiceRouter.get(
+systemRouter.get(
     '/roots',
     authenticateMiddleware(config.jwt.secret),
     authorizationMiddleware([UserRole.ADMIN, UserRole.EDITOR, UserRole.VIEWER]),
@@ -40,7 +40,7 @@ systemServiceRouter.get(
     wrapController(SystemServiceController.getRoots),
 );
 
-systemServiceRouter.get(
+systemRouter.get(
     '/:id',
     authenticateMiddleware(config.jwt.secret),
     authorizationMiddleware([UserRole.ADMIN, UserRole.EDITOR, UserRole.VIEWER]),
@@ -48,7 +48,7 @@ systemServiceRouter.get(
     wrapController(SystemServiceController.getById),
 );
 
-systemServiceRouter.get(
+systemRouter.get(
     '/:id/ancestors',
     authenticateMiddleware(config.jwt.secret),
     authorizationMiddleware([UserRole.ADMIN, UserRole.EDITOR, UserRole.VIEWER]),
@@ -56,7 +56,7 @@ systemServiceRouter.get(
     wrapController(SystemServiceController.getAncestors),
 );
 
-systemServiceRouter.post(
+systemRouter.post(
     '/',
     authenticateMiddleware(config.jwt.secret),
     authorizationMiddleware([UserRole.ADMIN, UserRole.EDITOR]),
@@ -64,7 +64,7 @@ systemServiceRouter.post(
     wrapController(SystemServiceController.createOne),
 );
 
-systemServiceRouter.put(
+systemRouter.put(
     '/:id/name',
     authenticateMiddleware(config.jwt.secret),
     authorizationMiddleware([UserRole.ADMIN, UserRole.EDITOR]),
@@ -72,7 +72,7 @@ systemServiceRouter.put(
     wrapController(SystemServiceController.renameSystem),
 );
 
-systemServiceRouter.put(
+systemRouter.put(
     '/:id/status',
     authenticateMiddleware(config.jwt.secret),
     authorizationMiddleware([UserRole.ADMIN, UserRole.EDITOR]),
@@ -80,7 +80,7 @@ systemServiceRouter.put(
     wrapController(SystemServiceController.changeStatus),
 );
 
-systemServiceRouter.delete(
+systemRouter.delete(
     '/:id',
     authenticateMiddleware(config.jwt.secret),
     authorizationMiddleware([UserRole.ADMIN]),

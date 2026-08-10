@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import { systemServiceRouter } from './systems-service/router.js';
+import { systemRouter } from './systems-service/router.js';
 import { StatusCodes } from 'http-status-codes';
 
 export const appRouter = Router();
 
-appRouter.use('/api/systems-service', systemServiceRouter);
+appRouter.use('/api/systems-service', systemRouter);
 
 appRouter.use(['/isAlive', '/isalive', '/health'], (_req, res) => {
     res.status(StatusCodes.OK).send('alive');

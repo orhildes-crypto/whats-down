@@ -53,4 +53,4 @@ const SystemServiceSchema = new mongoose.Schema<SystemDocument>(
 
 SystemServiceSchema.index({ statusPriority: 1, name: 1 });
 
-export const SystemServiceModel = mongoose.model<SystemDocument>('System', SystemServiceSchema, config.mongo.systemServiceCollectionName);
+export const SystemModel = mongoose.model<SystemDocument>('System', SystemServiceSchema, config.mongo.systemServiceCollectionName);
