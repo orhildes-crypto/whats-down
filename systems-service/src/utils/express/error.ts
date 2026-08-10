@@ -4,7 +4,7 @@ import { fromZodError } from 'zod-validation-error';
 import { ServiceError } from '@whats-down/shared';
 import { StatusCodes } from 'http-status-codes';
 
-export const errorMiddleware = (error: Error, _req: Request, res: Response, next: NextFunction) => {
+export const errorMiddleware = (error: Error, _req: Request, res: Response, _next: NextFunction) => {
     if (error instanceof ZodError) {
         res.status(StatusCodes.BAD_REQUEST).send({
             type: error.name,
@@ -23,6 +23,4 @@ export const errorMiddleware = (error: Error, _req: Request, res: Response, next
         });
     }
     /* v8 ignore end */
-
-    next();
 };

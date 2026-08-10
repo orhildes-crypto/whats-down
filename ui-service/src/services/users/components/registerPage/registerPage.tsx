@@ -14,13 +14,13 @@ export const RegisterPage: React.FC = () => {
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [showPassword, setShowPassword] = useState<boolean>(false);
 
+    type FieldName = keyof CreateLocalUserPayload;
+
     const navigate = useNavigate();
 
     const { t } = useTranslation('registerPage');
 
-    type FieldName = keyof CreateLocalUserPayload;
-
-    const { mutateAsync: register, isPending, error } = useRegister();
+    const { mutateAsync: register, isPending } = useRegister();
 
     const validateSingleField = (name: FieldName, value: unknown): string => {
         const fieldSchema = createLocalUserSchema.shape[name];
@@ -86,8 +86,6 @@ export const RegisterPage: React.FC = () => {
             <div className={styles.card}>
                 <h1 className={styles.title}>{t('title')}</h1>
                 <p className={styles.subtitle}>{t('subtitle')}</p>
-
-                {error && <div className={styles.errorMessage}>{`t('registerError') - ${error.message}`}</div>}
 
                 <form className={styles.form} onSubmit={handleSubmit}>
                     <div className={styles.inputGroup}>

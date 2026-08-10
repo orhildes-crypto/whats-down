@@ -3,7 +3,6 @@ import axios from 'axios';
 import router from '../router';
 import toast from 'react-hot-toast';
 
-
 const handleGlobalError = (error: unknown) => {
     if (axios.isAxiosError(error) && error.isAuthError) {
         router.navigate('/login', { replace: true });

@@ -6,11 +6,9 @@ type BaseUser = {
     role: UserRole;
 };
 
-export interface CreateLocalUserPayload {
-    username: string;
-    email: string;
-    password: string; 
-}
+export type CreateLocalUserPayload = Omit<BaseUser, 'role'> & {
+    password: string;
+};
 
 type AuthMethod = {
     passwordHash: string; 
@@ -24,7 +22,7 @@ export type UserDocument = User & {
     _id: string;
 };
 
-export type SafeUserDocument = Omit<UserDocument, 'passwordHash' | 'googleId'>;
+export type SafeUserDocument = Omit<UserDocument, keyof AuthMethod>;
 
 export interface AuthResult {
     user: SafeUserDocument;

@@ -20,7 +20,6 @@ export const setAuthCookie = (
 };
 
 export const setRefreshCookie = (res: Response, token: string) => {
-    
     setAuthCookie(res, token, {
         name: config.refreshToken.cookieName,
         path: config.refreshToken.refreshPath,

@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import env from 'env-var';
+import { SignOptions } from 'jsonwebtoken';
 
 const isProduction = env.get('NODE_ENV').asString() === 'production';
 
@@ -20,6 +21,7 @@ export const config = {
         secret: isProduction 
             ? env.get('JWT_SECRET').required().asString()
             : env.get('JWT_SECRET').default('local-dev-secret-key-123').asString(),
+        expiresIn: env.get('JWT_EXPIRES_IN').default('1h').required().asString() as SignOptions['expiresIn'],
     },
     refreshToken: {
         cookieName: env.get('REFRESH_TOKEN_COOKIE_NAME').default('refreshToken').required().asString(),

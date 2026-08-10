@@ -4,7 +4,7 @@ import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 
 export const authenticateMiddleware = (secret: string) => {
-    return (req: Request, res: Response, next: NextFunction): void => {
+    return (req: Request, _res: Response, next: NextFunction): void => {
         try {
             const token = req.cookies[COOKIE_NAME];
 
