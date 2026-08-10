@@ -1,6 +1,6 @@
-import { z } from 'zod';
+import { config } from '@/config.js';
 import { SystemStatus, zodMongoObjectId } from '@whats-down/shared';
-import { config } from '../../config.js';
+import { z } from 'zod';
 
 const nameSchema = z.string().min(config.name.minLettersAmount).max(config.name.maxLettersAmount);
 const statusSchema = z.nativeEnum(SystemStatus);

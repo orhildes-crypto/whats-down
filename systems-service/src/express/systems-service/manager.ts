@@ -1,41 +1,16 @@
+import { config } from '@/config.js';
+import { DocumentNotFoundError, SystemWithChildrenError } from '@/utils/errors.js';
+import { SystemStatus, SystemStatusPriority } from '@whats-down/shared';
 import mongoose from 'mongoose';
-import { DocumentNotFoundError, SystemWithChildrenError } from '../../utils/errors.js';
-import { CreateSystemPayload, SystemDocument, System, SystemCubeDTO } from './interface.js';
+import { CreateSystemPayload, System, SystemCubeDTO, SystemDocument } from './interface.js';
 import { SystemServiceModel } from './model.js';
-import { SystemStatus, SystemStatusPriority } from '../../../../shared/dist/interfaces/systemInterfaces.js';
-import { config } from '../../config.js';
 
 export class SystemServiceManager {
     static getByQuery = async (query: Partial<System>, step: number, limit?: number): Promise<SystemCubeDTO[]> => {
-        const matchStage = toObjectIdQuery(query, SystemServiceModel);
-
-        const pipeline: mongoose.PipelineStage[] = [{ $match: matchStage }, { $sort: { statusPriority: 1, name: 1 } }];
-        if (limit) {
-            pipeline.push({ $skip: limit * step }, { $limit: limit });
-        }
-
-        pipeline.push(
-            {
-                $lookup: {
-                    from: config.mongo.systemServiceCollectionName,
-                    localField: '_id',
-                    foreignField: 'parentId',
-                    as: 'children',
-                },
-            },
-            {
-                $addFields: {
-                    hasChildren: { $gt: [{ $size: '$children' }, 0] },
-                },
-            },
-            {
-                $project: {
-                    children: 0,
-                },
-            },
-        );
-
-        return SystemServiceModel.aggregate<SystemCubeDTO>(pipeline).exec();
+        return SystemServiceModel.find(query, {}, limit ? { limit, skip: limit * step } : {})
+            .sort('statusPriority name')
+            .lean()
+            .exec();
     };
 
     static getCount = async (query: Partial<System>): Promise<number> => {
@@ -43,40 +18,14 @@ export class SystemServiceManager {
     };
 
     static getById = async (id: string): Promise<SystemCubeDTO> => {
-        const system = await SystemServiceModel.findById(id).orFail(new DocumentNotFoundError(id)).lean().exec();
-
-        return { ...system, hasChildren: await this.checkForKids(system._id.toString()) };
+        return SystemServiceModel.findById(id).orFail(new DocumentNotFoundError(id)).lean().exec();
     };
 
     static getRoots = async (step: number, limit?: number): Promise<SystemCubeDTO[]> => {
-        const pipeline: mongoose.PipelineStage[] = [{ $match: { parentId: null } }, { $sort: { statusPriority: 1, name: 1 } }];
-
-        if (limit) {
-            pipeline.push({ $skip: limit * step }, { $limit: limit });
-        }
-
-        pipeline.push(
-            {
-                $lookup: {
-                    from: config.mongo.systemServiceCollectionName,
-                    localField: '_id',
-                    foreignField: 'parentId',
-                    as: 'children',
-                },
-            },
-            {
-                $addFields: {
-                    hasChildren: { $gt: [{ $size: '$children' }, 0] },
-                },
-            },
-            {
-                $project: {
-                    children: 0,
-                },
-            },
-        );
-
-        return await SystemServiceModel.aggregate<SystemCubeDTO>(pipeline).exec();
+        return SystemServiceModel.find({ parentId: null }, {}, limit ? { limit, skip: limit * step } : {})
+            .sort('statusPriority name')
+            .lean()
+            .exec();
     };
 
     static getAncestors = async (id: string): Promise<SystemDocument[]> => {
@@ -135,10 +84,12 @@ export class SystemServiceManager {
             ...createSystemPayload,
             createdBy,
             createdByUsername,
-            statusPriority: SystemStatusPriority[SystemStatus.UP],
         });
 
-        await this.updateAncestorsStatus(newSystem.parentId?.toString(), newSystem.status);
+        await this.updateAncestorsStatus(newSystem.parentId ? newSystem.parentId.toString() : null, newSystem.status);
+        await SystemServiceModel.findByIdAndUpdate(newSystem.parentId, { $set: { hasChildren: true } })
+            .lean()
+            .exec();
 
         return newSystem;
     };
@@ -152,7 +103,8 @@ export class SystemServiceManager {
             await SystemServiceModel.deleteMany({ _id: { $in: descendantIds } }).exec();
         }
 
-        await this.updateAncestorsStatus(deletedSystem.parentId?.toString(), SystemStatus.UP);
+        await this.updateAncestorsStatus(deletedSystem.parentId ? deletedSystem.parentId.toString() : null, SystemStatus.UP);
+        await this.updateParentHasChildren(deletedSystem.parentId ? deletedSystem.parentId.toString() : null);
 
         return deletedSystem;
     };
@@ -162,7 +114,7 @@ export class SystemServiceManager {
     };
 
     static changeStatus = async (id: string, status: SystemStatus): Promise<SystemDocument> => {
-        if (await this.checkForKids(id)) {
+        if (await this.hasKids(id)) {
             throw new SystemWithChildrenError(id);
         }
 
@@ -171,12 +123,22 @@ export class SystemServiceManager {
             .lean()
             .exec();
 
-        await this.updateAncestorsStatus(result.parentId?.toString(), status);
+        await this.updateAncestorsStatus(result.parentId ? result.parentId.toString() : null, status);
 
         return result;
     };
 
-    static updateAncestorsStatus = async (parentId: string | null | undefined, childStatus: SystemStatus): Promise<void> => {
+    static updateParentHasChildren = async (parentId: string | null): Promise<void> => {
+        if (!parentId) {
+            return;
+        }
+
+        const hasChildren = await this.hasKids(parentId);
+
+        await SystemServiceModel.findByIdAndUpdate(parentId, { $set: { hasChildren } }).lean().exec();
+    };
+
+    static updateAncestorsStatus = async (parentId: string | null, childStatus: SystemStatus): Promise<void> => {
         if (!parentId) {
             return;
         }
@@ -190,7 +152,7 @@ export class SystemServiceManager {
         if (childStatus === SystemStatus.DOWN) {
             newParentStatus = SystemStatus.DOWN;
         } else {
-            newParentStatus = (await this.checkForDownKids(parentId)) ? SystemStatus.DOWN : SystemStatus.UP;
+            newParentStatus = (await this.hasKids(parentId, SystemStatus.DOWN)) ? SystemStatus.DOWN : SystemStatus.UP;
         }
 
         if (newParentStatus === parentSystem.status) {
@@ -201,71 +163,19 @@ export class SystemServiceManager {
             .lean()
             .exec();
 
-        this.updateAncestorsStatus(parentSystem.parentId?.toString(), newParentStatus);
+        this.updateAncestorsStatus(parentSystem.parentId ? parentSystem.parentId.toString() : null, newParentStatus);
     };
 
-    static checkForDownKids = async (parentId: string): Promise<boolean> => {
+    static hasKids = async (parentId: string, status?: SystemStatus): Promise<boolean> => {
         const result = await SystemServiceModel.exists({
-            parentId: parentId,
-            status: SystemStatus.DOWN,
-        }).exec();
-
-        return !!result;
-    };
-
-    static checkForCycles = async (systemId: string, parentId: string): Promise<boolean> => {
-        const result = await SystemServiceModel.aggregate([
-            {
-                $match: { _id: new mongoose.Types.ObjectId(parentId) },
-            },
-            {
-                $graphLookup: {
-                    from: 'systems-services',
-                    startWith: '$_id',
-                    connectFromField: 'parentId',
-                    connectToField: '_id',
-                    as: 'parents',
-                    maxDepth: 10,
-                },
-            },
-        ]);
-
-        if (result.length === 0) {
-            return false; 
-        }
-
-        const parents = result[0].parents;
-
-        return parents.some((parent: SystemDocument) => parent._id.toString() === systemId.toString());
-    };
-
-    static checkForKids = async (parentId: string): Promise<boolean> => {
-        const result = await SystemServiceModel.exists({
-            parentId
+            parentId,
+            ...(status && { status }),
         }).exec();
 
         return !!result;
     };
 }
 
-const toObjectIdQuery = <T extends object>(query: T, model: mongoose.Model<any>): Record<string, any> => {
-    const parsedQuery: Record<string, any> = {};
-
-    for (const [key, value] of Object.entries(query)) {
-        if (value === undefined || value === null) continue;
-
-        const schemaPath = model.schema.path(key);
-        const isObjectIdField = schemaPath?.instance === 'ObjectId';
-
-        if (isObjectIdField && typeof value === 'string') {
-            parsedQuery[key] = new mongoose.Types.ObjectId(value);
-        } else {
-            parsedQuery[key] = value;
-        }
-    }
-
-    return parsedQuery;
-};
 
 const buildStatusUpdate = (status: SystemStatus) => ({
     status,

@@ -1,4 +1,4 @@
-import { SystemStatus } from "../../../../shared/dist/interfaces/systemInterfaces.js";
+import { SystemStatus } from "@whats-down/shared";
 
 export interface CreateSystemPayload {
     name: string;
@@ -12,6 +12,7 @@ export interface System extends CreateSystemPayload {
     statusUpdatedAt: Date;
     createdByUsername: string;
     statusPriority: number;
+    hasChildren: boolean;
 }
 
 export interface SystemDocument extends System {
