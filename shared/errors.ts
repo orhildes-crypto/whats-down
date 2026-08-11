@@ -17,14 +17,14 @@ export class InternalServerError extends ServiceError {
 }
 
 export class AuthorizationError extends ServiceError {
-    constructor(){
-        super(StatusCodes.FORBIDDEN, 'Forbidden. You do not have permission to access this resource.');
+    constructor(message: string = 'Forbidden. You do not have permission to access this resource.') {
+        super(StatusCodes.FORBIDDEN, message);
     }
 }
 
 export class AuthenticationError extends ServiceError {
-    constructor(){
-        super(StatusCodes.UNAUTHORIZED, 'Unauthorized. You must be authenticated to access this resource.');
+    constructor(message: string = 'Unauthorized. You must be authenticated to access this resource.') {
+        super(StatusCodes.UNAUTHORIZED, message);
     }
 }
 

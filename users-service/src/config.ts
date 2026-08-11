@@ -2,7 +2,7 @@ import 'dotenv/config';
 import env from 'env-var';
 import { SignOptions } from 'jsonwebtoken';
 
-const isProduction = env.get('NODE_ENV').asString() === 'production';
+export const isProduction = env.get('NODE_ENV').asString() === 'production';
 
 export const config = {
     service: {

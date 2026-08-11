@@ -24,12 +24,13 @@ export class UsersServiceManager {
             passwordHash: await bcrypt.hash(payload.password, 10),
         }).catch((err) => {
             if (err.code === 11000) {
-                const duplicateField = Object.keys(err.keyPattern ?? {})[0];
+                const isUsername = err.keyPattern?.username || err.keyValue?.username || err.message?.includes('username');
+                const isEmail = err.keyPattern?.email || err.keyValue?.email || err.message?.includes('email');
 
-                if (duplicateField === 'username') {
+                if (isUsername) {
                     throw new ConflictError(`Username ${payload.username} is already taken`);
                 }
-                if (duplicateField === 'email') {
+                if (isEmail) {
                     throw new ConflictError(`User with email ${payload.email} already exists`);
                 }
 
@@ -63,7 +64,9 @@ export class UsersServiceManager {
 
         const user = await UserModel.findOne({ email: payload.email }).exec();
 
-        if (!user) throw new DocumentNotFoundError(payload.email ?? 'unknown user');
+        if (!user) {
+        throw new AuthenticationError('No account found associated with this Google address. Please sign up first.');
+    }
 
         if (!user.googleId) {
             user.googleId = payload.sub;

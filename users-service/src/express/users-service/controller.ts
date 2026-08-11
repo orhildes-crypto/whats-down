@@ -1,5 +1,5 @@
 import { DocumentNotFoundError, InvalidOrExpiredTokenError } from '@/utils/errors.js';
-import { clearAuthCookie, setAuthCookie, setRefreshCookie } from '@/utils/express/cookie.js';
+import { clearAuthCookies, setAuthCookie, setRefreshCookie } from '@/utils/express/cookie.js';
 import { InternalServerError, TypedRequest } from '@whats-down/shared';
 import { Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
@@ -15,6 +15,7 @@ import {
     logoutRequestSchema,
 } from './validations.js';
 import { config } from '@/config.js';
+import { refreshRequestSchema } from './refresh-token/validation.js';
 
 export class UsersServiceController {
     static getMe = async (req: TypedRequest<typeof getMeRequestSchema>, res: Response) => {
@@ -49,7 +50,7 @@ export class UsersServiceController {
         res.json(user);
     };
 
-    static refresh = async (req: TypedRequest<any>, res: Response) => {
+    static refresh = async (req: TypedRequest<typeof refreshRequestSchema>, res: Response) => {
         const rawRefreshToken = req.cookies?.[config.refreshToken.cookieName];
 
         if (!rawRefreshToken) {
@@ -86,7 +87,7 @@ export class UsersServiceController {
     };
 
     static logout = async (_req: TypedRequest<typeof logoutRequestSchema>, res: Response) => {
-        clearAuthCookie(res);
+        clearAuthCookies(res);
         res.status(StatusCodes.OK).json({ message: 'Logged out successfully' });
     };
 }
