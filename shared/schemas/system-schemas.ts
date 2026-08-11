@@ -21,7 +21,7 @@ export const createSystemBodySchema = systemRequiredFields.pick({ name: true, pa
 });
 
 export const systemFiltersSchema = systemRequiredFields
-    .pick({ name: true, status: true, parentId: true, createdBy: true })
+    .pick({ name: true, status: true, parentId: true, createdByUsername: true, hasChildren: true })
     .partial();
 
 export const systemQueryParamsSchema = systemFiltersSchema.extend({
