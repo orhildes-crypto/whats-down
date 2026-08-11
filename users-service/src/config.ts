@@ -1,8 +1,7 @@
+import { isProduction } from '@whats-down/shared';
 import 'dotenv/config';
 import env from 'env-var';
 import { SignOptions } from 'jsonwebtoken';
-
-export const isProduction = env.get('NODE_ENV').asString() === 'production';
 
 export const config = {
     service: {

@@ -29,9 +29,11 @@ export class SystemServiceManager {
     };
 
     static getAncestors = async (id: string): Promise<SystemDocument[]> => {
-        const result = await SystemModel.aggregate([
+        const targetObjectId = this.toObjectId(id);
+
+        const [rootDocument] = await SystemModel.aggregate([
             {
-                $match: { _id: new mongoose.Types.ObjectId(id) },
+                $match: { _id: targetObjectId },
             },
             {
                 $graphLookup: {
@@ -56,14 +58,18 @@ export class SystemServiceManager {
             },
         ]);
 
-        if (!result[0]) throw new DocumentNotFoundError(id);
+        if (!rootDocument) {
+            throw new DocumentNotFoundError(id);
+        }
 
-        return result[0].ancestors;
+        return rootDocument.ancestors ?? [];
     };
 
     private static getDescendantIds = async (id: string): Promise<mongoose.Types.ObjectId[]> => {
-        const result = await SystemModel.aggregate([
-            { $match: { _id: new mongoose.Types.ObjectId(id) } },
+        const targetObjectId = this.toObjectId(id);
+
+        const [rootDocument] = await SystemModel.aggregate<{ descendants: Array<{ _id: mongoose.Types.ObjectId }> }>([
+            { $match: { _id: targetObjectId } },
             {
                 $graphLookup: {
                     from: config.mongo.systemServiceCollectionName,
@@ -76,7 +82,11 @@ export class SystemServiceManager {
             { $project: { 'descendants._id': 1 } },
         ]).exec();
 
-        return result[0]?.descendants.map((d: { _id: mongoose.Types.ObjectId }) => d._id) ?? [];
+        if (!rootDocument) {
+            return [];
+        }
+
+        return rootDocument.descendants.map((descendant) => descendant._id);
     };
 
     static createOne = async (createSystemPayload: CreateSystemPayload, createdBy: string, createdByUsername: string): Promise<SystemDocument> => {
@@ -87,9 +97,12 @@ export class SystemServiceManager {
         });
 
         await this.updateAncestorsStatus(newSystem.parentId ? newSystem.parentId.toString() : null, newSystem.status);
-        await SystemModel.findByIdAndUpdate(newSystem.parentId, { $set: { hasChildren: true } })
-            .lean()
-            .exec();
+
+        if (newSystem.parentId) {
+            await SystemModel.findByIdAndUpdate(newSystem.parentId, { $set: { hasChildren: true } })
+                .lean()
+                .exec();
+        }
 
         return newSystem;
     };
@@ -180,6 +193,10 @@ export class SystemServiceManager {
         }).exec();
 
         return !!result;
+    };
+
+    private static toObjectId = (id: string): mongoose.Types.ObjectId => {
+        return new mongoose.Types.ObjectId(id);
     };
 }
 

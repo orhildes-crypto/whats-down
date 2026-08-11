@@ -1,6 +1,5 @@
 import { config } from '@/config.js';
-import { COOKIE_NAME } from '@whats-down/shared';
-import { isProduction } from '@/config.js';
+import { COOKIE_NAME, isProduction} from '@whats-down/shared';
 import { Response } from 'express';
 
 const setCookie = (

@@ -1,7 +1,6 @@
+import { isProduction } from '@whats-down/shared';
 import 'dotenv/config';
 import env from 'env-var';
-
-const isProduction = env.get('NODE_ENV').asString() === 'production';
 
 export const config = {
     service: {
