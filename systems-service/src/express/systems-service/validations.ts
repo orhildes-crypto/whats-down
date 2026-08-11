@@ -1,28 +1,18 @@
 import { zodMongoObjectId } from '@whats-down/shared';
-import { createSystemBodySchema, systemRequiredFields } from '@whats-down/shared/common';
+import { createSystemBodySchema, systemRequiredFields, systemQueryParamsSchema } from '@whats-down/shared/common';
 import { z } from 'zod';
 
 // GET /api/system-service
 export const getByQueryRequestSchema = z.object({
     body: z.object({}),
-    query: z
-        .object({
-            step: z.coerce.number().min(0).default(0),
-            limit: z.coerce.number().optional(),
-        })
-        .merge(systemRequiredFields.partial()),
+    query: systemQueryParamsSchema,
     params: z.object({}),
 });
 
 // GET /api/system-service/roots
 export const getRootsByQueryRequestSchema = z.object({
     body: z.object({}),
-    query: z
-        .object({
-            step: z.coerce.number().min(0).default(0),
-            limit: z.coerce.number().optional(),
-        })
-        .merge(systemRequiredFields.omit({ parentId: true }).partial()),
+    query: systemQueryParamsSchema.omit({ parentId: true }),
     params: z.object({}),
 });
 

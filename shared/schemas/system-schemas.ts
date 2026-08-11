@@ -19,3 +19,12 @@ export const systemRequiredFields = z.object({
 export const createSystemBodySchema = systemRequiredFields.pick({ name: true, parentId: true }).extend({
     parentId: zodMongoObjectId.nullable(),
 });
+
+export const systemFiltersSchema = systemRequiredFields
+    .pick({ name: true, status: true, parentId: true, createdBy: true })
+    .partial();
+
+export const systemQueryParamsSchema = systemFiltersSchema.extend({
+    step: z.coerce.number().min(0).default(0),
+    limit: z.coerce.number().optional(),
+});

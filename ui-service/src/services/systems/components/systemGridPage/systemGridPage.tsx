@@ -23,7 +23,7 @@ export const SystemsGridPage: React.FC = () => {
     const { data: user, isLoading: isUserLoading } = useMe();
     const { data: parentSystem, isLoading: isParentSystemLoading } = useGetById(parentId);
     const { data: ancestors, isLoading: isAncestorsLoading } = useAncestors(parentId);
-    const { data: systems, isLoading: isSystemsLoading, isError, refetch } = useSystems({ parentId, step: 0 });
+    const { data: systems, isLoading: isSystemsLoading, isError, refetch } = useSystems({ parentId: parentId ?? undefined, step: 0 });
 
     const items: BreadcrumbItem[] = ancestors ? [...ancestors].reverse().map((anc) => ({ id: anc._id, name: anc.name })) : [];
 

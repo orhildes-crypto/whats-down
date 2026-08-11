@@ -1,6 +1,8 @@
-import type { SystemStatus, createSystemBodySchema } from "@whats-down/shared/common";
+import type { SystemStatus, createSystemBodySchema, systemFiltersSchema,  systemQueryParamsSchema} from "@whats-down/shared/common";
 import { z } from 'zod';
 
+export type SystemFilters = z.infer<typeof systemFiltersSchema>;
+export type SystemQueryParams = z.infer<typeof systemQueryParamsSchema>;
 export type CreateSystemPayload = z.infer<typeof createSystemBodySchema>;
 
 export interface SystemDocument extends CreateSystemPayload {
@@ -12,17 +14,5 @@ export interface SystemDocument extends CreateSystemPayload {
     createdByUsername: string;
     statusPriority: number;
     hasChildren: boolean;
-}
-
-export interface SystemFilters {
-    createdBy?: string;
-    status?: SystemStatus;
-    parentId?: string | null;
-    name?: string;
-}
-
-export interface SystemQueryParams extends SystemFilters {
-    step: number;
-    limit?: number;
 }
 

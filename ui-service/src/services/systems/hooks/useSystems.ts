@@ -5,7 +5,7 @@ import type { SystemQueryParams } from '@/shared/types/system-interfaces';
 export const useSystems = (query: SystemQueryParams) => {
     return useQuery({
         queryKey: ['systems', query],
-        queryFn: () => (query.parentId === null || query.parentId === undefined)
+        queryFn: () => query.parentId === undefined
             ? systemsService.getRoots(query.step, query.limit)
             : systemsService.getByQuery(query),
     });
