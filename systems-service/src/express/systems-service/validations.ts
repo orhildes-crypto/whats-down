@@ -1,18 +1,6 @@
-import { config } from '@/config.js';
-import { SystemStatus, zodMongoObjectId } from '@whats-down/shared';
+import { zodMongoObjectId } from '@whats-down/shared';
+import { createSystemBodySchema, systemRequiredFields } from '@whats-down/shared/common';
 import { z } from 'zod';
-
-const requiredFields = z.object({
-    name: z.string().min(config.name.minLettersAmount).max(config.name.maxLettersAmount),
-    parentId: zodMongoObjectId,
-    createdBy: zodMongoObjectId,
-    createdByUsername: z.string(),
-    status: z.nativeEnum(SystemStatus),
-    statusPriority: z.number(),
-    hasChildren: z.coerce.boolean(),
-    createdAt: z.coerce.date(),
-    statusUpdatedAt: z.coerce.date(),
-});
 
 // GET /api/system-service
 export const getByQueryRequestSchema = z.object({
@@ -22,7 +10,7 @@ export const getByQueryRequestSchema = z.object({
             step: z.coerce.number().min(0).default(0),
             limit: z.coerce.number().optional(),
         })
-        .merge(requiredFields.partial()),
+        .merge(systemRequiredFields.partial()),
     params: z.object({}),
 });
 
@@ -34,14 +22,14 @@ export const getRootsByQueryRequestSchema = z.object({
             step: z.coerce.number().min(0).default(0),
             limit: z.coerce.number().optional(),
         })
-        .merge(requiredFields.omit({ parentId: true }).partial()),
+        .merge(systemRequiredFields.omit({ parentId: true }).partial()),
     params: z.object({}),
 });
 
 // GET /api/system-service/count
 export const getCountRequestSchema = z.object({
     body: z.object({}),
-    query: requiredFields.partial(),
+    query: systemRequiredFields.partial(),
     params: z.object({}),
 });
 
@@ -65,16 +53,14 @@ export const getAncestorsByIdRequestSchema = z.object({
 
 // POST /api/system-service
 export const createOneRequestSchema = z.object({
-    body: requiredFields.pick({ name: true, parentId: true }).extend({
-        parentId: zodMongoObjectId.nullable(),
-    }),
+    body: createSystemBodySchema,
     query: z.object({}),
     params: z.object({}),
 });
 
 // PUT /api/system-service/:id/name
 export const editServiceRequestSchema = z.object({
-    body: requiredFields.pick({ name: true }),
+    body: systemRequiredFields.pick({ name: true }),
     query: z.object({}),
     params: z.object({
         id: zodMongoObjectId,
@@ -83,7 +69,7 @@ export const editServiceRequestSchema = z.object({
 
 // PUT /api/system-service/:id/status
 export const changeStatusRequestSchema = z.object({
-    body: requiredFields.pick({ status: true }),
+    body: systemRequiredFields.pick({ status: true }),
     query: z.object({}),
     params: z.object({
         id: zodMongoObjectId,

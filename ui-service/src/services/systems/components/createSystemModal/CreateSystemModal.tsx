@@ -5,13 +5,14 @@ import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 import styles from './CreateSystemModal.module.css';
 import { useCreateSystem } from './useCreateSystem';
+import { SYSTEM_MIN_NAME_LENGTH, SYSTEM_MAX_NAME_LENGTH } from '@whats-down/shared/common';
 
 const createSystemSchema = (t: TFunction<'createSystemModal'>) =>
     z.object({
         name: z
             .string()
-            .min(3, t('nameTooShort', { min: 3 }))
-            .max(35, t('nameTooLong', { max: 35 })),
+            .min(SYSTEM_MIN_NAME_LENGTH, t('nameTooShort', { min: SYSTEM_MIN_NAME_LENGTH }))
+            .max(SYSTEM_MAX_NAME_LENGTH, t('nameTooLong', { max: SYSTEM_MAX_NAME_LENGTH })),
     });
 
 type CreateSystemModalProps = {

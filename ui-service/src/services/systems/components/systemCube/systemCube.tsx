@@ -1,6 +1,6 @@
 import { type SystemDocument } from '@/shared/types/system-interfaces';
 import { formatDate } from '@/shared/utils/formatDate';
-import { SystemStatus, UserRole } from '@whats-down/shared/common';
+import { SYSTEM_MAX_NAME_LENGTH, SYSTEM_MIN_NAME_LENGTH, SystemStatus, UserRole } from '@whats-down/shared/common';
 import { PencilLine, Plus, Trash2 } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -105,7 +105,8 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role, onAddChild
                     <input
                         ref={inputRef}
                         type="text"
-                        maxLength={35}
+                        maxLength={SYSTEM_MAX_NAME_LENGTH}
+                        minLength={SYSTEM_MIN_NAME_LENGTH}
                         className={styles.titleInput}
                         value={nameValue}
                         onChange={(e) => setNameValue(e.target.value)}

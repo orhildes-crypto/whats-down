@@ -19,8 +19,4 @@ export const config = {
     model: {
         name: env.get('MODEL_NAME').default('SystemServiceModel').required().asString(),
     },
-    name: {
-        maxLettersAmount: env.get('NAME_MAX_LETTERS_AMOUNT').default(35).required().asIntPositive(),
-        minLettersAmount: env.get('NAME_MIN_LETTERS_AMOUNT').default(3).required().asIntPositive(),
-    }
 };

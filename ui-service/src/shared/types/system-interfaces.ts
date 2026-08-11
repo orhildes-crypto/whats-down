@@ -1,9 +1,7 @@
-import type { SystemStatus } from "@whats-down/shared";
+import type { SystemStatus, createSystemBodySchema } from "@whats-down/shared/common";
+import { z } from 'zod';
 
-export interface CreateSystemPayload {
-    name: string;
-    parentId: string | null;
-}
+export type CreateSystemPayload = z.infer<typeof createSystemBodySchema>;
 
 export interface SystemDocument extends CreateSystemPayload {
     _id: string;
