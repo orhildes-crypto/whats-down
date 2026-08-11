@@ -5,6 +5,9 @@ declare module 'axios' {
     export interface AxiosError {
         isAuthError?: boolean;
     }
+    export interface InternalAxiosRequestConfig {
+        _retry?: boolean;
+    }
 }
 
 export const apiClient = axios.create({
@@ -21,7 +24,10 @@ let refreshPromise: Promise<void> | null = null;
 
 apiClient.interceptors.response.use(
     (res) => res,
-    async (error) => {
+    async (error: unknown) => {
+        if (!axios.isAxiosError(error) || !error.config) {
+            return Promise.reject(error);
+        }
         const originalReq = error.config;
 
         if (error.response?.status === StatusCodes.UNAUTHORIZED && !originalReq._retry) {
@@ -41,7 +47,7 @@ apiClient.interceptors.response.use(
 
                 await refreshPromise;
 
-                return apiClient(originalReq);
+                return apiClient({ ...originalReq });
             } catch (refreshError) {
                 if (axios.isAxiosError(refreshError)) {
                     refreshError.isAuthError = true;

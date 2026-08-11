@@ -8,7 +8,11 @@ export const useLogout = () => {
 
     return useMutation({
         mutationFn: usersService.logout,
-        onSettled: () => {
+        onSuccess: () => {
+            navigate('/login', { replace: true });
+            queryClient.clear(); 
+        },
+        onError: () => {
             queryClient.clear();
             navigate('/login', { replace: true });
         },

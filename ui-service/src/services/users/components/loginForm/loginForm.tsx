@@ -14,13 +14,19 @@ export const LoginPage: React.FC = () => {
 
     const { mutateAsync: login, isPending, error } = useLogin();
 
-    const { t } = useTranslation('loginForm'); 
+    const { t } = useTranslation('loginForm');
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        await login({ username, password });
-        navigate('/');
+        login(
+            { username, password },
+            {
+                onSuccess: () => {
+                    navigate('/');
+                },
+            },
+        );
     };
 
     return (

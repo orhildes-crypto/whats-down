@@ -16,8 +16,8 @@ export const usersService = {
     login: async (username: string, password: string): Promise<SafeUserDocument> => {
         return  (
             await apiClient.post<SafeUserDocument>('/users/login', {
-                username: username,
-                password: password,
+                username,
+                password,
             })
         ).data;
         
@@ -28,7 +28,7 @@ export const usersService = {
             await apiClient.post<SafeUserDocument>(
                 '/users/login/google',
                 {
-                    idToken: idToken,
+                    idToken,
                 },
             )
         ).data;
@@ -40,12 +40,12 @@ export const usersService = {
         ).data;
     },
 
-    changeRole: async (newRole: UserRole, userId: string): Promise<SafeUserDocument> => {
+    changeRole: async (role: UserRole, userId: string): Promise<SafeUserDocument> => {
         return (
             await apiClient.put<SafeUserDocument>(
                 `/users/${userId}/role`, 
                 {
-                    role: newRole
+                    role,
                 },
             )
         ).data;

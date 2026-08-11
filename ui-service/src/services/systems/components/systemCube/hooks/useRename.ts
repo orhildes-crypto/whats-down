@@ -11,11 +11,9 @@ export const useRename = () => {
 
     return useMutation({
         mutationFn: rename,
-        onSuccess: (updatedSystem) => {
-            // TODO - If getById is implemented in front - add defense againt old data not being array
-            queryClient.setQueriesData<SystemDocument[]>({ queryKey: ['systems'] }, (oldData) => {
-                if (!oldData) return [];
-                return oldData.map((system) => (system._id === updatedSystem._id ? { ...system, name: updatedSystem.name } : system));
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ['systems'],
             });
         },
     });

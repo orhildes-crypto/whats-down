@@ -66,7 +66,7 @@ export const SystemsGridPage: React.FC = () => {
     return (
         <div className={styles.pageContainer}>
             {isBreadcrumbsLoading ? (
-                <div className={styles.breadcrumbsSkeleton}>{t('loadingBreacrumbs')}</div>
+                <div className={styles.breadcrumbsSkeleton}>{t('loadingBreadcrumbs')}</div>
             ) : (
                 <Breadcrumbs items={items} currentSystem={parentSystem ? { id: parentSystem._id, name: parentSystem.name } : null} />
             )}

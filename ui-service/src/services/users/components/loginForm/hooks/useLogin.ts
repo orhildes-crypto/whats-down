@@ -1,4 +1,5 @@
 import { usersService } from '@/services/users/api/usersApi';
+import { AUTH_USER_QUERY_KEY } from '@/services/users/hooks/useMe';
 import type { SafeUserDocument } from '@/shared/types/user-interfaces';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -12,7 +13,8 @@ export const useLogin = () => {
     return useMutation({
         mutationFn: loginUser,
         onSuccess: (user) => {
-            queryClient.setQueryData(['authUser'], user);
+            queryClient.setQueryData(AUTH_USER_QUERY_KEY, user);
+            queryClient.invalidateQueries({ queryKey: AUTH_USER_QUERY_KEY });
         },
     });
 };
