@@ -125,12 +125,15 @@ export class SystemServiceManager {
 
         const deletedSystem = await SystemModel.findByIdAndDelete(id).orFail(new DocumentNotFoundError(id)).lean().exec();
 
+        const parentIdStr = deletedSystem.parentId ? deletedSystem.parentId.toString() : null;
+
+        const tasks: Promise<unknown>[] = [this.updateAncestorsStatus(parentIdStr, SystemStatus.UP), this.updateParentHasChildren(parentIdStr)];
+
         if (descendantIds.length > 0) {
-            await SystemModel.deleteMany({ _id: { $in: descendantIds } }).exec();
+            tasks.push(SystemModel.deleteMany({ _id: { $in: descendantIds } }).exec());
         }
 
-        await this.updateAncestorsStatus(deletedSystem.parentId ? deletedSystem.parentId.toString() : null, SystemStatus.UP);
-        await this.updateParentHasChildren(deletedSystem.parentId ? deletedSystem.parentId.toString() : null);
+        await Promise.all(tasks);
 
         return deletedSystem;
     };
@@ -140,18 +143,18 @@ export class SystemServiceManager {
     };
 
     static changeStatus = async (id: string, status: SystemStatus): Promise<SystemDocument> => {
-        if (await this.hasKids(id)) {
+        const system = await SystemModel.findById(id).orFail(new DocumentNotFoundError(id)).exec();
+
+        if (system.hasChildren) {
             throw new SystemWithChildrenError(id);
         }
 
-        const result = await SystemModel.findByIdAndUpdate(id, { $set: buildStatusUpdate(status) }, { new: true })
-            .orFail(new DocumentNotFoundError(id))
-            .lean()
-            .exec();
+        system.set(buildStatusUpdate(status));
+        const updated = await system.save();
 
-        await this.updateAncestorsStatus(result.parentId ? result.parentId.toString() : null, status);
+        await this.updateAncestorsStatus(updated.parentId ? updated.parentId.toString() : null, status);
 
-        return result;
+        return updated.toObject();
     };
 
     static updateParentHasChildren = async (parentId: string | null): Promise<void> => {
