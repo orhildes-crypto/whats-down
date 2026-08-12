@@ -91,6 +91,6 @@ export const actionButtonStyle: SxProps<Theme> = {
 };
 
 export const actionIconStyle: SxProps<Theme> = {
-    fontSize: 16,
+    fontSize: 20,
     color: '#34383b',
 };
