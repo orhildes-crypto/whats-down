@@ -10,7 +10,6 @@ export const useSyncDocumentDir = () => {
             document.documentElement.lang = lang;
         };
 
-        // Apply immediately for the language i18next already initialized with
         applyDir(i18next.language);
 
         i18next.on('languageChanged', applyDir);

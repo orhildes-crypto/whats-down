@@ -3,9 +3,9 @@ import type { TFunction } from 'i18next';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
-import styles from './CreateSystemModal.module.css';
 import { useCreateSystem } from './useCreateSystem';
 import { SYSTEM_MIN_NAME_LENGTH, SYSTEM_MAX_NAME_LENGTH } from '@whats-down/shared/common';
+import { Box, TextField, Button, CircularProgress } from '@mui/material';
 
 const createSystemSchema = (t: TFunction<'createSystemModal'>) =>
     z.object({
@@ -62,26 +62,47 @@ export const CreateSystemModal = ({ isOpen, onClose, parentId }: CreateSystemMod
             onClose={handleClose}
             title={t('title')}
             confirmButton={
-                <button type="button" className={styles.confirmButton} onClick={handleSubmit} disabled={isPending}>
+                <Button
+                    type="button"
+                    variant="contained"
+                    onClick={handleSubmit}
+                    disabled={isPending}
+                    startIcon={isPending ? <CircularProgress size={18} color="inherit" /> : null}
+                    sx={{
+                        backgroundColor: '#636e72',
+                        color: '#ffffff',
+                        padding: '8px 16px',
+                        fontSize: '14px',
+                        fontWeight: 500,
+                        textTransform: 'none',
+                        borderRadius: '6px',
+                        '&:hover': {
+                            backgroundColor: '#404040',
+                        },
+                        '&:disabled': {
+                            backgroundColor: '#ededed',
+                            color: '#9e9e9e',
+                        },
+                    }}
+                >
                     {isPending ? t('submitting') : t('submitButton')}
-                </button>
+                </Button>
             }
         >
-            <div className={styles.field}>
-                <label htmlFor="system-name" className={styles.label}>
-                    {t('systemName')}
-                </label>
-                <input
+            <Box sx={{ marginTop: 1 }}>
+                <TextField
                     id="system-name"
-                    type="text"
-                    className={styles.input}
+                    label={t('systemName')}
+                    variant="outlined"
+                    fullWidth
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     disabled={isPending}
+                    error={Boolean(error)}
+                    helperText={error || ' '}
                     autoFocus
                 />
-                {error && <span className={styles.error}>{error}</span>}
-            </div>
+            </Box>
         </GenericModal>
     );
 };

@@ -1,9 +1,10 @@
+import { useRtl } from '@/i18n/useRtl';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import { Breadcrumbs as MuiBreadcrumbs, Link as MuiLink, Typography } from '@mui/material';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
-import { Breadcrumbs as MuiBreadcrumbs, Link as MuiLink, Typography } from '@mui/material';
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 
 export type BreadcrumbItem = {
     id: string | null;
@@ -15,8 +16,8 @@ export interface BreadcrumbsProps {
 }
 
 export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, currentSystem }) => {
-    const { t, i18n } = useTranslation('systemCube');
-    const isRtl = i18n.dir() === 'rtl';
+    const { t } = useTranslation('systemCube');
+    const { isRtl } = useRtl();
 
     const isAtRoot = items.length === 0 && !currentSystem;
 
