@@ -1,6 +1,6 @@
 import { config } from '@/config.js';
+import { authenticateMiddleware } from '@whats-down/shared';
 import { Router } from 'express';
-import { authenticateMiddleware } from '../middleware/auth.middleware.js';
 import { forwardRequest } from '../proxy/proxy-handler.js';
 
 export const backendSystemsRouter = Router({ mergeParams: true });
