@@ -1,37 +1,33 @@
-import setCookieParser from 'set-cookie-parser';
+import { config } from '@/config.js';
 import cookie from 'cookie';
-import { config } from '../../../config.js';
+import setCookieParser, { Cookie } from 'set-cookie-parser';
 
 type ExplicitSameSite = 'lax' | 'strict' | 'none';
 
-const isExplicitSameSite = (val: unknown): val is ExplicitSameSite => {
-    if (typeof val !== 'string') return false;
-    return ['lax', 'strict', 'none'].includes(val.toLowerCase());
+const EXPLICIT_SAME_SITE_VALUES: readonly ExplicitSameSite[] = ['lax', 'strict', 'none'];
+
+const isExplicitSameSite = (val: unknown): val is ExplicitSameSite =>
+    typeof val === 'string' && EXPLICIT_SAME_SITE_VALUES.includes(val.toLowerCase() as ExplicitSameSite);
+
+const resolveSameSite = (sameSite: unknown): ExplicitSameSite =>
+    isExplicitSameSite(sameSite) ? (sameSite.toLowerCase() as ExplicitSameSite) : 'lax';
+
+const resolvePath = (parsedCookie: Cookie, newPath: string): string =>
+    parsedCookie.name === config.refreshToken.cookieName ? newPath : (parsedCookie.path ?? '/');
+
+const rewriteCookie = (parsedCookie: Cookie, newPath: string): string => {
+    const options: cookie.CookieSerializeOptions = {
+        path: resolvePath(parsedCookie, newPath),
+        httpOnly: parsedCookie.httpOnly,
+        secure: parsedCookie.secure,
+        sameSite: resolveSameSite(parsedCookie.sameSite),
+        ...(parsedCookie.maxAge !== undefined && { maxAge: parsedCookie.maxAge }),
+        ...(parsedCookie.expires !== undefined && { expires: parsedCookie.expires }),
+        ...(parsedCookie.domain !== undefined && { domain: parsedCookie.domain }),
+    };
+
+    return cookie.serialize(parsedCookie.name, parsedCookie.value, options);
 };
 
-export const rewriteSetCookiePath = (rawCookies: string[], newPath: string): string[] => {
-    const parsedCookies = setCookieParser.parse(rawCookies);
-
-    const updatedCookies = parsedCookies.map((parsedCookie) => {
-        if (parsedCookie.name === config.refreshToken.cookieName) {
-            parsedCookie.path = newPath;
-        }
-
-        return parsedCookie;
-    });
-
-    return updatedCookies.map((updatedCookie) => {
-        const sameSiteValue: ExplicitSameSite = isExplicitSameSite(updatedCookie.sameSite)
-            ? (updatedCookie.sameSite.toLowerCase() as ExplicitSameSite)
-            : 'lax';
-
-        return cookie.serialize(updatedCookie.name, updatedCookie.value, {
-            path: updatedCookie.path,
-            httpOnly: updatedCookie.httpOnly,
-            sameSite: sameSiteValue,
-            maxAge: updatedCookie.maxAge,
-            expires: updatedCookie.expires,
-            secure: updatedCookie.secure,
-        });
-    });
-};
+export const rewriteSetCookiePath = (rawCookies: string[], newPath: string): string[] =>
+    setCookieParser.parse(rawCookies).map((parsedCookie) => rewriteCookie(parsedCookie, newPath));

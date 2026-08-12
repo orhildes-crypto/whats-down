@@ -1,5 +1,5 @@
+import { config } from '@/config.js';
 import { Router } from 'express';
-import { config } from '../../../config.js';
 import { authenticateMiddleware } from '../middleware/auth.middleware.js';
 import { forwardRequest } from '../proxy/proxy-handler.js';
 

@@ -1,5 +1,5 @@
-import { Router } from 'express';
-import { config } from '../../../config.js';
+import { config } from '@/config.js';
+import { Request, Response, Router } from 'express';
 import { authenticateMiddleware } from '../middleware/auth.middleware.js';
 import { forwardRequest } from '../proxy/proxy-handler.js';
 
@@ -7,20 +7,21 @@ export const backendUsersRouter = Router({ mergeParams: true });
 
 const USERS_SERVICE_BASE_URL = `${config.services.usersServiceUrl}/api/users-service`;
 
-const forwardToUsersService = (req: any, res: any) => {
+const forwardToUsersService = (req: Request, res: Response) => {
     forwardRequest(req, res, {
         targetUrl: `${USERS_SERVICE_BASE_URL}${req.url}`,
-        cookieRewritePath: config.auth.cookieRewritePath,
+        cookieRewritePath: config.proxy.publicRefreshPath,
     });
 };
 
-backendUsersRouter.all('*', (req, res) => {
-    forwardToUsersService(req, res);
-});
 backendUsersRouter.delete('/:id', authenticateMiddleware(config.jwt.secret), (req, res) => {
     forwardToUsersService(req, res);
 });
 
 backendUsersRouter.put('/:id/role', authenticateMiddleware(config.jwt.secret), (req, res) => {
+    forwardToUsersService(req, res);
+});
+
+backendUsersRouter.all('*', (req, res) => {
     forwardToUsersService(req, res);
 });

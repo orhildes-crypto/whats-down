@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import axios from 'axios';
+import { StatusCodes } from 'http-status-codes';
 import { rewriteSetCookiePath } from './cookie.js';
 
 interface ProxyOptions {
@@ -9,12 +10,9 @@ interface ProxyOptions {
 
 export const forwardRequest = async (req: Request, res: Response, options: ProxyOptions): Promise<void> => {
     try {
-        const clientCookies = req.headers.cookie;
-        const contentType = req.headers['content-type'];
-
-        const headers: Record<string, string> = {};
-        if (clientCookies) headers['Cookie'] = clientCookies;
-        if (contentType) headers['Content-Type'] = contentType;
+        const headers = { ...req.headers };
+        delete headers.host;
+        delete headers['content-length'];
 
         const response = await axios({
             method: req.method,
@@ -35,8 +33,14 @@ export const forwardRequest = async (req: Request, res: Response, options: Proxy
         }
 
         res.status(response.status).send(response.data);
-    } catch (error) {
-        res.status(502).send({
+    } catch (error: any) {
+        console.error(`[Proxy Error] Failed to forward request to ${options.targetUrl}:`, {
+            message: error.message,
+            code: error.code,
+            stack: error.stack,
+        });
+
+        res.status(StatusCodes.BAD_GATEWAY).send({
             error: 'Bad Gateway',
             message: 'The upstream service is unavailable or returned an invalid response.',
         });
