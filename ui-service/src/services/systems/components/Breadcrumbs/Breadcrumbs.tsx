@@ -1,7 +1,9 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-import styles from './Breadcrumbs.module.css';
+import { Link as RouterLink } from 'react-router-dom';
+import { Breadcrumbs as MuiBreadcrumbs, Link as MuiLink, Typography } from '@mui/material';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 
 export type BreadcrumbItem = {
     id: string | null;
@@ -13,44 +15,49 @@ export interface BreadcrumbsProps {
 }
 
 export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, currentSystem }) => {
-    const navigate = useNavigate();
-
-    const { t } = useTranslation('systemCube');
+    const { t, i18n } = useTranslation('systemCube');
+    const isRtl = i18n.dir() === 'rtl';
 
     const isAtRoot = items.length === 0 && !currentSystem;
 
-    const handleNavigate = (id: string | null) => {
-        if (id) {
-            navigate(`/systems/${id}`);
-        } else {
-            navigate('/');
-        }
-    };
+    const SeparatorIcon = isRtl ? NavigateBeforeIcon : NavigateNextIcon;
 
     return (
-        <nav className={styles.breadcrumbsContainer} aria-label="Breadcrumb">
+        <MuiBreadcrumbs 
+            separator={<SeparatorIcon fontSize="large" sx={{ color: 'common.white' }}/>} 
+            aria-label="breadcrumb"
+            sx={{ marginY: 1 , color: 'common.white', fontSize: 'xx-large' }}
+        >
             {isAtRoot ? (
-                <span className={styles.currentSystem}>{t('breadcrumbsHome')}</span>
+               <Typography sx={{ fontSize: 'xx-large' }}>{t('breadcrumbsHome')}</Typography>
             ) : (
-                <span className={styles.breadcrumbLink} onClick={() => handleNavigate(null)}>
+                <MuiLink 
+                    component={RouterLink} 
+                    to="/" 
+                    underline="hover" 
+                    color="inherit"
+                >
                     {t('breadcrumbsHome')}
-                </span>
+                </MuiLink>
             )}
+
             {items.map((item) => (
-                <React.Fragment key={item.id ?? 'root'}>
-                    <span className={styles.separator}>{`=>`}</span>
-                    <span className={styles.breadcrumbLink} onClick={() => handleNavigate(item.id)}>
-                        {item.name}
-                    </span>
-                </React.Fragment>
+                <MuiLink
+                    key={item.id ?? 'root'}
+                    component={RouterLink}
+                    to={`/systems/${item.id}`}
+                    underline="hover"
+                    color="inherit"
+                >
+                    {item.name}
+                </MuiLink>
             ))}
 
             {currentSystem && (
-                <>
-                    <span className={styles.separator}>{`=>`}</span>
-                    <span className={styles.currentSystem}>{currentSystem.name}</span>
-                </>
+                <Typography sx={{ fontSize: 'xx-large' }}>
+                    {currentSystem.name}
+                </Typography>
             )}
-        </nav>
+        </MuiBreadcrumbs>
     );
 };

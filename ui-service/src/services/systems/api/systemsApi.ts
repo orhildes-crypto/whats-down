@@ -61,7 +61,7 @@ export const systemsService = {
     changeStatus: async (systemId: string, status: SystemStatus): Promise<SystemDocument> => {
         return (
             await apiClient.put<SystemDocument>(`/systems/${systemId}/status`, {
-                status: status,
+                status,
             })
         ).data;
     },
