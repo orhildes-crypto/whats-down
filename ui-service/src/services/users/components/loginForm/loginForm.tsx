@@ -1,9 +1,10 @@
 import { LanguageToggle } from '@/shared/components/LanguageToggle/LanguageToggle';
+import { Alert, Box, Button, CircularProgress, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { GoogleLoginButton } from './GoogleLoginButton/GoogleLoginButton';
-import styles from './LoginForm.module.css';
+import * as styles from './LoginForm.styles';
 import { useLogin } from './hooks/useLogin';
 
 export const LoginPage: React.FC = () => {
@@ -30,65 +31,67 @@ export const LoginPage: React.FC = () => {
     };
 
     return (
-        <>
-            <div className={styles.container}>
-                <div className={styles.buttonContainer}>
-                    <LanguageToggle />
-                </div>
-                <div className={styles.card}>
-                    <h1 className={styles.title}>{t('title')}</h1>
-                    <p className={styles.subtitle}>{t('subtitle')}</p>
+        <Box sx={styles.containerStyle}>
+            <Box sx={styles.buttonContainerStyle}>
+                <LanguageToggle />
+            </Box>
 
-                    {error && <div className={styles.errorMessage}>{t('loginError')}</div>}
+            <Box sx={styles.cardStyle}>
+                <Typography component="h1" sx={styles.titleStyle}>
+                    {t('title')}
+                </Typography>
+                <Typography sx={styles.subtitleStyle}>{t('subtitle')}</Typography>
 
-                    <form className={styles.form} onSubmit={handleSubmit}>
-                        <div className={styles.inputGroup}>
-                            <label htmlFor="username" className={styles.label}>
-                                {t('username')}
-                            </label>
-                            <input
-                                id="username"
-                                type="text"
-                                className={styles.input}
-                                required
-                                value={username}
-                                onChange={(e) => {
-                                    setUsername(e.target.value);
-                                }}
-                            />
-                        </div>
+                {error && (
+                    <Alert severity="error" sx={styles.errorMessageStyle}>
+                        {t('loginError')}
+                    </Alert>
+                )}
 
-                        <div className={styles.inputGroup}>
-                            <label htmlFor="password" className={styles.label}>
-                                {t('password')}
-                            </label>
-                            <input
-                                id="password"
-                                type="password"
-                                className={styles.input}
-                                required
-                                value={password}
-                                onChange={(e) => {
-                                    setPassword(e.target.value);
-                                }}
-                            />
-                        </div>
+                <Box component="form" sx={styles.formStyle} onSubmit={handleSubmit}>
+                    <TextField
+                        id="username"
+                        label={t('username')}
+                        variant="outlined"
+                        required
+                        fullWidth
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        disabled={isPending}
+                    />
 
-                        <button type="submit" className={styles.submitButton} disabled={isPending}>
-                            {isPending ? t('logingIn') : t('loginButton')}
-                        </button>
-                    </form>
+                    <TextField
+                        id="password"
+                        label={t('password')}
+                        type="password"
+                        variant="outlined"
+                        required
+                        fullWidth
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        disabled={isPending}
+                    />
 
-                    <GoogleLoginButton />
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        disabled={isPending}
+                        startIcon={isPending ? <CircularProgress size={18} color="inherit" /> : null}
+                        sx={styles.submitButtonStyle}
+                    >
+                        {isPending ? t('logingIn') : t('loginButton')}
+                    </Button>
+                </Box>
 
-                    <div className={styles.registerSection}>
-                        <p className={styles.registerText}>{t('registerText')}</p>
-                        <button type="button" className={styles.registerButton} onClick={() => navigate('/register')}>
-                            {t('registerLink')}
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </>
+                <GoogleLoginButton />
+
+                <Box sx={styles.registerSectionStyle}>
+                    <Typography sx={styles.registerTextStyle}>{t('registerText')}</Typography>
+                    <Button type="button" variant="outlined" onClick={() => navigate('/register')} sx={styles.registerButtonStyle}>
+                        {t('registerLink')}
+                    </Button>
+                </Box>
+            </Box>
+        </Box>
     );
 };

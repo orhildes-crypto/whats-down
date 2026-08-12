@@ -1,9 +1,10 @@
+import { Box, Typography } from '@mui/material';
 import { GoogleLogin, type CredentialResponse } from '@react-oauth/google';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useLoginWithGoogle } from '../hooks/useLoginWithGoogle';
-import styles from './GoogleLoginButton.module.css';
+import * as styles from './GoogleLoginButton.styles';
 
 export const GoogleLoginButton: React.FC = () => {
     const navigate = useNavigate();
@@ -24,15 +25,13 @@ export const GoogleLoginButton: React.FC = () => {
     };
 
     return (
-        <div className={styles.container}>
-            <GoogleLogin
-                onSuccess={handleSuccess}
-            />
+        <Box sx={styles.containerStyle}>
+            <GoogleLogin onSuccess={handleSuccess} />
             {error && (
-                <p className={styles.errorText}>
+                <Typography sx={styles.errorTextStyle}>
                     {t('googleErrorMessage')}
-                </p>
+                </Typography>
             )}
-        </div>
+        </Box>
     );
 };

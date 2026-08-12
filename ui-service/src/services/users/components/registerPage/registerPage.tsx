@@ -1,12 +1,14 @@
 import { LanguageToggle } from '@/shared/components/LanguageToggle/LanguageToggle';
 import { type CreateLocalUserPayload } from '@/shared/types/user-interfaces';
 import { getErrorMessage } from '@/shared/utils/zodErrorMessages';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOffOutlined';
+import VisibilityIcon from '@mui/icons-material/VisibilityOutlined';
+import { Box, Button, CircularProgress, IconButton, InputAdornment, TextField, Typography } from '@mui/material';
 import { createLocalUserSchema } from '@whats-down/shared/common';
-import { Eye, EyeOff } from 'lucide-react';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import styles from './registerPage.module.css';
+import * as styles from './registerPage.styles';
 import { useRegister } from './useRegister';
 
 export const RegisterPage: React.FC = () => {
@@ -77,70 +79,94 @@ export const RegisterPage: React.FC = () => {
             [fieldName]: errorMessage,
         }));
     };
-
+    
     return (
-        <div className={styles.container}>
-            <div className={styles.buttonContainer}>
+        <Box sx={styles.containerStyle}>
+            <Box sx={styles.buttonContainerStyle}>
                 <LanguageToggle />
-            </div>
-            <div className={styles.card}>
-                <h1 className={styles.title}>{t('title')}</h1>
-                <p className={styles.subtitle}>{t('subtitle')}</p>
+            </Box>
 
-                <form className={styles.form} onSubmit={handleSubmit}>
-                    <div className={styles.inputGroup}>
-                        <label htmlFor="username" className={styles.label}>
-                            {t('username')}
-                        </label>
-                        <input id="username" type="text" className={styles.input} value={registerData.username} onChange={handleChange} />
-                        {errors.username && <span className={styles.fieldError}>{errors.username}</span>}
-                    </div>
+            <Box sx={styles.cardStyle}>
+                <Typography component="h1" sx={styles.titleStyle}>
+                    {t('title')}
+                </Typography>
+                <Typography sx={styles.subtitleStyle}>{t('subtitle')}</Typography>
 
-                    <div className={styles.inputGroup}>
-                        <label htmlFor="email" className={styles.label}>
-                            {t('email')}
-                        </label>
-                        <input id="email" type="email" className={styles.input} value={registerData.email} onChange={handleChange} />
-                        {errors.email && <span className={styles.fieldError}>{errors.email}</span>}
-                    </div>
+                <Box component="form" sx={styles.formStyle} onSubmit={handleSubmit}>
+                    <TextField
+                        id="username"
+                        name="username"
+                        label={t('username')}
+                        variant="outlined"
+                        fullWidth
+                        value={registerData.username}
+                        onChange={handleChange}
+                        error={Boolean(errors.username)}
+                        helperText={errors.username}
+                        disabled={isPending}
+                    />
 
-                    <div className={styles.inputGroup}>
-                        <label htmlFor="password" className={styles.label}>
-                            {t('password')}
-                        </label>
-                        <div className={styles.passwordWrapper}>
-                            <input
-                                id="password"
-                                type={showPassword ? 'text' : 'password'}
-                                className={`${styles.input} ${styles.passwordInput}`}
-                                value={registerData.password}
-                                onChange={handleChange}
-                            />
-                            <button type="button" className={styles.togglePasswordButton} onClick={() => setShowPassword((prev) => !prev)}>
-                                {showPassword ? <EyeOff /> : <Eye />}
-                            </button>
-                        </div>
-                        {errors.password && <span className={styles.fieldError}>{errors.password}</span>}
-                    </div>
+                    <TextField
+                        id="email"
+                        name="email"
+                        type="email"
+                        label={t('email')}
+                        variant="outlined"
+                        fullWidth
+                        value={registerData.email}
+                        onChange={handleChange}
+                        error={Boolean(errors.email)}
+                        helperText={errors.email}
+                        disabled={isPending}
+                    />
 
-                    <button type="submit" className={styles.submitButton} disabled={isPending}>
-                        {isPending ? t('registerPending') : t('registerButton')}
-                    </button>
-                </form>
-
-                <div className={styles.loginSection}>
-                    <p className={styles.loginText}>{t('loginText')}</p>
-                    <button
-                        type="button"
-                        className={styles.loginButton}
-                        onClick={() => {
-                            navigate('/login');
+                    <TextField
+                        id="password"
+                        name="password"
+                        type={showPassword ? 'text' : 'password'}
+                        label={t('password')}
+                        variant="outlined"
+                        fullWidth
+                        value={registerData.password}
+                        onChange={handleChange}
+                        error={Boolean(errors.password)}
+                        helperText={errors.password}
+                        disabled={isPending}
+                        slotProps={{
+                            input: {
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            onClick={() => setShowPassword((prev) => !prev)}
+                                            edge="end"
+                                        >
+                                            {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                ),
+                            },
                         }}
+                    />
+
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        disabled={isPending}
+                        startIcon={isPending ? <CircularProgress size={18} color="inherit" /> : null}
+                        sx={styles.submitButtonStyle}
                     >
+                        {isPending ? t('registerPending') : t('registerButton')}
+                    </Button>
+                </Box>
+
+                <Box sx={styles.loginSectionStyle}>
+                    <Typography sx={styles.loginTextStyle}>{t('loginText')}</Typography>
+                    <Button type="button" variant="outlined" onClick={() => navigate('/login')} sx={styles.loginButtonStyle}>
                         {t('loginLink')}
-                    </button>
-                </div>
-            </div>
-        </div>
+                    </Button>
+                </Box>
+            </Box>
+        </Box>
     );
 };
