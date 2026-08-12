@@ -18,4 +18,8 @@ export const config = {
     model: {
         name: env.get('MODEL_NAME').default('SystemServiceModel').required().asString(),
     },
+    systems: {
+        defaultSort: env.get('SYSTEMS_DEFAULT_SORT').default('statusPriority name').asString(),
+        maxAncestorsDepth: env.get('SYSTEMS_MAX_ANCESTORS_DEPTH').default(20).asIntPositive(),
+    },
 };

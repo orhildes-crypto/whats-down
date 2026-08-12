@@ -8,7 +8,7 @@ import { SystemModel } from './model.js';
 export class SystemServiceManager {
     static getByQuery = async (query: Partial<System>, step: number, limit?: number): Promise<SystemDocument[]> => {
         return SystemModel.find(query, {}, limit ? { limit, skip: limit * step } : {})
-            .sort('statusPriority name')
+            .sort(config.systems.defaultSort)
             .lean()
             .exec();
     };
@@ -23,7 +23,7 @@ export class SystemServiceManager {
 
     static getRoots = async (step: number, limit?: number): Promise<SystemDocument[]> => {
         return SystemModel.find({ parentId: null }, {}, limit ? { limit, skip: limit * step } : {})
-            .sort('statusPriority name')
+            .sort(config.systems.defaultSort)
             .lean()
             .exec();
     };
@@ -42,7 +42,7 @@ export class SystemServiceManager {
                     connectFromField: 'parentId',
                     connectToField: '_id',
                     as: 'ancestors',
-                    maxDepth: 20,
+                    maxDepth: config.systems.maxAncestorsDepth,
                     depthField: 'distance',
                 },
             },
@@ -68,8 +68,10 @@ export class SystemServiceManager {
     private static getDescendantIds = async (id: string): Promise<mongoose.Types.ObjectId[]> => {
         const targetObjectId = this.toObjectId(id);
 
-        const [rootDocument] = await SystemModel.aggregate<{ descendants: Array<{ _id: mongoose.Types.ObjectId }> }>([
-            { $match: { _id: targetObjectId } },
+        const [rootDocument] = await SystemModel.aggregate<{ descendantIds: mongoose.Types.ObjectId[] }>([
+            {
+                $match: { _id: targetObjectId },
+            },
             {
                 $graphLookup: {
                     from: config.mongo.systemServiceCollectionName,
@@ -79,14 +81,21 @@ export class SystemServiceManager {
                     as: 'descendants',
                 },
             },
-            { $project: { 'descendants._id': 1 } },
+            {
+                $project: {
+                    _id: 0,
+                    descendantIds: {
+                        $map: {
+                            input: '$descendants',
+                            as: 'descendant',
+                            in: '$$descendant._id',
+                        },
+                    },
+                },
+            },
         ]).exec();
 
-        if (!rootDocument) {
-            return [];
-        }
-
-        return rootDocument.descendants.map((descendant) => descendant._id);
+        return rootDocument?.descendantIds ?? [];
     };
 
     static createOne = async (createSystemPayload: CreateSystemPayload, createdBy: string, createdByUsername: string): Promise<SystemDocument> => {
@@ -96,13 +105,17 @@ export class SystemServiceManager {
             createdByUsername,
         });
 
-        await this.updateAncestorsStatus(newSystem.parentId ? newSystem.parentId.toString() : null, newSystem.status);
+        const tasks: Promise<unknown>[] = [this.updateAncestorsStatus(newSystem.parentId ? newSystem.parentId.toString() : null, newSystem.status)];
 
         if (newSystem.parentId) {
-            await SystemModel.findByIdAndUpdate(newSystem.parentId, { $set: { hasChildren: true } })
-                .lean()
-                .exec();
+            tasks.push(
+                SystemModel.findByIdAndUpdate(newSystem.parentId, { $set: { hasChildren: true } })
+                    .lean()
+                    .exec(),
+            );
         }
+
+        await Promise.all(tasks);
 
         return newSystem;
     };

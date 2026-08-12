@@ -7,11 +7,14 @@ export const config = {
         port: env.get('PORT').default(3000).required().asPortNumber(),
     },
     services: {
-        usersServiceUrl: env.get('USERS_SERVICE_URL').required().asString(),
-        systemsServiceUrl: env.get('SYSTEMS_SERVICE_URL').required().asString(),
+        usersServiceUrl: env.get('USERS_SERVICE_URL').default('http://localhost:5000').asString(),
+        systemsServiceUrl: env.get('SYSTEMS_SERVICE_URL').default('http://localhost:8000').asString(),
+        usersServiceRoute: env.get('USERS_SERVICE_ROUTE').default('/api/users-service').asString(),
     },
     jwt: {
-        secret: isProduction ? env.get('JWT_SECRET').required().asString() : env.get('JWT_SECRET').default('local-dev-secret-key-123').asString(),
+        secret: isProduction 
+            ? env.get('JWT_SECRET').required().asString() 
+            : env.get('JWT_SECRET').default('local-dev-secret-key-123').asString(),
     },
     proxy: {
         publicRefreshPath: env.get('PUBLIC_REFRESH_PATH').default('/api/users/auth/refresh').asString(),

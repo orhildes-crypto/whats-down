@@ -5,7 +5,7 @@ import { forwardRequest } from '../proxy/proxy-handler.js';
 
 export const backendUsersRouter = Router({ mergeParams: true });
 
-const USERS_SERVICE_BASE_URL = `${config.services.usersServiceUrl}/api/users-service`;
+const USERS_SERVICE_BASE_URL = `${config.services.usersServiceUrl}${config.services.usersServiceRoute}`;
 
 const forwardToUsersService = (req: Request, res: Response) => {
     forwardRequest(req, res, {

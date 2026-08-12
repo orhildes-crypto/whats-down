@@ -11,7 +11,7 @@ import {
     getRootsByQueryRequestSchema,
     getAncestorsByIdRequestSchema,
 } from './validations.js';
-import { DeveloperError, TypedRequest } from '@whats-down/shared';
+import { TypedRequest } from '@whats-down/shared';
 
 
 export class SystemServiceController {
@@ -40,11 +40,7 @@ export class SystemServiceController {
     };
 
     static createOne = async (req: TypedRequest<typeof createOneRequestSchema>, res: Response) => {
-        if (!req.user) {
-            throw new DeveloperError("User context is missing. Make sure authenticateMiddleware is applied to this route.");
-        }
-
-        const { userId, username } = req.user;
+        const { userId, username } = req.user!;
         
         res.json(await SystemServiceManager.createOne(req.body, userId, username));
     };
