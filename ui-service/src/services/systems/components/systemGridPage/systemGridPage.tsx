@@ -62,7 +62,7 @@ export const SystemsGridPage: React.FC = () => {
         return <ErrorPage message={t('userError')} />;
     }
 
-    const isEmpty = !systems || systems.length === 0;
+    const isEmpty = !systems || !systems.length;
     const isBreadcrumbsLoading = parentId ? isParentSystemLoading || isAncestorsLoading : false;
 
     return (

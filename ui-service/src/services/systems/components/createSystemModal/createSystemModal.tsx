@@ -1,20 +1,10 @@
 import { GenericModal } from '@/shared/components/GenericModal/GenericModal';
 import { Box, Button, CircularProgress, TextField } from '@mui/material';
-import { SYSTEM_MAX_NAME_LENGTH, SYSTEM_MIN_NAME_LENGTH } from '@whats-down/shared/common';
-import type { TFunction } from 'i18next';
+import { SYSTEM_MAX_NAME_LENGTH, SYSTEM_MIN_NAME_LENGTH, createSystemBodySchema } from '@whats-down/shared/common';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { z } from 'zod';
 import { useCreateSystem } from './useCreateSystem';
 import * as styles from './createSystemModal.styles';
-
-const createSystemSchema = (t: TFunction<'createSystemModal'>) =>
-    z.object({
-        name: z
-            .string()
-            .min(SYSTEM_MIN_NAME_LENGTH, t('nameTooShort', { min: SYSTEM_MIN_NAME_LENGTH }))
-            .max(SYSTEM_MAX_NAME_LENGTH, t('nameTooLong', { max: SYSTEM_MAX_NAME_LENGTH })),
-    });
 
 type CreateSystemModalProps = {
     isOpen: boolean;
@@ -37,18 +27,24 @@ export const CreateSystemModal = ({ isOpen, onClose, parentId }: CreateSystemMod
     };
 
     const handleSubmit = () => {
-        const schema = createSystemSchema(t);
-        const result = schema.safeParse({ name });
+        const result = createSystemBodySchema.safeParse({ name, parentId });
 
         if (!result.success) {
-            setError(result.error.issues[0]!.message);
+            const issue = result.error.issues[0];
+
+            if (issue?.code === 'too_small') {
+                setError(t('nameTooShort', { min: SYSTEM_MIN_NAME_LENGTH }));
+            } else if (issue?.code === 'too_big') {
+                setError(t('nameTooLong', { max: SYSTEM_MAX_NAME_LENGTH }));
+            } else {
+                setError(issue?.message || t('invalidInput'));
+            }
             return;
         }
-
         setError(null);
 
         createSystem(
-            { payload: { name: result.data.name, parentId } },
+            { name: result.data.name, parentId },
             {
                 onSuccess: () => {
                     handleClose();
