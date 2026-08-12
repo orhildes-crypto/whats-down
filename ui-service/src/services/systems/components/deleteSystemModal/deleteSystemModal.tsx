@@ -1,8 +1,9 @@
 import { GenericModal } from '@/shared/components/GenericModal/GenericModal';
 import type { SystemDocument } from '@/shared/types/system-interfaces';
+import { Box, Button, CircularProgress, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import styles from './deleteSystemModal.module.css';
 import { useDeleteSystem } from './useDeleteSystem';
+import * as styles from './deleteSystemModal.styles';
 
 type DeleteSystemModalProps = {
     isOpen: boolean;
@@ -35,19 +36,28 @@ export const DeleteSystemModal = ({ isOpen, onClose, system }: DeleteSystemModal
             onClose={handleClose}
             title={t('title', { systemName: system.name })}
             confirmButton={
-                <button type="button" className={styles.confirmButton} onClick={handleSubmit} disabled={isPending}>
+                <Button
+                    type="button"
+                    variant="contained"
+                    onClick={handleSubmit}
+                    disabled={isPending}
+                    startIcon={isPending ? <CircularProgress size={18} color="inherit" /> : null}
+                    sx={styles.confirmButtonStyle}
+                >
                     {isPending ? t('deleting') : t('confirmButton')}
-                </button>
+                </Button>
             }
             cancelButton={
-                <button type="button" className={styles.cancelButton} onClick={onClose} disabled={isPending}>
+                <Button type="button" variant="contained" onClick={onClose} disabled={isPending} sx={styles.cancelButtonStyle}>
                     {t('cancelDelete')}
-                </button>
+                </Button>
             }
         >
-            <div className={styles.validationMessage}>
-                {t(system.hasChildren ? 'validationMessageWithChildren' : 'validationMessage', { systemName: system.name })}
-            </div>
+            <Box sx={styles.messageContainerStyle}>
+                <Typography sx={styles.messageTypographyStyle}>
+                    {t(system.hasChildren ? 'validationMessageWithChildren' : 'validationMessage', { systemName: system.name })}
+                </Typography>
+            </Box>
         </GenericModal>
     );
 };

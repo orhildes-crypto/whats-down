@@ -1,11 +1,12 @@
 import { GenericModal } from '@/shared/components/GenericModal/GenericModal';
+import { Box, Button, CircularProgress, TextField } from '@mui/material';
+import { SYSTEM_MAX_NAME_LENGTH, SYSTEM_MIN_NAME_LENGTH } from '@whats-down/shared/common';
 import type { TFunction } from 'i18next';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 import { useCreateSystem } from './useCreateSystem';
-import { SYSTEM_MIN_NAME_LENGTH, SYSTEM_MAX_NAME_LENGTH } from '@whats-down/shared/common';
-import { Box, TextField, Button, CircularProgress } from '@mui/material';
+import * as styles from './createSystemModal.styles';
 
 const createSystemSchema = (t: TFunction<'createSystemModal'>) =>
     z.object({
@@ -68,28 +69,13 @@ export const CreateSystemModal = ({ isOpen, onClose, parentId }: CreateSystemMod
                     onClick={handleSubmit}
                     disabled={isPending}
                     startIcon={isPending ? <CircularProgress size={18} color="inherit" /> : null}
-                    sx={{
-                        backgroundColor: '#636e72',
-                        color: '#ffffff',
-                        padding: '8px 16px',
-                        fontSize: '14px',
-                        fontWeight: 500,
-                        textTransform: 'none',
-                        borderRadius: '6px',
-                        '&:hover': {
-                            backgroundColor: '#404040',
-                        },
-                        '&:disabled': {
-                            backgroundColor: '#ededed',
-                            color: '#9e9e9e',
-                        },
-                    }}
+                    sx={styles.confirmButtonStyle}
                 >
                     {isPending ? t('submitting') : t('submitButton')}
                 </Button>
             }
         >
-            <Box sx={{ marginTop: 1 }}>
+            <Box sx={styles.formContainerStyle}>
                 <TextField
                     id="system-name"
                     label={t('systemName')}

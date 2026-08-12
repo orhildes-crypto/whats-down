@@ -1,14 +1,18 @@
 import { type SystemDocument } from '@/shared/types/system-interfaces';
 import { formatDate } from '@/shared/utils/formatDate';
+import AddIcon from '@mui/icons-material/AddOutlined';
+import DeleteIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import EditIcon from '@mui/icons-material/EditOutlined';
+import { Box, IconButton, TextField, Typography } from '@mui/material';
 import { SYSTEM_MAX_NAME_LENGTH, SYSTEM_MIN_NAME_LENGTH, SystemStatus, UserRole } from '@whats-down/shared/common';
-import { PencilLine, Plus, Trash2 } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { DeleteSystemModal } from '../deleteSystemModal/deleteSystemModal';
 import { useChangeStatus } from './hooks/useChangeStatus';
 import { useRename } from './hooks/useRename';
-import styles from './systemCube.module.css';
+
+import * as styles from './systemCube.styles';
 
 export interface SystemCubeProps {
     system: SystemDocument;
@@ -31,7 +35,7 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role, onAddChild
     const isUp = system.status === SystemStatus.UP;
     const canEdit = role === UserRole.ADMIN || role === UserRole.EDITOR;
 
-    const containerStatusClass = isUp ? styles.statusUp : styles.statusDown;
+    const statusStyle = system.status === SystemStatus.UP ? styles.STATUS_COLORS.up : styles.STATUS_COLORS.down;
 
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
@@ -96,84 +100,106 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role, onAddChild
         }
     };
 
-    return (
-        <div className={`${styles.cubeContainer} ${containerStatusClass}`} onClick={handleStatusToggle}>
-            <div className={`${styles.statusBadge}`}>{system.status}</div>
+    const infoRows = [
+        { label: t('creationTime'), value: formatDate(system.createdAt) },
+        { label: t('statusUpdateTime'), value: formatDate(system.statusUpdatedAt) },
+        { label: t('createdByUsername'), value: system.createdByUsername },
+    ];
 
-            <div className={styles.cubeHeader}>
+    return (
+        <Box
+            onClick={handleStatusToggle}
+            sx={styles.cubeContainerStyle(statusStyle)}
+        >
+            <Box sx={styles.statusBadgeStyle}>{system.status}</Box>
+
+            <Box sx={{ marginTop: '25px', marginBottom: '6px' }}>
                 {isEditingName ? (
-                    <input
-                        ref={inputRef}
-                        type="text"
-                        maxLength={SYSTEM_MAX_NAME_LENGTH}
-                        minLength={SYSTEM_MIN_NAME_LENGTH}
-                        className={styles.titleInput}
+                    <TextField
+                        inputRef={inputRef}
+                        size="small"
                         value={nameValue}
                         onChange={(e) => setNameValue(e.target.value)}
                         onBlur={handleSaveName}
                         onKeyDown={handleKeyDown}
                         onClick={(e) => e.stopPropagation()}
+                        slotProps={{
+                            htmlInput: {
+                                maxLength: SYSTEM_MAX_NAME_LENGTH,
+                                minLength: SYSTEM_MIN_NAME_LENGTH,
+                            },
+                        }}
+                        sx={styles.editTextFieldStyle}
                     />
                 ) : (
-                    <h3 className={styles.cubeTitle}>{system.name}</h3>
+                    <Typography
+                        component="h3"
+                        sx={styles.titleTypographyStyle}
+                    >
+                        {system.name}
+                    </Typography>
                 )}
-            </div>
+            </Box>
 
-            <div className={styles.cubeContent}>
-                <div className={styles.infoRow}>
-                    <span className={styles.infoLabel}>{t('creationTime')}</span>
-                    <span className={styles.infoLabel}>{formatDate(system.createdAt)}</span>
-                </div>
-                <div className={styles.infoRow}>
-                    <span className={styles.infoLabel}>{t('statusUpdateTime')}</span>
-                    <span className={styles.infoLabel}>{formatDate(system.statusUpdatedAt)}</span>
-                </div>
-                <div className={styles.infoRow}>
-                    <span className={styles.infoLabel}>{t('createdByUsername')}</span>
-                    <span className={styles.infoLabel}>{system.createdByUsername}</span>
-                </div>
-            </div>
+            <Box sx={{ display: 'flex', flexDirection: 'column',  marginTop: '14px', gap: '7px' }}>
+                {infoRows.map((row) => (
+                    <Box
+                        key={row.label}
+                        sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}
+                    >
+                        <Typography component="span" sx={styles.infoTextStyle}>
+                            {row.label}
+                        </Typography>
+                        <Typography component="span" sx={styles.infoTextStyle}>
+                            {row.value}
+                        </Typography>
+                    </Box>
+                ))}
+            </Box>
 
-            <div className={styles.footerContainer}>
-                <div className={styles.changeStatusMessage}>{system.hasChildren ? t('watchChildrenMessage') : canEdit ? t('changeStatusMessage'): ''}</div>
-                <div className={styles.cubeActions} onClick={(e) => e.stopPropagation()}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: '14px', paddingTop: '12px' }}>
+                <Typography sx={{ fontWeight: 500, fontSize: '0.95rem' }}>
+                    {system.hasChildren ? t('watchChildrenMessage') : canEdit ? t('changeStatusMessage') : ''}
+                </Typography>
+
+                <Box sx={{ display: 'flex', gap: '8px' }} onClick={(e) => e.stopPropagation()}>
                     {canEdit && (
-                        <button
-                            type="button"
-                            className={styles.actionButton}
+                        <IconButton
                             aria-label="rename"
                             onClick={(e) => {
                                 handleStartEdit(e);
                             }}
+                            sx={styles.actionButtonStyle}
                         >
-                            <PencilLine size={16} color='#34383b'/>
-                        </button>
+                            <EditIcon sx={styles.actionIconStyle} />
+                        </IconButton>
                     )}
 
                     {role === UserRole.ADMIN && (
-                        <button
-                            type="button"
-                            className={styles.actionButton}
+                        <IconButton
                             aria-label="delete"
                             onClick={() => {
-                                openDeleteModal()
+                                openDeleteModal();
                             }}
+                            sx={styles.actionButtonStyle}
                         >
-                            <Trash2 size={16} color='#34383b'/>
-                        </button>
+                            <DeleteIcon sx={styles.actionIconStyle} />
+                        </IconButton>
                     )}
 
                     {canEdit && (
-                        <button type="button" className={styles.actionButton} aria-label="create" onClick={onAddChild}>
-                            <Plus size={16} color='#34383b'/>
-                        </button>
+                        <IconButton
+                            aria-label="create"
+                            onClick={onAddChild}
+                            sx={styles.actionButtonStyle}
+                        >
+                            <AddIcon sx={styles.actionIconStyle} />
+                        </IconButton>
                     )}
-                </div>
-            </div>
-            <DeleteSystemModal 
-                isOpen={isDeleteModalOpen} 
-                onClose={closeDeleteModal} 
-                system={system} />
-        </div>
+                </Box>
+            </Box>
+
+            <DeleteSystemModal isOpen={isDeleteModalOpen} onClose={closeDeleteModal} system={system} />
+        </Box>
     );
 };

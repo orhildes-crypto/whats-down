@@ -10,7 +10,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { Breadcrumbs, type BreadcrumbItem } from '../Breadcrumbs/Breadcrumbs';
-import { CreateSystemModal } from '../createSystemModal/CreateSystemModal';
+import { CreateSystemModal } from '../createSystemModal/createSystemModal';
 import { SystemCube } from '../systemCube/systemCube';
 import styles from './systemGridPage.module.css';
 
