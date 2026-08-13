@@ -16,7 +16,7 @@ export const STATUS_COLORS = {
 export const cubeContainerStyle = (statusStyle: typeof STATUS_COLORS.up): SxProps<Theme> => ({
     position: 'relative',
     borderRadius: '10px',
-    padding: '20px 20px 16px',
+    padding: '20px 15px 16px',
     display: 'flex',
     flexDirection: 'column',
     minHeight: '200px',

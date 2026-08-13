@@ -19,4 +19,13 @@ export const confirmButtonStyle: SxProps<Theme> = {
 
 export const formContainerStyle: SxProps<Theme> = {
     marginTop: 1,
+
+    '& .MuiInputBase-input': {
+        color: '#ffffff',
+    },
+
+    '& input:-webkit-autofill': {
+        WebkitBoxShadow: '0 0 0 100px #1e2227 inset !important',
+        transition: 'background-color 5000s ease-in-out 0s',
+    },
 };

@@ -29,10 +29,11 @@ export const titleTextStyle: SxProps<Theme> = {
 export const closeButtonStyle: SxProps<Theme> = {
     gridColumn: 3,
     justifySelf: 'end',
-    color: '#6b7280',
+    color: '#c0c4cd',
     padding: '4px',
+    transition: 'background 0.15s ease, border-color 0.15s ease, transform 0.15s ease',
     '&:hover': {
-        color: '#111827',
+        color: '#ffffff',
         backgroundColor: 'transparent',
     },
 };

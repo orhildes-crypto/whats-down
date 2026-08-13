@@ -15,7 +15,10 @@ export const DeleteSystemModal = ({ isOpen, onClose, system }: DeleteSystemModal
     const { t } = useTranslation('deleteSystemModal');
     const { mutate: deleteSystem, isPending } = useDeleteSystem();
 
-    const handleClose = () => {
+    const handleClose = (e?: React.SyntheticEvent | React.MouseEvent) => {
+        if (e) {
+            e.stopPropagation();
+        }
         onClose();
     };
 
@@ -50,7 +53,7 @@ export const DeleteSystemModal = ({ isOpen, onClose, system }: DeleteSystemModal
                 </Button>
             }
             cancelButton={
-                <Button type="button" variant="contained" onClick={onClose} disabled={isPending} sx={styles.cancelButtonStyle}>
+                <Button type="button" variant="contained" onClick={handleClose} disabled={isPending} sx={styles.cancelButtonStyle}>
                     {t('cancelDelete')}
                 </Button>
             }
