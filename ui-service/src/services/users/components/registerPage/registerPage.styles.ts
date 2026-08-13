@@ -34,7 +34,7 @@ export const titleStyle: SxProps<Theme> = {
 export const subtitleStyle: SxProps<Theme> = {
     margin: '0 0 2rem 0',
     fontSize: '0.95rem',
-    color: '#6b7280',
+    color: '#000000',
     textAlign: 'center',
 };
 
@@ -42,6 +42,15 @@ export const formStyle: SxProps<Theme> = {
     display: 'flex',
     flexDirection: 'column',
     gap: '1.25rem',
+    '& .MuiOutlinedInput-root.Mui-focused:not(.Mui-error) .MuiOutlinedInput-notchedOutline': {
+        borderColor: 'rgba(0, 0, 0, 0.23)',
+        borderWidth: '1px',
+    },
+    '& input:-webkit-autofill': {
+        WebkitBoxShadow: '0 0 0 100px transparent inset !important',
+        WebkitTextFillColor: 'inherit !important',
+        transition: 'background-color 5000s ease-in-out 0s',
+    },
 };
 
 export const errorMessageStyle: SxProps<Theme> = {

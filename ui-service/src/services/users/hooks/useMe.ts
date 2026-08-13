@@ -11,7 +11,6 @@ export const authUserQueryOptions = queryOptions({
   meta: { skipGlobalErrorHandler: true },
 });
 
-// שימוש ב-Hook
 export const useMe = () => {
   return useQuery(authUserQueryOptions);
 };

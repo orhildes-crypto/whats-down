@@ -1,6 +1,31 @@
 import { z } from 'zod';
 import i18next from 'i18next';
 
+export const formatFieldError = (
+    error: unknown,
+    fieldName: string,
+    namespace = 'registerPage'
+): string => {
+    if (!error) return '';
+
+    if (typeof error === 'string') {
+        return error;
+    }
+
+    const errObj = error as Record<string, any>;
+
+    const issueLike: z.ZodIssue = {
+        code: errObj.code ?? 'custom',
+        path: errObj.path ?? [fieldName],
+        message: errObj.message ?? '',
+        minimum: errObj.minimum,
+        type: errObj.type,
+        validation: errObj.validation,
+    } as z.ZodIssue;
+
+    return getErrorMessage(issueLike, fieldName, namespace);
+};
+
 export const getErrorMessage = (issue: z.ZodIssue, fieldNameOverride?: string, namespace = 'registerPage'): string => {
     const pathHead = issue.path.length > 0 ? issue.path[0] : undefined;
     const field = fieldNameOverride ?? pathHead;

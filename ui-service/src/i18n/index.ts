@@ -57,7 +57,7 @@ i18next.use(initReactI18next).init({
     lng: savedLang ?? 'he',
     fallbackLng: 'he',
     interpolation: {
-        escapeValue: false, // React already escapes values, no need for i18next to do it too
+        escapeValue: false,
     },
 });
 

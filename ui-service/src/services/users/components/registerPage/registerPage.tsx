@@ -1,84 +1,37 @@
-import { LanguageToggle } from '@/shared/components/LanguageToggle/LanguageToggle';
-import { type CreateLocalUserPayload } from '@/shared/types/user-interfaces';
-import { getErrorMessage } from '@/shared/utils/zodErrorMessages';
+import React, { useState } from 'react';
+import { useForm } from '@tanstack/react-form';
+import { createLocalUserSchema } from '@whats-down/shared/common';
+import { useTranslation } from 'react-i18next';
+import { Box, Button, CircularProgress, IconButton, InputAdornment, TextField, Typography } from '@mui/material';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOffOutlined';
 import VisibilityIcon from '@mui/icons-material/VisibilityOutlined';
-import { Box, Button, CircularProgress, IconButton, InputAdornment, TextField, Typography } from '@mui/material';
-import { createLocalUserSchema } from '@whats-down/shared/common';
-import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import * as styles from './registerPage.styles';
-import { useRegister } from './useRegister';
+import { LanguageToggle } from '@/shared/components/LanguageToggle/LanguageToggle';
+import { type CreateLocalUserPayload } from '@/shared/types/user-interfaces';
 import { router } from '@/shared/router';
+import { useRegister } from './useRegister';
+import * as styles from './registerPage.styles';
+import { formatFieldError } from '@/shared/utils/zodErrorMessages';
 
 export const RegisterPage: React.FC = () => {
-    const [registerData, setRegisterData] = useState<CreateLocalUserPayload>({ email: '', username: '', password: '' });
-    const [errors, setErrors] = useState<Record<string, string>>({});
     const [showPassword, setShowPassword] = useState<boolean>(false);
-
-    type FieldName = keyof CreateLocalUserPayload;
-
-    const navigate = router.navigate;
-
     const { t } = useTranslation('registerPage');
-
+    const navigate = router.navigate;
     const { mutateAsync: register, isPending } = useRegister();
 
-    const validateSingleField = (name: FieldName, value: unknown): string => {
-        const fieldSchema = createLocalUserSchema.shape[name];
-
-        if (!fieldSchema) return '';
-
-        const result = fieldSchema.safeParse(value);
-
-        if (!result.success) {
-            if (!result.error.issues[0]) return '';
-
-            return getErrorMessage(result.error.issues[0], name);
-        }
-
-        return '';
-    };
-
-    const validateForm = (): boolean => {
-        const result = createLocalUserSchema.safeParse(registerData);
-
-        if (result.success) {
-            setErrors({});
-            return true;
-        } else {
-            result.error.issues.forEach((issue) => {
-                setErrors((prevErrors) => ({
-                    ...prevErrors,
-                    [issue.path[0] as string]: getErrorMessage(issue),
-                }));
-            });
-
-            return false;
-        }
-    };
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-
-        if (!validateForm()) return;
-
-        await register(registerData);
-        navigate({ to: '/login' });
-    };
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { id, value } = e.target;
-        const fieldName = id as FieldName;
-        setRegisterData({ ...registerData, [id]: value });
-
-        const errorMessage = validateSingleField(fieldName, value);
-
-        setErrors((prevErrors) => ({
-            ...prevErrors,
-            [fieldName]: errorMessage,
-        }));
-    };
+    const form = useForm({
+        defaultValues: {
+            username: '',
+            email: '',
+            password: '',
+        } as CreateLocalUserPayload,
+        validators: {
+            onChange: createLocalUserSchema,
+        },
+        onSubmit: async ({ value }) => {
+            await register(value);
+            navigate({ to: '/login' });
+        },
+    });
 
     return (
         <Box sx={styles.containerStyle}>
@@ -92,76 +45,142 @@ export const RegisterPage: React.FC = () => {
                 </Typography>
                 <Typography sx={styles.subtitleStyle}>{t('subtitle')}</Typography>
 
-                <Box component="form" sx={styles.formStyle} onSubmit={handleSubmit}>
-                    <TextField
-                        id="username"
+                <Box
+                    component="form"
+                    sx={styles.formStyle}
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        form.handleSubmit();
+                    }}
+                >
+                    <form.Field
                         name="username"
-                        label={t('username')}
-                        variant="outlined"
-                        fullWidth
-                        value={registerData.username}
-                        onChange={handleChange}
-                        error={Boolean(errors.username)}
-                        helperText={errors.username}
-                        disabled={isPending}
-                    />
+                        children={(field) => {
+                            const showFieldError = field.state.meta.isTouched || form.state.isSubmitted;
+                            const rawError = showFieldError ? field.state.meta.errors[0] : undefined;
+                            const errorMessage = formatFieldError(rawError, 'username');
 
-                    <TextField
-                        id="email"
-                        name="email"
-                        type="email"
-                        label={t('email')}
-                        variant="outlined"
-                        fullWidth
-                        value={registerData.email}
-                        onChange={handleChange}
-                        error={Boolean(errors.email)}
-                        helperText={errors.email}
-                        disabled={isPending}
-                    />
-
-                    <TextField
-                        id="password"
-                        name="password"
-                        type={showPassword ? 'text' : 'password'}
-                        label={t('password')}
-                        variant="outlined"
-                        fullWidth
-                        value={registerData.password}
-                        onChange={handleChange}
-                        error={Boolean(errors.password)}
-                        helperText={errors.password}
-                        disabled={isPending}
-                        slotProps={{
-                            input: {
-                                endAdornment: (
-                                    <InputAdornment position="end">
-                                        <IconButton
-                                            aria-label="toggle password visibility"
-                                            onClick={() => setShowPassword((prev) => !prev)}
-                                            edge="end"
-                                        >
-                                            {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                                        </IconButton>
-                                    </InputAdornment>
-                                ),
-                            },
+                            return (
+                                <TextField
+                                    id={field.name}
+                                    name={field.name}
+                                    label={t('username')}
+                                    variant="outlined"
+                                    fullWidth
+                                    value={field.state.value}
+                                    onBlur={field.handleBlur}
+                                    onChange={(e) => field.handleChange(e.target.value)}
+                                    error={Boolean(errorMessage)}
+                                    helperText={errorMessage}
+                                    disabled={isPending}
+                                    sx={{
+                                        '& .MuiInputBase-input': {
+                                            color: 'black',
+                                        },
+                                    }}
+                                />
+                            );
                         }}
                     />
 
-                    <Button
-                        type="submit"
-                        variant="contained"
-                        disabled={isPending}
-                        startIcon={isPending ? <CircularProgress size={18} color="inherit" /> : null}
-                        sx={styles.submitButtonStyle}
-                    >
-                        {isPending ? t('registerPending') : t('registerButton')}
-                    </Button>
+                    <form.Field
+                        name="email"
+                        children={(field) => {
+                            const showFieldError = field.state.meta.isTouched || form.state.isSubmitted;
+                            const rawError = showFieldError ? field.state.meta.errors[0] : undefined;
+                            const errorMessage = formatFieldError(rawError, 'email');
+
+                            return (
+                                <TextField
+                                    id={field.name}
+                                    name={field.name}
+                                    type="email"
+                                    label={t('email')}
+                                    variant="outlined"
+                                    fullWidth
+                                    value={field.state.value}
+                                    onBlur={field.handleBlur}
+                                    onChange={(e) => field.handleChange(e.target.value)}
+                                    error={Boolean(errorMessage)}
+                                    helperText={errorMessage}
+                                    disabled={isPending}
+                                    sx={{
+                                        '& .MuiInputBase-input': {
+                                            color: 'black',
+                                        },
+                                    }}
+                                />
+                            );
+                        }}
+                    />
+
+                    <form.Field
+                        name="password"
+                        children={(field) => {
+                            const showFieldError = field.state.meta.isTouched || form.state.isSubmitted;
+                            const rawError = showFieldError ? field.state.meta.errors[0] : undefined;
+                            const errorMessage = formatFieldError(rawError, 'password');
+
+                            return (
+                                <TextField
+                                    id={field.name}
+                                    name={field.name}
+                                    type={showPassword ? 'text' : 'password'}
+                                    label={t('password')}
+                                    variant="outlined"
+                                    fullWidth
+                                    value={field.state.value}
+                                    onBlur={field.handleBlur}
+                                    onChange={(e) => field.handleChange(e.target.value)}
+                                    error={Boolean(errorMessage)}
+                                    helperText={errorMessage}
+                                    disabled={isPending}
+                                    sx={{
+                                        '& .MuiInputBase-input': {
+                                            color: 'black',
+                                        },
+                                    }}
+                                    slotProps={{
+                                        input: {
+                                            endAdornment: (
+                                                <InputAdornment position="end">
+                                                    <IconButton
+                                                        aria-label="toggle password visibility"
+                                                        onClick={() => setShowPassword((prev) => !prev)}
+                                                        edge="end"
+                                                        sx={{ color: 'black' }}
+                                                    >
+                                                        {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                                                    </IconButton>
+                                                </InputAdornment>
+                                            ),
+                                        },
+                                    }}
+                                />
+                            );
+                        }}
+                    />
+
+                    <form.Subscribe
+                        selector={(state) => [state.canSubmit, state.isSubmitting]}
+                        children={([canSubmit, isSubmitting]) => (
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                disabled={!canSubmit || isPending || isSubmitting}
+                                startIcon={isPending ? <CircularProgress size={18} color="inherit" /> : null}
+                                sx={styles.submitButtonStyle}
+                            >
+                                {isPending ? t('registerPending') : t('registerButton')}
+                            </Button>
+                        )}
+                    />
                 </Box>
 
                 <Box sx={styles.loginSectionStyle}>
                     <Typography sx={styles.loginTextStyle}>{t('loginText')}</Typography>
+
                     <Button type="button" variant="outlined" onClick={() => navigate({ to: '/login' })} sx={styles.loginButtonStyle}>
                         {t('loginLink')}
                     </Button>
