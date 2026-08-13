@@ -7,9 +7,9 @@ import { Box, Button, CircularProgress, IconButton, InputAdornment, TextField, T
 import { createLocalUserSchema } from '@whats-down/shared/common';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import * as styles from './registerPage.styles';
 import { useRegister } from './useRegister';
+import { router } from '@/shared/router';
 
 export const RegisterPage: React.FC = () => {
     const [registerData, setRegisterData] = useState<CreateLocalUserPayload>({ email: '', username: '', password: '' });
@@ -18,7 +18,7 @@ export const RegisterPage: React.FC = () => {
 
     type FieldName = keyof CreateLocalUserPayload;
 
-    const navigate = useNavigate();
+    const navigate = router.navigate;
 
     const { t } = useTranslation('registerPage');
 
@@ -64,7 +64,7 @@ export const RegisterPage: React.FC = () => {
         if (!validateForm()) return;
 
         await register(registerData);
-        navigate('/login');
+        navigate({ to: '/login' });
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -79,7 +79,7 @@ export const RegisterPage: React.FC = () => {
             [fieldName]: errorMessage,
         }));
     };
-    
+
     return (
         <Box sx={styles.containerStyle}>
             <Box sx={styles.buttonContainerStyle}>
@@ -162,7 +162,7 @@ export const RegisterPage: React.FC = () => {
 
                 <Box sx={styles.loginSectionStyle}>
                     <Typography sx={styles.loginTextStyle}>{t('loginText')}</Typography>
-                    <Button type="button" variant="outlined" onClick={() => navigate('/login')} sx={styles.loginButtonStyle}>
+                    <Button type="button" variant="outlined" onClick={() => navigate({ to: '/login' })} sx={styles.loginButtonStyle}>
                         {t('loginLink')}
                     </Button>
                 </Box>

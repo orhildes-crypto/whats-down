@@ -2,16 +2,16 @@ import { LanguageToggle } from '@/shared/components/LanguageToggle/LanguageToggl
 import { Alert, Box, Button, CircularProgress, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import { GoogleLoginButton } from './GoogleLoginButton/GoogleLoginButton';
 import * as styles from './LoginForm.styles';
 import { useLogin } from './hooks/useLogin';
+import { router } from '@/shared/router';
 
 export const LoginPage: React.FC = () => {
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
 
-    const navigate = useNavigate();
+    const navigate = router.navigate;
 
     const { mutateAsync: login, isPending, error } = useLogin();
 
@@ -24,7 +24,7 @@ export const LoginPage: React.FC = () => {
             { username, password },
             {
                 onSuccess: () => {
-                    navigate('/');
+                    navigate({ to: '/' });
                 },
             },
         );
@@ -87,7 +87,7 @@ export const LoginPage: React.FC = () => {
 
                 <Box sx={styles.registerSectionStyle}>
                     <Typography sx={styles.registerTextStyle}>{t('registerText')}</Typography>
-                    <Button type="button" variant="outlined" onClick={() => navigate('/register')} sx={styles.registerButtonStyle}>
+                    <Button type="button" variant="outlined" onClick={() => navigate({ to: '/register' })} sx={styles.registerButtonStyle}>
                         {t('registerLink')}
                     </Button>
                 </Box>

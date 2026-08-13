@@ -2,9 +2,9 @@ import { useRtl } from '@/i18n/useRtl';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { Breadcrumbs as MuiBreadcrumbs, Link as MuiLink, Typography } from '@mui/material';
+import { Link as RouterLink } from '@tanstack/react-router';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link as RouterLink } from 'react-router-dom';
 
 export type BreadcrumbItem = {
     id: string | null;
@@ -24,41 +24,35 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, currentSystem }
     const SeparatorIcon = isRtl ? NavigateBeforeIcon : NavigateNextIcon;
 
     return (
-        <MuiBreadcrumbs 
-            separator={<SeparatorIcon fontSize="large" sx={{ color: 'common.white' }}/>} 
+        <MuiBreadcrumbs
+            separator={<SeparatorIcon fontSize="large" sx={{ color: 'common.white' }} />}
             aria-label="breadcrumb"
-            sx={{ marginY: 1 , color: 'common.white', fontSize: 'xx-large' }}
+            sx={{ marginY: 1, color: 'common.white', fontSize: 'xx-large' }}
         >
             {isAtRoot ? (
-               <Typography sx={{ fontSize: 'xx-large' }}>{t('breadcrumbsHome')}</Typography>
+                <Typography sx={{ fontSize: 'xx-large' }}>{t('breadcrumbsHome')}</Typography>
             ) : (
-                <MuiLink 
-                    component={RouterLink} 
-                    to="/" 
-                    underline="hover" 
-                    color="inherit"
-                >
-                    {t('breadcrumbsHome')}
-                </MuiLink>
+                <RouterLink to="/" style={{ color: 'inherit', textDecoration: 'none' }}>
+                    <MuiLink component="span" underline="hover" color="inherit">
+                        {t('breadcrumbsHome')}
+                    </MuiLink>
+                </RouterLink>
             )}
 
             {items.map((item) => (
-                <MuiLink
+                <RouterLink
                     key={item.id ?? 'root'}
-                    component={RouterLink}
-                    to={`/systems/${item.id}`}
-                    underline="hover"
-                    color="inherit"
+                    to="/systems/$id"
+                    params={{ id: item.id ?? '' }}
+                    style={{ color: 'inherit', textDecoration: 'none' }}
                 >
-                    {item.name}
-                </MuiLink>
+                    <MuiLink component="span" underline="hover" color="inherit">
+                        {item.name}
+                    </MuiLink>
+                </RouterLink>
             ))}
 
-            {currentSystem && (
-                <Typography sx={{ fontSize: 'xx-large' }}>
-                    {currentSystem.name}
-                </Typography>
-            )}
+            {currentSystem && <Typography sx={{ fontSize: 'xx-large' }}>{currentSystem.name}</Typography>}
         </MuiBreadcrumbs>
     );
 };

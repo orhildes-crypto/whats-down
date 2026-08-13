@@ -7,12 +7,12 @@ import { Box, IconButton, TextField, Typography } from '@mui/material';
 import { SYSTEM_MAX_NAME_LENGTH, SYSTEM_MIN_NAME_LENGTH, SystemStatus, UserRole } from '@whats-down/shared/common';
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import { DeleteSystemModal } from '../deleteSystemModal/deleteSystemModal';
 import { useChangeStatus } from './hooks/useChangeStatus';
 import { useRename } from './hooks/useRename';
 
 import * as styles from './systemCube.styles';
+import { router } from '@/shared/router';
 
 export interface SystemCubeProps {
     system: SystemDocument;
@@ -21,7 +21,7 @@ export interface SystemCubeProps {
 }
 
 export const SystemCube: React.FC<SystemCubeProps> = ({ system, role, onAddChild }) => {
-    const navigate = useNavigate();
+    const navigate = router.navigate;
 
     const { t } = useTranslation('systemCube');
 
@@ -91,7 +91,7 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role, onAddChild
         if (isEditingName) return;
 
         if (system.hasChildren) {
-            navigate(`/systems/${system._id}`);
+            navigate({ to: `/systems/${system._id}` });
         } else {
             if (!canEdit || statusIsPending) return;
 
@@ -107,10 +107,7 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role, onAddChild
     ];
 
     return (
-        <Box
-            onClick={handleStatusToggle}
-            sx={styles.cubeContainerStyle(statusStyle)}
-        >
+        <Box onClick={handleStatusToggle} sx={styles.cubeContainerStyle(statusStyle)}>
             <Box sx={styles.statusBadgeStyle}>{system.status}</Box>
 
             <Box sx={{ marginTop: '25px', marginBottom: '6px' }}>
@@ -132,21 +129,15 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role, onAddChild
                         sx={styles.editTextFieldStyle}
                     />
                 ) : (
-                    <Typography
-                        component="h3"
-                        sx={styles.titleTypographyStyle}
-                    >
+                    <Typography component="h3" sx={styles.titleTypographyStyle}>
                         {system.name}
                     </Typography>
                 )}
             </Box>
 
-            <Box sx={{ display: 'flex', flexDirection: 'column',  marginTop: '14px', gap: '7px' }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', marginTop: '14px', gap: '7px' }}>
                 {infoRows.map((row) => (
-                    <Box
-                        key={row.label}
-                        sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}
-                    >
+                    <Box key={row.label} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
                         <Typography component="span" sx={styles.infoTextStyle}>
                             {row.label}
                         </Typography>
@@ -188,11 +179,7 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role, onAddChild
                     )}
 
                     {canEdit && (
-                        <IconButton
-                            aria-label="create"
-                            onClick={onAddChild}
-                            sx={styles.actionButtonStyle}
-                        >
+                        <IconButton aria-label="create" onClick={onAddChild} sx={styles.actionButtonStyle}>
                             <AddIcon sx={styles.actionIconStyle} />
                         </IconButton>
                     )}

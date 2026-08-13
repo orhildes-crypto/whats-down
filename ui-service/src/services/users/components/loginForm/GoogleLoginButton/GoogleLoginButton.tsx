@@ -2,12 +2,12 @@ import { Box, Typography } from '@mui/material';
 import { GoogleLogin, type CredentialResponse } from '@react-oauth/google';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import { useLoginWithGoogle } from '../hooks/useLoginWithGoogle';
 import * as styles from './GoogleLoginButton.styles';
+import { router } from '@/shared/router';
 
 export const GoogleLoginButton: React.FC = () => {
-    const navigate = useNavigate();
+    const navigate = router.navigate;
     const { mutate: loginWithGoogle, error } = useLoginWithGoogle();
 
     const { t } = useTranslation('loginForm');
@@ -19,7 +19,7 @@ export const GoogleLoginButton: React.FC = () => {
 
         loginWithGoogle(credentialResponse.credential, {
             onSuccess: () => {
-                navigate('/', { replace: true });
+                navigate({to: '/', replace: true });
             },
         });
     };
