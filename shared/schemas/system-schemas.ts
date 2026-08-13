@@ -1,4 +1,3 @@
-// shared/src/schemas/system-schemas.ts
 import { z } from 'zod';
 import { SystemStatus } from '../interfaces/systemInterfaces.js';
 import { zodMongoObjectId } from '../zod.js';

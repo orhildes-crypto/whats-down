@@ -1,5 +1,6 @@
 import { queryOptions, useQuery } from '@tanstack/react-query';
 import { usersService } from '../api/usersApi';
+import { config } from '@/config';
 
 export const AUTH_USER_QUERY_KEY = ['authUser'] as const;
 
@@ -7,7 +8,7 @@ export const authUserQueryOptions = queryOptions({
   queryKey: AUTH_USER_QUERY_KEY,
   queryFn: usersService.getMe,
   retry: false,
-  staleTime: 1000 * 60 * 5,
+  staleTime: config.staleTime.standard,
   meta: { skipGlobalErrorHandler: true },
 });
 
