@@ -19,7 +19,9 @@ export const DeleteSystemModal = ({ isOpen, onClose, system }: DeleteSystemModal
         onClose();
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        
         deleteSystem(
             { systemId: system._id },
             {

@@ -169,7 +169,8 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role, onAddChild
                     {role === UserRole.ADMIN && (
                         <IconButton
                             aria-label="delete"
-                            onClick={() => {
+                            onClick={(e) => {
+                                e.stopPropagation();
                                 openDeleteModal();
                             }}
                             sx={styles.actionButtonStyle}
