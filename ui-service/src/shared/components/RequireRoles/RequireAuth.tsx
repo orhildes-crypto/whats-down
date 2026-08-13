@@ -1,15 +1,22 @@
+import { useMe } from '@/services/users/hooks/useMe';
+import { Box, CircularProgress } from '@mui/material';
 import { Navigate, Outlet } from 'react-router-dom';
-import { useMe } from '../../../services/users/hooks/useMe';
-import { Spinner } from '../Spinner/Spinner';
 
 export const RequireAuth = () => {
     const { data: user, isLoading, isError } = useMe();
 
     if (isLoading) {
         return (
-            <div className="flex items-center justify-center min-h-screen">
-                <Spinner />
-            </div>
+            <Box
+                sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    minHeight: '100vh',
+                }}
+            >
+                <CircularProgress size={40} />
+            </Box>
         );
     }
 

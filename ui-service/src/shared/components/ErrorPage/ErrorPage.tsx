@@ -1,7 +1,8 @@
 import React from 'react';
-import styles from './ErrorPage.module.css';
+import { Box, Button, Typography } from '@mui/material';
+import CancelIcon from '@mui/icons-material/CancelOutlined';
 import { useTranslation } from 'react-i18next';
-import { CircleX } from 'lucide-react';
+import * as styles from './ErrorPage.styles';
 
 interface ErrorPageProps {
     message?: string;
@@ -10,16 +11,29 @@ interface ErrorPageProps {
 
 export const ErrorPage: React.FC<ErrorPageProps> = ({ message, onRetry }) => {
     const { t } = useTranslation('errorPage');
+
     return (
-        <div className={styles.container}>
-            <div className={styles.icon}><CircleX size={100} color='#CC071E'/></div>
-            <h2 className={styles.title}>{t('title')}</h2>
-            <p className={styles.message}>{message ? message : t('defaultMessage')}</p>
+        <Box sx={styles.containerStyle}>
+            <CancelIcon sx={styles.iconStyle} />
+
+            <Typography component="h2" sx={styles.titleStyle}>
+                {t('title')}
+            </Typography>
+
+            <Typography sx={styles.messageStyle}>
+                {message ? message : t('defaultMessage')}
+            </Typography>
+
             {onRetry && (
-                <button type="button" className={styles.retryButton} onClick={onRetry}>
+                <Button
+                    type="button"
+                    variant="outlined"
+                    onClick={onRetry}
+                    sx={styles.retryButtonStyle}
+                >
                     {t('displayMessage')}
-                </button>
+                </Button>
             )}
-        </div>
+        </Box>
     );
 };

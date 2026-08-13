@@ -6,7 +6,7 @@ export const confirmButtonStyle: SxProps<Theme> = {
     borderRadius: '6px',
     padding: '8px 16px',
     fontSize: '15px',
-    fontWeight: 799,
+    fontWeight: 800,
     textTransform: 'none',
     boxShadow: 'none',
     '&:hover': {
@@ -25,7 +25,7 @@ export const cancelButtonStyle: SxProps<Theme> = {
     borderRadius: '6px',
     padding: '8px 16px',
     fontSize: '15px',
-    fontWeight: 799,
+    fontWeight: 800,
     textTransform: 'none',
     boxShadow: 'none',
     transition: 'background-color 0.3s ease',

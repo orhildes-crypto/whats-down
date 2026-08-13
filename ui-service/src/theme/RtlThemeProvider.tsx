@@ -1,5 +1,5 @@
 import { CacheProvider } from '@emotion/react';
-import { ThemeProvider } from '@mui/material';
+import { ThemeProvider, CssBaseline } from '@mui/material';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { createEmotionCache } from './emotionCache';
@@ -15,6 +15,7 @@ export const RtlThemeProvider = ({ children }: { children: React.ReactNode }) =>
     return (
         <CacheProvider value={cache}>
             <ThemeProvider theme={theme}>
+                <CssBaseline />
                 {children}
             </ThemeProvider>
         </CacheProvider>

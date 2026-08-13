@@ -1,7 +1,8 @@
 import { changeLanguage } from '@/i18n';
+import { Button } from '@mui/material';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import styles from './LanguageToggle.module.css';
+import * as styles from './LanguageToggle.styles';
 
 export const LanguageToggle: React.FC = () => {
     const { i18n } = useTranslation();
@@ -12,8 +13,8 @@ export const LanguageToggle: React.FC = () => {
     };
 
     return (
-        <button type="button" className={styles.toggleButton} onClick={handleToggle}>
+        <Button type="button" variant="contained" onClick={handleToggle} sx={styles.toggleButtonStyle}>
             {isHebrew ? 'english' : 'עברית'}
-        </button>
+        </Button>
     );
 };

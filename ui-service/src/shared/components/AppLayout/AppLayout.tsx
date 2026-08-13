@@ -1,17 +1,19 @@
 import { useSyncDocumentDir } from '@/i18n/useSyncDocumentDir';
+import { Box } from '@mui/material';
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import { Navbar } from '../Navbar/Navbar';
-import styles from './AppLayout.module.css';
+import * as styles from './AppLayout.styles';
 
 export const AppLayout: React.FC = () => {
     useSyncDocumentDir();
+
     return (
-        <div className={styles.layoutContainer}>
+        <Box sx={styles.layoutContainerStyle}>
             <Navbar />
-            <main className={styles.mainContent}>
+            <Box component="main" sx={styles.mainContentStyle}>
                 <Outlet />
-            </main>
-        </div>
+            </Box>
+        </Box>
     );
 };

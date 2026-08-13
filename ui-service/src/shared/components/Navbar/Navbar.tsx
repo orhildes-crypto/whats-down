@@ -1,9 +1,10 @@
 import { useLogout } from '@/services/users/hooks/useLogout';
 import { useMe } from '@/services/users/hooks/useMe';
+import { Box, Button, CircularProgress, Typography } from '@mui/material';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { LanguageToggle } from '../LanguageToggle/LanguageToggle';
-import styles from './Navbar.module.css';
+import * as styles from './Navbar.styles';
 
 export const Navbar: React.FC = () => {
     const { data: user } = useMe();
@@ -16,20 +17,36 @@ export const Navbar: React.FC = () => {
     };
 
     return (
-        <nav className={styles.navbar}>
-            <div className={styles.side}>{user && <span className={styles.welcomeText}>{t('welcome', { username: user.username })}</span>}</div>
+        <Box component="nav" sx={styles.navbarStyle}>
+            <Box sx={styles.startSideStyle}>
+                {user && (
+                    <Typography component="span" sx={styles.welcomeTextStyle}>
+                        {t('welcome', { username: user.username })}
+                    </Typography>
+                )}
+            </Box>
 
-            <div className={styles.center}>
-                <h1 className={styles.title}>{`What's Down`}</h1>
-            </div>
-            <div className={styles.side}>
-                <div className={styles.buttonContainer}>
+            <Box sx={styles.centerStyle}>
+                <Typography component="h1" sx={styles.titleStyle}>
+                    What's Down
+                </Typography>
+            </Box>
+
+            <Box sx={styles.endSideStyle}>
+                <Box>
                     <LanguageToggle />
-                </div>
-                <button type="button" className={styles.logoutButton} onClick={handleLogout} disabled={isPending}>
+                </Box>
+                <Button
+                    type="button"
+                    variant="outlined"
+                    onClick={handleLogout}
+                    disabled={isPending}
+                    startIcon={isPending ? <CircularProgress size={16} color="inherit" /> : null}
+                    sx={styles.logoutButtonStyle}
+                >
                     {isPending ? t('logoutPending') : t('logoutButton')}
-                </button>
-            </div>
-        </nav>
+                </Button>
+            </Box>
+        </Box>
     );
 };

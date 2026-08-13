@@ -1,6 +1,7 @@
 import { type ReactNode } from 'react';
-import { createPortal } from 'react-dom';
-import styles from './GenericModal.module.css';
+import { Dialog, DialogTitle, DialogContent, DialogActions, IconButton, Typography, Box } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import * as styles from './GenericModal.styles';
 
 type ModalProps = {
     isOpen: boolean;
@@ -8,34 +9,35 @@ type ModalProps = {
     title: string;
     children: ReactNode;
     confirmButton: ReactNode;
-    cancelButton?: ReactNode; 
+    cancelButton?: ReactNode;
 };
 
 export const GenericModal = ({ isOpen, onClose, title, children, confirmButton, cancelButton }: ModalProps) => {
-    if (!isOpen) {
-        return null;
-    }
+    return (
+        <Dialog
+            open={isOpen}
+            onClose={onClose}
+            slotProps={{
+                paper: {
+                    sx: styles.dialogPaperStyle,
+                },
+            }}
+        >
+            <DialogTitle component="div" sx={styles.dialogTitleStyle}>
+                <Typography component="h2" sx={styles.titleTextStyle}>
+                    {title}
+                </Typography>
+                <IconButton aria-label="close" onClick={onClose} sx={styles.closeButtonStyle}>
+                    <CloseIcon sx={{ fontSize: '22px' }} />
+                </IconButton>
+            </DialogTitle>
 
-    return createPortal(
-        <div className={styles.backdrop} onClick={onClose}>
-            <div className={styles.content} onClick={(e) => e.stopPropagation()}>
-                <div className={styles.header}>
-                    <h2 className={styles.title}>{title}</h2>
-                    <button
-                        type="button"
-                        className={styles.closeButton}
-                        onClick={onClose}
-                        aria-label="close"
-                    >
-                        &times;
-                    </button>
-                </div>
+            <DialogContent sx={styles.dialogContentStyle}>{children}</DialogContent>
 
-                <div className={styles.body}>{children}</div>
-
-                <div className={styles.footer}>{cancelButton}{confirmButton}</div>
-            </div>
-        </div>,
-        document.body
+            <DialogActions sx={styles.dialogActionsStyle}>
+                {cancelButton}
+                {confirmButton}
+            </DialogActions>
+        </Dialog>
     );
 };

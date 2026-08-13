@@ -14,8 +14,6 @@ import errorPageEn from '@/shared/components/ErrorPage/locales/errorPage.en.json
 import errorPageHe from '@/shared/components/ErrorPage/locales/errorPage.he.json';
 import navbarEn from '@/shared/components/Navbar/locales/navbar.en.json';
 import navbarHe from '@/shared/components/Navbar/locales/navbar.he.json';
-import spinnerEn from '@/shared/components/Spinner/locales/spinner.en.json';
-import spinnerHe from '@/shared/components/Spinner/locales/spinner.he.json';
 import utilsEn from '@/shared/utils/locales/utils.en.json';
 import utilsHe from '@/shared/utils/locales/utils.he.json';
 import i18next from 'i18next';
@@ -42,7 +40,6 @@ i18next.use(initReactI18next).init({
             createSystemModal: createSystemModalHe,
             deleteSystemModal: deleteSystemModalHe,
             errorPage: errorPageHe,
-            spinner: spinnerHe,
             utils: utilsHe,
         },
         en: {
@@ -54,7 +51,6 @@ i18next.use(initReactI18next).init({
             createSystemModal: createSystemModalEn,
             deleteSystemModal: deleteSystemModalEn,
             errorPage: errorPageEn,
-            spinner: spinnerEn,
             utils: utilsEn,
         },
     },
