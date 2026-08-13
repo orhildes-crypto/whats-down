@@ -47,6 +47,21 @@ export const formStyle: SxProps<Theme> = {
     display: 'flex',
     flexDirection: 'column',
     gap: '1.25rem',
+
+    '& .MuiInputBase-input': {
+        color: '#000000',
+    },
+
+    '& .MuiOutlinedInput-root.Mui-focused:not(.Mui-error) .MuiOutlinedInput-notchedOutline': {
+        borderColor: '#9ca3af',
+        borderWidth: '1px',
+    },
+
+    '& input:-webkit-autofill': {
+        WebkitBoxShadow: '0 0 0 100px #ffffff inset !important',
+        WebkitTextFillColor: '#1f2937 !important',
+        transition: 'background-color 5000s ease-in-out 0s',
+    },
 };
 
 export const submitButtonStyle: SxProps<Theme> = {
