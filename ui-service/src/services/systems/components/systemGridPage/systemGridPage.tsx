@@ -8,7 +8,7 @@ import { Box, Button, Skeleton, CircularProgress, Typography } from '@mui/materi
 import AddIcon from '@mui/icons-material/Add';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { useParams } from '@tanstack/react-router';
 import { Breadcrumbs, type BreadcrumbItem } from '../Breadcrumbs/Breadcrumbs';
 import { CreateSystemModal } from '../createSystemModal/createSystemModal';
 import { SystemCube } from '../systemCube/systemCube';
@@ -17,7 +17,7 @@ import * as styles from './systemGridPage.styles';
 export const SystemsGridPage: React.FC = () => {
     const { t } = useTranslation('systemsPage');
 
-    const { id } = useParams<{ id?: string }>();
+    const { id } = useParams({ strict: false });
     const parentId = id ?? null;
 
     const { data: user, isLoading: isUserLoading } = useMe();
@@ -47,9 +47,7 @@ export const SystemsGridPage: React.FC = () => {
         return (
             <Box sx={styles.centeredStateStyle}>
                 <CircularProgress size={48} sx={{ color: '#ffffff' }} />
-                <Typography sx={styles.loadingTextStyle}>
-                    {t('loadingSystem')}
-                </Typography>
+                <Typography sx={styles.loadingTextStyle}>{t('loadingSystem')}</Typography>
             </Box>
         );
     }
@@ -68,17 +66,9 @@ export const SystemsGridPage: React.FC = () => {
     return (
         <Box sx={styles.pageContainerStyle}>
             {isBreadcrumbsLoading ? (
-                <Skeleton 
-                    variant="rounded" 
-                    width={220} 
-                    height={28} 
-                    sx={{ marginBottom: '16px', backgroundColor: 'rgba(0, 0, 0, 0.1)' }} 
-                />
+                <Skeleton variant="rounded" width={220} height={28} sx={{ marginBottom: '16px', backgroundColor: 'rgba(0, 0, 0, 0.1)' }} />
             ) : (
-                <Breadcrumbs
-                    items={items}
-                    currentSystem={parentSystem ? { id: parentSystem._id, name: parentSystem.name } : null}
-                />
+                <Breadcrumbs items={items} currentSystem={parentSystem ? { id: parentSystem._id, name: parentSystem.name } : null} />
             )}
 
             {isEmpty ? (
@@ -88,12 +78,7 @@ export const SystemsGridPage: React.FC = () => {
             ) : (
                 <Box component="main" sx={styles.gridStyle}>
                     {systems.map((system) => (
-                        <SystemCube
-                            key={system._id}
-                            system={system}
-                            role={user.role}
-                            onAddChild={() => openCreateModal(system._id)}
-                        />
+                        <SystemCube key={system._id} system={system} role={user.role} onAddChild={() => openCreateModal(system._id)} />
                     ))}
                 </Box>
             )}
@@ -110,11 +95,7 @@ export const SystemsGridPage: React.FC = () => {
                 </Button>
             )}
 
-            <CreateSystemModal
-                isOpen={createModalState.isOpen}
-                onClose={closeCreateModal}
-                parentId={createModalState.parentId}
-            />
+            <CreateSystemModal isOpen={createModalState.isOpen} onClose={closeCreateModal} parentId={createModalState.parentId} />
         </Box>
     );
 };

@@ -1,8 +1,6 @@
-// src/app/router.tsx
 import { SystemsGridPage } from '@/services/systems/components/systemGridPage/systemGridPage';
-import { usersService } from '@/services/users/api/usersApi';
 import { RegisterPage } from '@/services/users/components/registerPage/registerPage';
-import { AUTH_USER_QUERY_KEY, authUserQueryOptions } from '@/services/users/hooks/useMe';
+import { authUserQueryOptions } from '@/services/users/hooks/useMe';
 import { Box, CircularProgress } from '@mui/material';
 import { createRootRouteWithContext, createRoute, createRouter, Outlet, redirect } from '@tanstack/react-router';
 import { LoginPage } from '../services/users/components/loginForm/loginForm';
