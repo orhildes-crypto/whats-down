@@ -18,15 +18,16 @@ export const confirmButtonStyle: SxProps<Theme> = {
     },
 };
 
+
 export const formContainerStyle: SxProps<Theme> = {
     marginTop: 1,
 
     '& .MuiInputBase-input': {
-        color: colors.text.onDark,
+        color: colors.text.onLight,
     },
 
     '& input:-webkit-autofill': {
-        WebkitBoxShadow: '0 0 0 100px #1e2227 inset !important',
+        WebkitBoxShadow: `0 0 0 100px ${colors.text.onDark} inset !important`,
         transition: 'background-color 5000s ease-in-out 0s',
     },
 };

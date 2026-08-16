@@ -7,7 +7,7 @@
     "registerButton": "Register",
     "registerPending": "Registering...",
     "registerError": "We couldn't register you, ",
-    "loginText":"?Already have an account",
+    "loginText":"Already have an account?",
     "loginLink": "Login",
     "validation": {
         "required": "Required field",
