@@ -1,3 +1,4 @@
+import { colors } from '@/theme/colorsConfig';
 import { SxProps, Theme } from '@mui/material';
 
 export const containerStyle: SxProps<Theme> = {
@@ -15,10 +16,10 @@ export const buttonContainerStyle: SxProps<Theme> = {
 };
 
 export const cardStyle: SxProps<Theme> = {
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.text.onDark,
     padding: '2.5rem',
     borderRadius: '12px',
-    boxShadow: '0 4px 15px rgba(0, 0, 0, 0.08)',
+    boxShadow: `0 4px 15px rgba(0, 0, 0, 0.08)`,
     width: '100%',
     maxWidth: '450px',
 };
@@ -34,7 +35,7 @@ export const titleStyle: SxProps<Theme> = {
 export const subtitleStyle: SxProps<Theme> = {
     margin: '0 0 2rem 0',
     fontSize: '0.95rem',
-    color: '#000000',
+    color: colors.form.subtitle,
     textAlign: 'center',
 };
 
@@ -61,8 +62,8 @@ export const errorMessageStyle: SxProps<Theme> = {
 export const submitButtonStyle: SxProps<Theme> = {
     marginTop: '0.5rem',
     padding: '0.75rem',
-    backgroundColor: '#636e72',
-    color: '#ffffff',
+    backgroundColor: colors.action.primaryDefault,
+    color: colors.text.onDark,
     fontSize: '1rem',
     fontWeight: 600,
     borderRadius: '6px',
@@ -72,20 +73,20 @@ export const submitButtonStyle: SxProps<Theme> = {
     justifyContent: 'center',
     alignItems: 'center',
     '&:hover': {
-        backgroundColor: '#404040',
+        backgroundColor: colors.action.primaryHover,
         boxShadow: 'none',
     },
     '&:disabled': {
         opacity: 0.6,
-        backgroundColor: '#636e72',
-        color: '#ffffff',
+        backgroundColor: colors.action.primaryDefault,
+        color: colors.text.onDark,
     },
 };
 
 export const loginSectionStyle: SxProps<Theme> = {
     marginTop: '1.5rem',
     paddingTop: '1.25rem',
-    borderTop: '1px solid #e5e7eb',
+    borderTop: `1px solid ${colors.divider.onDark}`,
     textAlign: 'center',
     display: 'flex',
     flexDirection: 'column',
@@ -94,7 +95,7 @@ export const loginSectionStyle: SxProps<Theme> = {
 
 export const loginTextStyle: SxProps<Theme> = {
     fontSize: '0.875rem',
-    color: '#4b5563',
+    color: colors.form.footerText,
     margin: 0,
 };
 

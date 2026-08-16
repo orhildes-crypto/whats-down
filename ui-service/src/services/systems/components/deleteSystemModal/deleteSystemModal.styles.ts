@@ -1,8 +1,9 @@
+import { colors } from '@/theme/colorsConfig';
 import { SxProps, Theme } from '@mui/material';
 
 export const confirmButtonStyle: SxProps<Theme> = {
-    backgroundColor: '#df3535',
-    color: '#ffffff',
+    backgroundColor: colors.status.down.main,
+    color: colors.text.onDark,
     borderRadius: '6px',
     padding: '8px 16px',
     fontSize: '15px',
@@ -10,7 +11,7 @@ export const confirmButtonStyle: SxProps<Theme> = {
     textTransform: 'none',
     boxShadow: 'none',
     '&:hover': {
-        backgroundColor: '#e24f4f',
+        backgroundColor: colors.status.down.border,
         boxShadow: 'none',
     },
     '&:disabled': {
@@ -20,8 +21,8 @@ export const confirmButtonStyle: SxProps<Theme> = {
 };
 
 export const cancelButtonStyle: SxProps<Theme> = {
-    backgroundColor: '#888383',
-    color: '#ffffff',
+    backgroundColor: colors.action.primaryDefault,
+    color: colors.text.onDark,
     borderRadius: '6px',
     padding: '8px 16px',
     fontSize: '15px',
@@ -30,7 +31,7 @@ export const cancelButtonStyle: SxProps<Theme> = {
     boxShadow: 'none',
     transition: 'background-color 0.3s ease',
     '&:hover': {
-        backgroundColor: '#494545',
+        backgroundColor: colors.action.primaryHover,
         boxShadow: 'none',
     },
 };

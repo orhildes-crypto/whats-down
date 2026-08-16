@@ -67,6 +67,7 @@ export const LoginPage: React.FC = () => {
                                 label={t('username')}
                                 variant="outlined"
                                 fullWidth
+                                required
                                 value={field.state.value}
                                 onBlur={field.handleBlur}
                                 onChange={(e) => field.handleChange(e.target.value)}
@@ -85,6 +86,7 @@ export const LoginPage: React.FC = () => {
                                 label={t('password')}
                                 variant="outlined"
                                 fullWidth
+                                required
                                 autoComplete="current-password"
                                 value={field.state.value}
                                 onBlur={field.handleBlur}

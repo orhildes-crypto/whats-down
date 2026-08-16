@@ -1,3 +1,4 @@
+import { colors } from '@/theme/colorsConfig';
 import { SxProps, Theme } from '@mui/material';
 
 export const navbarStyle: SxProps<Theme> = {
@@ -5,7 +6,7 @@ export const navbarStyle: SxProps<Theme> = {
     gridTemplateColumns: '1fr auto 1fr',
     alignItems: 'center',
     padding: '12px 56px',
-    color: '#ffffff',
+    color: colors.text.onDark,
 };
 
 export const startSideStyle: SxProps<Theme> = {
@@ -36,22 +37,22 @@ export const titleStyle: SxProps<Theme> = {
 
 export const logoutButtonStyle: SxProps<Theme> = {
     backgroundColor: 'transparent',
-    border: '1px solid #ffffff',
+    border: `1px solid ${colors.text.onDark}`,
     borderRadius: '6px',
     padding: '10px 14px',
     fontSize: '14px',
-    color: '#ffffff',
+    color: colors.text.onDark,
     width: '110px',
     textTransform: 'none',
     boxShadow: 'none',
     '&:hover': {
-        backgroundColor: '#404040',
-        borderColor: '#ffffff',
+        backgroundColor: colors.action.primaryHover,
+        borderColor: colors.text.onDark,
         boxShadow: 'none',
     },
     '&:disabled': {
         opacity: 0.6,
-        color: '#ffffff',
-        borderColor: '#ffffff',
+        color: colors.text.onDark,
+        borderColor: colors.text.onDark,
     },
 };

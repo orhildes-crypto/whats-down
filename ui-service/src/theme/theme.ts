@@ -1,25 +1,11 @@
 import { createTheme } from '@mui/material/styles';
+import { colors } from './colorsConfig';
 
 export const createAppTheme = (direction: 'rtl' | 'ltr') => {
     return createTheme({
         direction,
-        palette: {
-            mode: 'dark',
-            background: {
-                default: '#636e72', 
-                paper: '#1e2227',   
-            },
-            text: {
-                primary: '#e4e7eb',  
-                secondary: '#9aa1ac', 
-            },
-            divider: '#2a2f36',
-        },
         typography: {
-            fontFamily:
-                direction === 'rtl'
-                    ? '"Assistant", "Heebo", "Roboto", "Arial", sans-serif'
-                    : '"Roboto", "Arial", sans-serif',
+            fontFamily: direction === 'rtl' ? '"Assistant", "Heebo", "Roboto", "Arial", sans-serif' : '"Roboto", "Arial", sans-serif',
             h1: {
                 fontFamily: '"Rubik", "Heebo", system-ui, sans-serif',
             },
@@ -42,7 +28,7 @@ export const createAppTheme = (direction: 'rtl' | 'ltr') => {
                         minHeight: '100vh',
                         overflowX: 'hidden',
                         lineHeight: 1.55,
-                        backgroundColor: '#636e72',
+                        backgroundColor: colors.action.primaryDefault,
                     },
                     '#root': {
                         minHeight: '100vh',

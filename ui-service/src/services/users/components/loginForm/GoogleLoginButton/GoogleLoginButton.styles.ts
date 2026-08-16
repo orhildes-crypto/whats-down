@@ -1,3 +1,4 @@
+import { colors } from '@/theme/colorsConfig';
 import { SxProps, Theme } from '@mui/material';
 
 export const containerStyle: SxProps<Theme> = {
@@ -8,7 +9,7 @@ export const containerStyle: SxProps<Theme> = {
 };
 
 export const errorTextStyle: SxProps<Theme> = {
-    color: '#dc2626',
+    color: colors.status.down.main,
     fontSize: '13px',
     textAlign: 'center',
     margin: 0,

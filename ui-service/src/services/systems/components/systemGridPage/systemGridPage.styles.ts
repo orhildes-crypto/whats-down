@@ -1,3 +1,4 @@
+import { colors } from '@/theme/colorsConfig';
 import { SxProps, Theme } from '@mui/material';
 
 export const pageContainerStyle: SxProps<Theme> = {
@@ -15,9 +16,9 @@ export const addButtonStyle: SxProps<Theme> = {
     bottom: '28px',
     insetInlineStart: '28px',
     zIndex: 1000,
-    backgroundColor: '#ffffff',
-    color: '#000000',
-    border: '1px solid #2a2f36',
+    backgroundColor: colors.text.onDark,
+    color: colors.text.onLight,
+    border: `1px solid ${colors.divider.onLight}`,
     borderRadius: '50px',
     padding: '9px 18px',
     fontSize: '1rem',
@@ -40,12 +41,12 @@ export const emptyStateStyle: SxProps<Theme> = {
     alignItems: 'center',
     justifyContent: 'center',
     minHeight: '30vh',
-    color: '#8b93a1',
+    color: colors.text.empty,
     fontSize: '1rem',
 };
 
 export const breadcrumbsSkeletonStyle: SxProps<Theme> = {
-    color: '#8b93a1',
+    color: colors.text.empty,
     fontSize: '0.9rem',
     marginBottom: '16px',
 };

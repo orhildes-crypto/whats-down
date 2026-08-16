@@ -1,19 +1,20 @@
+import { colors } from '@/theme/colorsConfig';
 import { SxProps, Theme } from '@mui/material';
 
 export const confirmButtonStyle: SxProps<Theme> = {
-    backgroundColor: '#636e72',
-    color: '#ffffff',
+    backgroundColor: colors.action.primaryDefault,
+    color: colors.text.onDark,
     padding: '8px 16px',
     fontSize: '14px',
     fontWeight: 500,
     textTransform: 'none',
     borderRadius: '6px',
     '&:hover': {
-        backgroundColor: '#404040',
+        backgroundColor: colors.action.primaryHover,
     },
     '&:disabled': {
-        backgroundColor: '#ededed',
-        color: '#9e9e9e',
+        backgroundColor: colors.background.disabled,
+        color: colors.text.muted,
     },
 };
 
@@ -21,7 +22,7 @@ export const formContainerStyle: SxProps<Theme> = {
     marginTop: 1,
 
     '& .MuiInputBase-input': {
-        color: '#ffffff',
+        color: colors.text.onDark,
     },
 
     '& input:-webkit-autofill': {

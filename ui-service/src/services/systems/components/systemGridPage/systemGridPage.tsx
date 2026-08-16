@@ -13,6 +13,7 @@ import { Breadcrumbs, type BreadcrumbItem } from '../Breadcrumbs/Breadcrumbs';
 import { CreateSystemModal } from '../createSystemModal/createSystemModal';
 import { SystemCube } from '../systemCube/systemCube';
 import * as styles from './systemGridPage.styles';
+import { colors } from '@/theme/colorsConfig';
 
 export const SystemsGridPage: React.FC = () => {
     const { t } = useTranslation('systemsPage');
@@ -46,7 +47,7 @@ export const SystemsGridPage: React.FC = () => {
     if (isUserLoading || isSystemsLoading) {
         return (
             <Box sx={styles.centeredStateStyle}>
-                <CircularProgress size={48} sx={{ color: '#ffffff' }} />
+                <CircularProgress size={48} sx={{ color: colors.text.onDark }} />
                 <Typography sx={styles.loadingTextStyle}>{t('loadingSystem')}</Typography>
             </Box>
         );
@@ -88,7 +89,7 @@ export const SystemsGridPage: React.FC = () => {
                     type="button"
                     variant="contained"
                     onClick={() => openCreateModal(parentId)}
-                    startIcon={<AddIcon sx={{ color: '#34383b', fontSize: 16 }} />}
+                    startIcon={<AddIcon sx={{ color: colors.action.iconDefault, fontSize: 16 }} />}
                     sx={styles.addButtonStyle}
                 >
                     {t('addSystemButton')}

@@ -1,19 +1,22 @@
 import { SxProps, Theme } from '@mui/material';
+import { colors } from '@/theme/colorsConfig';
 
 export const STATUS_COLORS = {
     up: {
-        background: '#2f9e5f',
-        borderInlineStart: '3px solid #2f9e5f',
+        background: colors.status.up.main,
+        borderInlineStart: `3px solid ${colors.status.up.border}`,
         boxShadow: 'none',
     },
     down: {
-        background: '#d61219',
-        borderInlineStart: '3px solid #e5484d',
-        boxShadow: '0 0 0 1px rgba(229, 72, 77, 0.15), 0 4px 24px rgba(229, 72, 77, 0.18)',
+        background: colors.status.down.main,
+        borderInlineStart: `3px solid ${colors.status.down.border}`,
+        boxShadow: `0 0 0 1px ${colors.status.down.glow}, 0 4px 24px ${colors.status.down.glowStrong}`,
     },
 };
 
-export const cubeContainerStyle = (statusStyle: typeof STATUS_COLORS.up): SxProps<Theme> => ({
+export type StatusColorSet = (typeof STATUS_COLORS)[keyof typeof STATUS_COLORS];
+
+export const cubeContainerStyle = (statusStyle: StatusColorSet): SxProps<Theme> => ({
     position: 'relative',
     borderRadius: '10px',
     padding: '20px 15px 16px',
@@ -23,7 +26,7 @@ export const cubeContainerStyle = (statusStyle: typeof STATUS_COLORS.up): SxProp
     width: '100%',
     minWidth: 0,
     transition: 'transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease',
-    color: '#fbfbfb',
+    color: colors.text.onDark,
     cursor: 'pointer',
     backgroundColor: statusStyle.background,
     borderInlineStart: statusStyle.borderInlineStart,
@@ -43,24 +46,24 @@ export const statusBadgeStyle: SxProps<Theme> = {
     padding: '3px 9px',
     borderRadius: '4px',
     textTransform: 'uppercase',
-    color: '#000000',
+    color: colors.text.onLight,
 };
 
 export const editTextFieldStyle: SxProps<Theme> = {
     marginBottom: '6px',
     width: '100%',
     '& .MuiOutlinedInput-root': {
-        backgroundColor: '#020000',
-        color: '#ffffff',
+        backgroundColor: colors.background.input,
+        color: colors.text.onDark,
         fontSize: '1.15rem',
         fontWeight: 600,
         borderRadius: '4px',
         '& fieldset': {
-            borderColor: '#18222b',
+            borderColor: colors.border.input,
             borderWidth: '2px',
         },
         '&:hover fieldset': {
-            borderColor: '#18222b',
+            borderColor: colors.border.input,
         },
     },
     '& .MuiOutlinedInput-input': {
@@ -72,12 +75,12 @@ export const titleTypographyStyle: SxProps<Theme> = {
     fontSize: '1.15rem',
     fontWeight: 600,
     lineHeight: 1.3,
-    color: '#f5f6f7',
+    color: colors.text.primary,
     wordBreak: 'break-word',
 };
 
 export const infoTextStyle: SxProps<Theme> = {
-    color: '#fafafa',
+    color: colors.text.secondary,
     fontWeight: 500,
     fontSize: '0.95rem',
 };
@@ -87,10 +90,10 @@ export const actionButtonStyle: SxProps<Theme> = {
     height: '30px',
     borderRadius: '50%',
     backgroundColor: 'transparent',
-    '&:hover': { backgroundColor: '#8d8d8e' },
+    '&:hover': { backgroundColor: colors.action.iconButtonHover },
 };
 
 export const actionIconStyle: SxProps<Theme> = {
     fontSize: 20,
-    color: '#34383b',
+    color: colors.action.iconDefault,
 };

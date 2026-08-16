@@ -1,3 +1,4 @@
+import { colors } from '@/theme/colorsConfig';
 import { SxProps, Theme } from '@mui/material';
 
 export const dialogPaperStyle: SxProps<Theme> = {
@@ -6,7 +7,6 @@ export const dialogPaperStyle: SxProps<Theme> = {
     maxWidth: '600px',
     width: '100%',
     maxHeight: '90vh',
-    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)',
     margin: '16px',
 };
 
@@ -15,7 +15,7 @@ export const dialogTitleStyle: SxProps<Theme> = {
     gridTemplateColumns: '1fr auto 1fr',
     alignItems: 'center',
     padding: '16px 20px',
-    borderBottom: '1px solid #e5e7eb',
+    borderBottom: `1px solid ${colors.divider.onDark}`,
 };
 
 export const titleTextStyle: SxProps<Theme> = {
@@ -33,7 +33,7 @@ export const closeButtonStyle: SxProps<Theme> = {
     padding: '4px',
     transition: 'background 0.15s ease, border-color 0.15s ease, transform 0.15s ease',
     '&:hover': {
-        color: '#ffffff',
+        color: colors.text.onDark,
         backgroundColor: 'transparent',
     },
 };

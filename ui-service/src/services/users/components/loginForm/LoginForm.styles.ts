@@ -1,3 +1,4 @@
+import { colors } from '@/theme/colorsConfig';
 import { SxProps, Theme } from '@mui/material';
 
 export const containerStyle: SxProps<Theme> = {
@@ -15,7 +16,7 @@ export const buttonContainerStyle: SxProps<Theme> = {
 };
 
 export const cardStyle: SxProps<Theme> = {
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.text.onDark,
     padding: '2.5rem',
     borderRadius: '12px',
     boxShadow: '0 4px 15px rgba(0, 0, 0, 0.08)',
@@ -27,14 +28,14 @@ export const titleStyle: SxProps<Theme> = {
     margin: '0 0 0.5rem 0',
     fontSize: '1.75rem',
     fontWeight: 700,
-    color: '#1f2937',
+    color: colors.form.title,
     textAlign: 'center',
 };
 
 export const subtitleStyle: SxProps<Theme> = {
     margin: '0 0 2rem 0',
     fontSize: '0.95rem',
-    color: '#6b7280',
+    color: colors.form.subtitle,
     textAlign: 'center',
 };
 
@@ -49,7 +50,7 @@ export const formStyle: SxProps<Theme> = {
     gap: '1.25rem',
 
     '& .MuiInputBase-input': {
-        color: '#000000',
+        color: colors.text.onLight,
     },
 
     '& .MuiOutlinedInput-root.Mui-focused:not(.Mui-error) .MuiOutlinedInput-notchedOutline': {
@@ -58,8 +59,8 @@ export const formStyle: SxProps<Theme> = {
     },
 
     '& input:-webkit-autofill': {
-        WebkitBoxShadow: '0 0 0 100px #ffffff inset !important',
-        WebkitTextFillColor: '#1f2937 !important',
+        WebkitBoxShadow: `0 0 0 100px ${colors.text.onDark} inset !important`,
+        WebkitTextFillColor: `${colors.form.title} !important`,
         transition: 'background-color 5000s ease-in-out 0s',
     },
 };
@@ -68,28 +69,28 @@ export const submitButtonStyle: SxProps<Theme> = {
     marginTop: '0.5rem',
     marginBottom: '20px',
     padding: '0.75rem',
-    backgroundColor: '#636e72',
-    color: '#ffffff',
+    backgroundColor: colors.action.primaryDefault,
+    color: colors.text.onDark,
     fontSize: '1rem',
     fontWeight: 600,
     borderRadius: '6px',
     textTransform: 'none',
     boxShadow: 'none',
     '&:hover': {
-        backgroundColor: '#404040',
+        backgroundColor: colors.action.primaryHover,
         boxShadow: 'none',
     },
     '&:disabled': {
         opacity: 0.6,
-        backgroundColor: '#636e72',
-        color: '#ffffff',
+        backgroundColor: colors.action.primaryDefault,
+        color: colors.text.onDark,
     },
 };
 
 export const registerSectionStyle: SxProps<Theme> = {
     marginTop: '1.5rem',
     paddingTop: '1.25rem',
-    borderTop: '1px solid #e5e7eb',
+    borderTop: `1px solid ${colors.divider.onDark}`,
     textAlign: 'center',
     display: 'flex',
     flexDirection: 'column',
@@ -98,7 +99,7 @@ export const registerSectionStyle: SxProps<Theme> = {
 
 export const registerTextStyle: SxProps<Theme> = {
     fontSize: '0.875rem',
-    color: '#4b5563',
+    color: colors.form.footerText,
     margin: 0,
 };
 
