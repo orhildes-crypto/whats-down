@@ -1,19 +1,19 @@
 import { config } from '@/config.js';
 import { DocumentNotFoundError, SystemWithChildrenError } from '@/utils/errors.js';
-import { SystemStatus, SystemStatusPriority } from '@whats-down/shared';
+import { SystemFilters, SystemStatus, SystemStatusPriority } from '@whats-down/shared';
 import mongoose from 'mongoose';
-import { CreateSystemPayload, System, SystemDocument } from './interface.js';
+import { CreateSystemPayload, SystemDocument } from './interface.js';
 import { SystemModel } from './model.js';
 
 export class SystemServiceManager {
-    static getByQuery = async (query: Partial<System>, step: number, limit?: number): Promise<SystemDocument[]> => {
+    static getByQuery = async (query: SystemFilters, step: number, limit?: number): Promise<SystemDocument[]> => {
         return SystemModel.find(query, {}, limit ? { limit, skip: limit * step } : {})
             .sort(config.systems.defaultSort)
             .lean()
             .exec();
     };
 
-    static getCount = async (query: Partial<System>): Promise<number> => {
+    static getCount = async (query: SystemFilters): Promise<number> => {
         return SystemModel.countDocuments(query).exec();
     };
 

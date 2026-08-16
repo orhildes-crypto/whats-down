@@ -10,6 +10,7 @@ import {
     createOneRequestSchema,
     deleteOneRequestSchema,
     getMeRequestSchema,
+    getUsersRequestSchema,
     googleAuthRequestSchema,
     loginRequestSchema,
     logoutRequestSchema,
@@ -24,6 +25,12 @@ export class UsersServiceController {
         }
 
         res.json(await UsersServiceManager.getMe(req.user.userId));
+    };
+
+    static getUsers = async (req: TypedRequest<typeof getUsersRequestSchema>, res: Response) => {
+        const { step, limit, ...query } = req.query;
+
+        res.json(await UsersServiceManager.getByQuery(query, step, limit));
     };
 
     static createOne = async (req: TypedRequest<typeof createOneRequestSchema>, res: Response) => {

@@ -2,28 +2,28 @@ import { zodMongoObjectId } from '@whats-down/shared';
 import { createSystemBodySchema, systemRequiredFields, systemQueryParamsSchema } from '@whats-down/shared/common';
 import { z } from 'zod';
 
-// GET /api/system-service
+// GET /system-service
 export const getByQueryRequestSchema = z.object({
     body: z.object({}),
     query: systemQueryParamsSchema,
     params: z.object({}),
 });
 
-// GET /api/system-service/roots
+// GET /system-service/roots
 export const getRootsByQueryRequestSchema = z.object({
     body: z.object({}),
     query: systemQueryParamsSchema.omit({ parentId: true }),
     params: z.object({}),
 });
 
-// GET /api/system-service/count
+// GET /system-service/count
 export const getCountRequestSchema = z.object({
     body: z.object({}),
     query: systemRequiredFields.partial(),
     params: z.object({}),
 });
 
-// GET /api/system-service/:id
+// GET /system-service/:id
 export const getByIdRequestSchema = z.object({
     body: z.object({}),
     query: z.object({}),
@@ -32,7 +32,7 @@ export const getByIdRequestSchema = z.object({
     }),
 });
 
-// GET /api/system-service/:id/ancestors
+// GET /system-service/:id/ancestors
 export const getAncestorsByIdRequestSchema = z.object({
     body: z.object({}),
     query: z.object({}),
@@ -41,7 +41,7 @@ export const getAncestorsByIdRequestSchema = z.object({
     }),
 });
 
-// POST /api/system-service
+// POST /system-service
 export const createOneRequestSchema = z.object({
     body: createSystemBodySchema,
     query: z.object({}),

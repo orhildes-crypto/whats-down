@@ -1,13 +1,19 @@
 import { z } from 'zod';
-import { UserRole, zodMongoObjectId } from '@whats-down/shared';
-import { createLocalUserSchema } from '@whats-down/shared/common';
+import { UserRole, zodMongoObjectId, userQueryParamsSchema, createLocalUserSchema } from '@whats-down/shared';
 
 // GET /users-service/me
 export const getMeRequestSchema = z.object({
     body: z.object({}),
     query: z.object({}),
     params: z.object({}),
-})
+});
+
+// GET /users-service
+export const getUsersRequestSchema = z.object({
+    body: z.object({}),
+    query: userQueryParamsSchema,
+    params: z.object({}),
+});
 
 // POST /users-service/signup
 export const createOneRequestSchema = z.object({
@@ -16,7 +22,7 @@ export const createOneRequestSchema = z.object({
     params: z.object({}),
 });
 
-// POST /users-service/login 
+// POST /users-service/login
 export const loginRequestSchema = z.object({
     body: z.object({
         username: z.string(),
@@ -38,7 +44,7 @@ export const googleAuthRequestSchema = z.object({
 // PUT /users-service/:id/role
 export const changeUserRoleRequestSchema = z.object({
     body: z.object({
-        role: z.enum([UserRole.ADMIN, UserRole.EDITOR, UserRole.VIEWER]),
+        role: z.nativeEnum(UserRole),
     }),
     query: z.object({}),
     params: z.object({
@@ -46,7 +52,7 @@ export const changeUserRoleRequestSchema = z.object({
     }),
 });
 
-// Post /users-service/logout
+// POST /users-service/logout
 export const logoutRequestSchema = z.object({
     body: z.object({}),
     query: z.object({}),

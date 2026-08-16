@@ -1,6 +1,6 @@
 import { config } from '@/config.js';
 import { DocumentNotFoundError, GoogleAuthError, PasswordIncorrectError, SelfDemotionError } from '@/utils/errors.js';
-import { AuthenticationError, ConflictError, UserRole } from '@whats-down/shared';
+import { AuthenticationError, ConflictError, UserFilters, UserRole } from '@whats-down/shared';
 import bcrypt from 'bcryptjs';
 import { TokenPayload, OAuth2Client } from 'google-auth-library';
 import jwt from 'jsonwebtoken';
@@ -14,6 +14,15 @@ export class UsersServiceManager {
         const user = await UserModel.findById(id).orFail(new DocumentNotFoundError(id)).lean().exec();
 
         return this.toSafeUser(user);
+    };
+
+    static getByQuery = async (query: UserFilters, step: number, limit?: number): Promise<SafeUserDocument[]> => {
+        const users = await UserModel.find(query, {}, limit ? { limit, skip: limit * step } : {})
+            .sort('username')
+            .lean()
+            .exec();
+
+        return users.map(user => this.toSafeUser(user));
     };
 
     static createLocalUser = async (payload: CreateLocalUserPayload): Promise<SafeUserDocument> => {
