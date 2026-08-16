@@ -15,7 +15,7 @@ export const dialogTitleStyle: SxProps<Theme> = {
     gridTemplateColumns: '1fr auto 1fr',
     alignItems: 'center',
     padding: '16px 20px',
-    borderBottom: `1px solid ${colors.divider.onDark}`,
+    borderBottom: `1px solid ${colors.divider.onLight}`,
 };
 
 export const titleTextStyle: SxProps<Theme> = {
@@ -33,7 +33,7 @@ export const closeButtonStyle: SxProps<Theme> = {
     padding: '4px',
     transition: 'background 0.15s ease, border-color 0.15s ease, transform 0.15s ease',
     '&:hover': {
-        color: colors.text.onDark,
+        color: colors.text.onLight,
         backgroundColor: 'transparent',
     },
 };
