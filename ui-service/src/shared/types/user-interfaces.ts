@@ -1,2 +1,2 @@
-export type { CreateLocalUserPayload, BaseUser, SafeUserDocument } from "@whats-down/shared/common";
+export type { CreateLocalUserPayload, BaseUser, SafeUserDocument, UserFilters, UserQueryParams } from "@whats-down/shared/common";
 
