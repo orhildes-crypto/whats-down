@@ -1,0 +1,14 @@
+{
+    "pageTitle": "ניהול משתמשים",
+    "backButton": "חזרה",
+    "table": {
+        "username": "שם משתמש",
+        "email": "אימייל",
+        "role": "תפקיד"
+    },
+    "roles": {
+        "ADMIN": "אדמין",
+        "EDITOR": "עורך",
+        "VIEWER": "צופה"
+    }
+}

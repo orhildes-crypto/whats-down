@@ -1,0 +1,14 @@
+{
+    "pageTitle": "Manage Users",
+    "backButton": "Back",
+    "table": {
+        "username": "Username",
+        "email": "Email",
+        "role": "Role"
+    },
+    "roles": {
+        "ADMIN": "Admin",
+        "EDITOR": "Editor",
+        "VIEWER": "Viewer"
+    }
+}

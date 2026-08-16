@@ -8,6 +8,8 @@ import systemsPageEn from '@/services/systems/components/systemGridPage/locales/
 import systemsPageHe from '@/services/systems/components/systemGridPage/locales/systemPage.he.json';
 import loginFormEn from '@/services/users/components/loginForm/locales/loginform.en.json';
 import loginFormHe from '@/services/users/components/loginForm/locales/loginform.he.json';
+import manageUsersEn from '@/services/users/components/ManageUsersPage/locales/manageUsers.en.json';
+import manageUsersHe from '@/services/users/components/ManageUsersPage/locales/manageUsers.he.json';
 import registerPageEn from '@/services/users/components/registerPage/locales/registerPage.en.json';
 import registerPageHe from '@/services/users/components/registerPage/locales/registerPage.he.json';
 import errorPageEn from '@/shared/components/ErrorPage/locales/errorPage.en.json';
@@ -41,6 +43,7 @@ i18next.use(initReactI18next).init({
             deleteSystemModal: deleteSystemModalHe,
             errorPage: errorPageHe,
             utils: utilsHe,
+            manageUsers: manageUsersHe,
         },
         en: {
             loginForm: loginFormEn,
@@ -52,6 +55,7 @@ i18next.use(initReactI18next).init({
             deleteSystemModal: deleteSystemModalEn,
             errorPage: errorPageEn,
             utils: utilsEn,
+            manageUsers: manageUsersEn
         },
     },
     lng: savedLang ?? 'he',

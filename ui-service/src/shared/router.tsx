@@ -8,6 +8,7 @@ import { queryClient } from './api/queryClient';
 import { AppLayout } from './components/AppLayout/AppLayout';
 import { SafeUserDocument } from './types/user-interfaces';
 import { UserRole } from '@whats-down/shared/common';
+import { ManageUsersPage } from '@/services/users/components/ManageUsersPage/ManageUsersPage';
 
 export interface RouterContext {
     user?: SafeUserDocument | null;
@@ -100,7 +101,7 @@ const adminLayoutRoute = createRoute({
 const adminUsersRoute = createRoute({
     path: '/admin/users',
     getParentRoute: () => adminLayoutRoute,
-    component: () => null, // TODO: <ManageUsersPage />
+    component: () =>  <ManageUsersPage />,
 });
 
 const catchAllRoute = createRoute({
