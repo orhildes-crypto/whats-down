@@ -32,8 +32,8 @@ export const getByIdRequestSchema = z.object({
     }),
 });
 
-// GET /system-service/:id/ancestors
-export const getAncestorsByIdRequestSchema = z.object({
+// GET /system-service/:id/parents
+export const getParentsByIdRequestSchema = z.object({
     body: z.object({}),
     query: z.object({}),
     params: z.object({

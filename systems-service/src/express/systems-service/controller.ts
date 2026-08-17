@@ -9,7 +9,7 @@ import {
     editServiceRequestSchema,
     changeStatusRequestSchema,
     getRootsByQueryRequestSchema,
-    getAncestorsByIdRequestSchema,
+    getParentsByIdRequestSchema,
 } from './validations.js';
 import { TypedRequest } from '@whats-down/shared';
 
@@ -35,8 +35,8 @@ export class SystemServiceController {
         res.json(await SystemServiceManager.getById(req.params.id));
     };
 
-    static getAncestors = async (req: TypedRequest<typeof getAncestorsByIdRequestSchema>, res: Response) => {
-        res.json(await SystemServiceManager.getAncestors(req.params.id));
+    static getParentsOfSystem = async (req: TypedRequest<typeof getParentsByIdRequestSchema>, res: Response) => {
+        res.json(await SystemServiceManager.getParentsOfSystem(req.params.id));
     };
 
     static createOne = async (req: TypedRequest<typeof createOneRequestSchema>, res: Response) => {

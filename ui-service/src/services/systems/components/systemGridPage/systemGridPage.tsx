@@ -1,4 +1,4 @@
-import { useAncestors } from '@/services/systems/hooks/useAncestors';
+import { useParents } from '@/services/systems/hooks/useParents';
 import { useGetById } from '@/services/systems/hooks/useGetById';
 import { useSystems } from '@/services/systems/hooks/useSystems';
 import { useMe } from '@/services/users/hooks/useMe';
@@ -26,10 +26,10 @@ export const SystemsGridPage: React.FC = () => {
 
     const { data: user, isLoading: isUserLoading } = useMe();
     const { data: parentSystem, isLoading: isParentSystemLoading } = useGetById(parentId);
-    const { data: ancestors, isLoading: isAncestorsLoading } = useAncestors(parentId);
+    const { data: parents, isLoading: isParentsLoading } = useParents(parentId);
     const { data: systems, isLoading: isSystemsLoading, isError, refetch } = useSystems({ parentId: parentId ?? undefined, step: 0 });
 
-    const items: BreadcrumbItem[] = ancestors ? [...ancestors].reverse().map((anc) => ({ id: anc._id, name: anc.name })) : [];
+    const items: BreadcrumbItem[] = parents ? [...parents].reverse().map((anc) => ({ id: anc._id, name: anc.name })) : [];
 
     const [createModalState, setCreateModalState] = useState<{
         isOpen: boolean;
@@ -65,7 +65,7 @@ export const SystemsGridPage: React.FC = () => {
     }
 
     const isEmpty = !systems || !systems.length;
-    const isBreadcrumbsLoading = parentId ? isParentSystemLoading || isAncestorsLoading : false;
+    const isBreadcrumbsLoading = parentId ? isParentSystemLoading || isParentsLoading : false;
 
     return (
         <Box sx={styles.pageContainerStyle}>

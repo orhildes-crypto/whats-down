@@ -40,8 +40,8 @@ export const systemsService = {
         ).data;
     },
 
-    getAncestors: async (systemId: string): Promise<SystemDocument[]> => {
-        return (await apiClient.get<SystemDocument[]>(`${BASE_URL}/${systemId}/ancestors`)).data;
+    getParents: async (systemId: string): Promise<SystemDocument[]> => {
+        return (await apiClient.get<SystemDocument[]>(`${BASE_URL}/${systemId}/parents`)).data;
     },
 
     rename: async (systemId: string, newName: string): Promise<SystemDocument> => {

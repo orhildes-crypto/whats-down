@@ -20,6 +20,6 @@ export const config = {
     },
     systems: {
         defaultSort: env.get('SYSTEMS_DEFAULT_SORT').default('statusPriority name').asString(),
-        maxAncestorsDepth: env.get('SYSTEMS_MAX_ANCESTORS_DEPTH').default(20).asIntPositive(),
+        maxParentsDepth: env.get('SYSTEMS_MAX_PARENTS_DEPTH').default(20).asIntPositive(),
     },
 };

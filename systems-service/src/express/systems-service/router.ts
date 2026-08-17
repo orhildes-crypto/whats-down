@@ -10,7 +10,7 @@ import {
     changeStatusRequestSchema,
     editServiceRequestSchema,
     getRootsByQueryRequestSchema,
-    getAncestorsByIdRequestSchema,
+    getParentsByIdRequestSchema,
 } from './validations.js';
 import { config } from '@/config.js';
 
@@ -49,11 +49,11 @@ systemRouter.get(
 );
 
 systemRouter.get(
-    '/:id/ancestors',
+    '/:id/parents',
     authenticateMiddleware(config.jwt.secret),
     authorizationMiddleware([UserRole.ADMIN, UserRole.EDITOR, UserRole.VIEWER]),
-    validateRequest(getAncestorsByIdRequestSchema),
-    wrapController(SystemServiceController.getAncestors),
+    validateRequest(getParentsByIdRequestSchema),
+    wrapController(SystemServiceController.getParentsOfSystem),
 );
 
 systemRouter.post(
