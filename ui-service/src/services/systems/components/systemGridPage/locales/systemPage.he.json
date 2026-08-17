@@ -4,5 +4,6 @@
     "userError": "לא הצלחנו לזהות את המשתמש המחובר",
     "loadingBreadcrumbs": "טוען נתיב...",
     "emptyPage": "אין מערכות כאן עדיין",
-    "addSystemButton": "הוסף מערכת"
+    "addSystemButton": "הוסף מערכת",
+    "manageUsersButton": "ניהול משתמשים"
 }

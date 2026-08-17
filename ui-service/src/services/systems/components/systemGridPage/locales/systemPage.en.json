@@ -4,5 +4,6 @@
     "userError": "could not find connected user",
     "loadingBreadcrumbs": "loading path...",
     "emptyPage": "no service yet",
-    "addSystemButton": "add service"
+    "addSystemButton": "add service",
+    "manageUsersButton": "manage Users"
 }

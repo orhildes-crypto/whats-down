@@ -3,20 +3,23 @@ import { useGetById } from '@/services/systems/hooks/useGetById';
 import { useSystems } from '@/services/systems/hooks/useSystems';
 import { useMe } from '@/services/users/hooks/useMe';
 import { ErrorPage } from '@/shared/components/ErrorPage/ErrorPage';
-import { UserRole } from '@whats-down/shared/common';
-import { Box, Button, Skeleton, CircularProgress, Typography } from '@mui/material';
+import { router } from '@/shared/router';
+import { colors } from '@/theme/colorsConfig';
 import AddIcon from '@mui/icons-material/Add';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import { Box, Button, CircularProgress, Skeleton, Typography } from '@mui/material';
+import { useParams } from '@tanstack/react-router';
+import { UserRole } from '@whats-down/shared/common';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams } from '@tanstack/react-router';
 import { Breadcrumbs, type BreadcrumbItem } from '../Breadcrumbs/Breadcrumbs';
 import { CreateSystemModal } from '../createSystemModal/createSystemModal';
 import { SystemCube } from '../systemCube/systemCube';
 import * as styles from './systemGridPage.styles';
-import { colors } from '@/theme/colorsConfig';
 
 export const SystemsGridPage: React.FC = () => {
     const { t } = useTranslation('systemsPage');
+    const navigate = router.navigate;
 
     const { id } = useParams({ strict: false });
     const parentId = id ?? null;
@@ -93,6 +96,18 @@ export const SystemsGridPage: React.FC = () => {
                     sx={styles.addButtonStyle}
                 >
                     {t('addSystemButton')}
+                </Button>
+            )}
+
+            {user.role === UserRole.ADMIN && (
+                <Button
+                    type="button"
+                    variant="contained"
+                    onClick={() => navigate({ to: '/admin/users' })}
+                    startIcon={<ManageAccountsIcon sx={{ color: colors.action.iconDefault, fontSize: 16 }} />}
+                    sx={styles.manageUsersButtonStyle}
+                >
+                    {t('manageUsersButton')}
                 </Button>
             )}
 

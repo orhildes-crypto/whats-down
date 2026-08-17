@@ -9,6 +9,7 @@ export const titleStyle: SxProps<Theme> = {
     fontSize: '1.5rem',
     fontWeight: 600,
     marginBottom: '24px',
+    color: colors.text.onDark,
 };
 
 export const backButtonStyle: SxProps<Theme> = {
