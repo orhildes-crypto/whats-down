@@ -9,7 +9,8 @@ export const config = {
     services: {
         usersServiceUrl: env.get('USERS_SERVICE_URL').default('http://localhost:5000').asString(),
         systemsServiceUrl: env.get('SYSTEMS_SERVICE_URL').default('http://localhost:8000').asString(),
-        usersServiceRoute: env.get('USERS_SERVICE_ROUTE').default('/api/users-service').asString(),
+        usersServiceRoute: env.get('USERS_SERVICE_ROUTE').default('/api/users').asString(),
+        systemsServiceRoute: env.get('SYSTEMS_SERVICE_ROUTE').default('/api/systems').asString(),
     },
     jwt: {
         secret: isProduction 

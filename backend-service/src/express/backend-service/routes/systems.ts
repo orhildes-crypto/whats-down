@@ -5,7 +5,7 @@ import { createServiceProxy } from '../proxy/handler.js';
 
 export const systemsRouter = Router({ mergeParams: true });
 
-const SYSTEM_SERVICE_BASE_URL = `${config.services.systemsServiceUrl}/api/systems-service`;
+const SYSTEM_SERVICE_BASE_URL = `${config.services.systemsServiceUrl}${config.services.systemsServiceRoute}`;
 
 const systemsServiceProxy = createServiceProxy(SYSTEM_SERVICE_BASE_URL);
 
