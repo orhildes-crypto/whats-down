@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-restricted-syntax */
-import { COOKIE_NAME, UserRole } from '@whats-down/shared';
+import { config as sharedConfig, UserRole } from '@whats-down/shared';
 import { Express } from 'express';
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
@@ -10,13 +10,14 @@ import request from 'supertest';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { config } from '../src/config.js';
 import { Server } from '../src/express/server.js';
-import { RefreshTokenModel } from '../src/express/users-service/refresh-token/model.js';
-import { REFRESH_COOKIE_NAME } from '../src/utils/express/cookie.js';
 
-const { mongo, jwt: jwtConfig } = config;
+const { mongo } = config;
 
 const fakeObjectId = '111111111111111111111111';
 const BASE_ROUTE = '/api/users-service';
+
+const COOKIE_NAME = sharedConfig.cookieName;
+const {jwt: jwtConfig} = sharedConfig;
 
 const generateTestToken = (role: UserRole) => {
     return jwt.sign({ userId: 'test-admin-id', role }, jwtConfig.secret);
@@ -207,88 +208,6 @@ describe('e2e users-service api testing', () => {
         });
     });
 
-    describe('POST /api/users-service/auth/refresh', () => {
-        const mockGoogleToken = 'mock-google-id-token-123';
-        let validRefreshTokenCookie: string;
-
-        beforeEach(async () => {
-        await RefreshTokenModel.deleteMany({});
-
-        const response = await request(app)
-            .post(`${BASE_ROUTE}/login/google`) 
-            .send({ idToken: mockGoogleToken })
-            .expect(200);
-
-        const cookies = response.headers['set-cookie'] as unknown as string[];
-        expect(cookies).toBeDefined();
-
-        console.log('DEBUG COOKIES RETURNED FROM LOGIN:', cookies);
-
-        const refreshCookie = cookies.find(c => c.startsWith(`${REFRESH_COOKIE_NAME}=`));
-        
-        expect(refreshCookie).toBeDefined();
-
-        const rawCookieValue = refreshCookie!.split(';')[0]; 
-        validRefreshTokenCookie = rawCookieValue;
-    });
-
-        it('1. Happy Path - should rotate tokens successfully and return new cookies', async () => {
-            const response = await request(app)
-                .post(`${BASE_ROUTE}/auth/refresh`)
-                .set('Cookie', [validRefreshTokenCookie]) 
-                .expect(200);
-
-            expect(response.body.success).toBe(true);
-
-            const cookies = response.headers['set-cookie'] as unknown as string[];
-            expect(cookies).toBeDefined();
-
-            const hasRefreshToken = cookies.some((c) => c.startsWith(`${REFRESH_COOKIE_NAME}=`));
-            expect(hasRefreshToken).toBe(true);
-        });
-
-        it('2. Invalid Token - should fail with 401 and clear cookies if token is fake/expired', async () => {
-            const fakeCookie = `${REFRESH_COOKIE_NAME}=this-is-a-fake-unhashed-token-123`;
-
-            const response = await request(app).post(`${BASE_ROUTE}/auth/refresh`).set('Cookie', [fakeCookie]).expect(401);
-
-            expect(response.body.type).toBe('InvalidOrExpiredTokenError');
-
-            const setCookies = response.headers['set-cookie'] as unknown as string[];
-            expect(setCookies).toBeDefined();
-
-            const clearedRefresh = setCookies.some((c) => c.includes(`${REFRESH_COOKIE_NAME}=`));
-            expect(clearedRefresh).toBe(true);
-        });
-
-        it('3. Security - should detect reuse attack, revoke family, clear cookies and return 401', async () => {
-            const firstRefreshResponse = await request(app).post(`${BASE_ROUTE}/auth/refresh`).set('Cookie', [validRefreshTokenCookie]).expect(200);
-
-            const newCookies = firstRefreshResponse.headers['set-cookie'] as unknown as string[];
-            const newRefreshCookie = newCookies.find((c) => c.startsWith(`${REFRESH_COOKIE_NAME}=`))!.split(';')[0];
-
-            const attackResponse = await request(app)
-                .post(`${BASE_ROUTE}/auth/refresh`)
-                .set('Cookie', [validRefreshTokenCookie])
-                .expect(401);
-
-            expect(attackResponse.body.type).toBe('ReuseTokenAttackDetected');
-
-            const setCookies = attackResponse.headers['set-cookie'] as unknown as string[];
-            expect(setCookies).toBeDefined();
-
-            const clearedRefresh = setCookies.some((c) => c.includes(`${REFRESH_COOKIE_NAME}=`));
-            expect(clearedRefresh).toBe(true);
-
-            const dbTokens = await RefreshTokenModel.find({}).exec();
-            expect(dbTokens.length).toBeGreaterThan(0);
-
-            for (const tokenDoc of dbTokens) {
-                expect(tokenDoc.isRevoked).toBe(true);
-                expect(tokenDoc.revocationReason).toBe('FAMILY_COMPROMISED');
-            }
-        });
-    });
     describe('PUT /api/users/:id/role', () => {
         let targetUserId: string;
 

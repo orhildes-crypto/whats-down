@@ -1,4 +1,4 @@
-import { isProduction } from '@whats-down/shared';
+import { config as sharedConf } from '@whats-down/shared';
 import 'dotenv/config';
 import env from 'env-var';
 
@@ -11,7 +11,7 @@ export const config = {
         systemServiceCollectionName: env.get('SYSTEM_SERVICE_COLLECTION_NAME').default('systems-service').required().asString(),
     },
     jwt: {
-        secret: isProduction 
+        secret: sharedConf.isProduction 
             ? env.get('JWT_SECRET').required().asString()
             : env.get('JWT_SECRET').default('local-dev-secret-key-123').asString(),
     },

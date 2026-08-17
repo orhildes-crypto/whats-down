@@ -1,7 +1,6 @@
-import { isProduction } from '@whats-down/shared';
+import { config as sharedConf } from '@whats-down/shared';
 import 'dotenv/config';
 import env from 'env-var';
-import { SignOptions } from 'jsonwebtoken';
 
 export const config = {
     service: {
@@ -12,20 +11,9 @@ export const config = {
         userCollectionName: env.get('USERS_SERVICE_COLLECTION_NAME').default('users-service').required().asString(),
     },
     google: {
-        clientId: isProduction 
+        clientId: sharedConf.isProduction 
             ? env.get('GOOGLE_CLIENT_ID').required().asString()
             : env.get('GOOGLE_CLIENT_ID').default('local-dev-client-id-123').asString(),
     },
-    jwt: {
-        secret: isProduction 
-            ? env.get('JWT_SECRET').required().asString()
-            : env.get('JWT_SECRET').default('local-dev-secret-key-123').asString(),
-        expiresIn: env.get('JWT_EXPIRES_IN').default('1h').required().asString() as SignOptions['expiresIn'],
-    },
-    refreshToken: {
-        cookieName: env.get('REFRESH_TOKEN_COOKIE_NAME').default('refreshToken').required().asString(),
-        refreshPath: env.get('REFRESH_TOKEN_PATH').default('/api/users-service/auth/refresh').required().asString(),
-        refreshTokenTtl: env.get('REFRESH_TOKEN_TTL').default(7 * 24 * 60 * 60 * 1000).required().asIntPositive(),
-        auditRetention: env.get('REFRESH_TOKEN_AUDIT_RETENTION').default(30 * 24 * 60 * 60 * 1000).required().asIntPositive(),
-    }
+
 };

@@ -1,5 +1,4 @@
-import { config } from '@/config.js';
-import { authenticateMiddleware, authorizationMiddleware, UserRole, validateRequest, wrapController } from '@whats-down/shared';
+import { authenticateMiddleware, authorizationMiddleware, UserRole, validateRequest, wrapController, config as sharedConf } from '@whats-down/shared';
 import { Router } from 'express';
 import { UsersServiceController } from './controller.js';
 import {
@@ -18,21 +17,19 @@ export const usersServiceRouter = Router();
 usersServiceRouter.get(
     '/me',
     validateRequest(getMeRequestSchema),
-    authenticateMiddleware(config.jwt.secret),
+    authenticateMiddleware(sharedConf.jwt.secret),
     wrapController(UsersServiceController.getMe),
 );
 
 usersServiceRouter.get(
     '/',
     validateRequest(getUsersRequestSchema),
-    authenticateMiddleware(config.jwt.secret),
+    authenticateMiddleware(sharedConf.jwt.secret),
     authorizationMiddleware([UserRole.ADMIN]),
     wrapController(UsersServiceController.getUsers),
 );
 
 usersServiceRouter.post('/', validateRequest(createOneRequestSchema), wrapController(UsersServiceController.createOne));
-
-usersServiceRouter.post('/auth/refresh', wrapController(UsersServiceController.refresh));
 
 usersServiceRouter.post('/login', validateRequest(loginRequestSchema), wrapController(UsersServiceController.login));
 
@@ -40,7 +37,7 @@ usersServiceRouter.post('/login/google', validateRequest(googleAuthRequestSchema
 
 usersServiceRouter.delete(
     '/:id',
-    authenticateMiddleware(config.jwt.secret),
+    authenticateMiddleware(sharedConf.jwt.secret),
     authorizationMiddleware([UserRole.ADMIN]),
     validateRequest(deleteOneRequestSchema),
     wrapController(UsersServiceController.deleteOne),
@@ -48,7 +45,7 @@ usersServiceRouter.delete(
 
 usersServiceRouter.put(
     '/:id/role',
-    authenticateMiddleware(config.jwt.secret),
+    authenticateMiddleware(sharedConf.jwt.secret),
     authorizationMiddleware([UserRole.ADMIN]),
     validateRequest(changeUserRoleRequestSchema),
     wrapController(UsersServiceController.changeUserRole),

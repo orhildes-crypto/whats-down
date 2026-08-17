@@ -6,12 +6,13 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { config } from '../src/config.js';
 import { SystemDocument } from '../src/express/systems-service/interface.js';
 import { Server } from '../src/express/server.js';
-import { COOKIE_NAME, UserRole } from '@whats-down/shared';
+import { config as sharedConfig, UserRole } from '@whats-down/shared';
 
 const { mongo, jwt: jwtConfig } = config;
 
 const fakeObjectId = '111111111111111111111111';
 const BASE_ROUTE = '/api/system-service';
+const COOKIE_NAME = sharedConfig.cookieName;
 
 const generateTestToken = (role: UserRole = UserRole.ADMIN) => {
     return jwt.sign({ userId: 'test-user-id-123', role }, jwtConfig.secret);

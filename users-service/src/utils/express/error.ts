@@ -1,9 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import { ZodError } from 'zod';
 import { fromZodError } from 'zod-validation-error';
-import { ServiceError } from '@whats-down/shared';
+import { ServiceError, clearAuthCookie } from '@whats-down/shared';
 import { ReuseTokenAttackDetected, InvalidOrExpiredTokenError } from '../errors.js';
-import { clearAuthCookies } from './cookie.js';
 import { StatusCodes } from 'http-status-codes';
 
 export const errorMiddleware = (error: Error, _req: Request, res: Response, _next: NextFunction) => {
@@ -13,7 +12,7 @@ export const errorMiddleware = (error: Error, _req: Request, res: Response, _nex
             message: fromZodError(error).message,
         });
     } else if (error instanceof ReuseTokenAttackDetected || error instanceof InvalidOrExpiredTokenError) {
-        clearAuthCookies(res);
+        clearAuthCookie(res);
         res.status(error.code).send({
             type: error.name,
             message: error.message,

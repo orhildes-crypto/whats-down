@@ -1,9 +1,9 @@
 import { config } from '@/config.js';
 import { DocumentNotFoundError, GoogleAuthError, PasswordIncorrectError, SelfDemotionError } from '@/utils/errors.js';
-import { AuthenticationError, ConflictError, UserFilters, UserRole } from '@whats-down/shared';
+import { AuthenticationError, ConflictError, UserFilters, UserRole, config as sharedConf } from '@whats-down/shared';
 import bcrypt from 'bcryptjs';
 import { TokenPayload, OAuth2Client } from 'google-auth-library';
-import jwt from 'jsonwebtoken';
+import jwt, { SignOptions } from 'jsonwebtoken';
 import { AuthResult, CreateLocalUserPayload, SafeUserDocument, UserDocument } from './interface.js';
 import { UserModel } from './model.js';
 
@@ -120,21 +120,11 @@ export class UsersServiceManager {
     };
 
     static generateJWTToken = (user: UserDocument): string => {
-        return jwt.sign({ userId: user._id, role: user.role, username: user.username }, config.jwt.secret, { expiresIn: config.jwt.expiresIn });
+        return jwt.sign({ userId: user._id, role: user.role, username: user.username }, sharedConf.jwt.secret, { expiresIn: sharedConf.jwt.expiresIn as SignOptions['expiresIn'] });
     };
 
     static toSafeUser = (user: UserDocument): SafeUserDocument => {
         const { googleId, passwordHash, ...safeUser } = user;
         return safeUser;
-    };
-
-    static generateTokenForUserId = async (userId: string): Promise<string> => {
-        const user = await UserModel.findById(userId).select('-passwordHash').lean().exec();
-
-        if (!user) {
-            throw new DocumentNotFoundError(userId);
-        }
-
-        return this.generateJWTToken(user);
     };
 }
