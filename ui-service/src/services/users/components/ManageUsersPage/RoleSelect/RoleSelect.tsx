@@ -29,9 +29,14 @@ export const RoleSelect: React.FC<RoleSelectProps> = ({ value, onChange, disable
             MenuProps={{
                 container: () => document.getElementById('root'),
                 disablePortal: false,
+                slotProps: {
+                    paper: {
+                        sx: styles.optionsStyle,
+                    },
+                },
             }}
         >
-            {ROLES.map(role => (
+            {ROLES.map((role) => (
                 <MenuItem key={role} value={role}>
                     {t(`roles.${role}`)}
                 </MenuItem>

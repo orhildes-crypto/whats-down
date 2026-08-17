@@ -1,42 +1,42 @@
 import { colors } from '@/theme/colorsConfig';
 import { SxProps, Theme } from '@mui/material';
 
-const TABLE_HEADER_BG = '#4d565a';
-const ROW_HOVER_BG = '#d4d4d4';
-const BORDER_COLOR = 'rgba(0, 0, 0, 0.1)';
-const TEXT_PRIMARY = '#090909';
-const TEXT_SECONDARY = 'rgba(245, 245, 245, 0.7)';
-
 export const tableContainerStyle: SxProps<Theme> = {
     maxWidth: '1400px',
     margin: '0 auto',
-    backgroundColor: '#FFFDD0',
+    backgroundColor: colors.table.background.dark,
     borderRadius: '12px',
-    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.25)',
+    border: `1px solid ${colors.table.border}`,
+    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
     overflow: 'hidden',
 };
 
 export const headerRowStyle: SxProps<Theme> = {
-    backgroundColor: TABLE_HEADER_BG,
+    backgroundColor: colors.table.background.header,
 
     '& .MuiTableCell-root': {
-        color: TEXT_PRIMARY,
-        fontWeight: 900,
-        fontSize: '1.4rem',
-        borderBottom: `1px solid ${BORDER_COLOR}`,
+        color: colors.table.text.muted,
+        fontWeight: 600,
+        fontSize: '1.3rem',
+        textTransform: 'uppercase',
+        letterSpacing: '0.05em',
+        padding: '16px 24px',
+        borderBottom: `1px solid ${colors.table.border}`,
     },
 };
 
 export const bodyRowStyle: SxProps<Theme> = {
     transition: 'background-color 0.15s ease',
 
-    '& .MuiTableCell-root': {
-        color: TEXT_PRIMARY,
-        borderBottom: `1px solid ${BORDER_COLOR}`,
+    '&:hover': {
+        backgroundColor: colors.table.background.rowHover,
     },
 
-    '&:hover': {
-        backgroundColor: ROW_HOVER_BG,
+    '& .MuiTableCell-root': {
+        color: colors.table.text.primary,
+        padding: '16px 24px',
+        fontSize: '0.875rem',
+        borderBottom: `1px solid ${colors.table.border}`,
     },
 
     '&:last-of-type .MuiTableCell-root': {
@@ -46,15 +46,11 @@ export const bodyRowStyle: SxProps<Theme> = {
 
 export const currentUserRowStyle: SxProps<Theme> = {
     ...bodyRowStyle,
-    opacity: 0.55,
-
-    '&:hover': {
-        backgroundColor: '#FFFDD0',
-    },
+    opacity: 0.7,
 };
 
 export const secondaryCellStyle: SxProps<Theme> = {
-    color: TEXT_SECONDARY,
+    color: colors.table.text.secondary,
 };
 
 export const centeredStateStyle: SxProps<Theme> = {
@@ -62,4 +58,5 @@ export const centeredStateStyle: SxProps<Theme> = {
     alignItems: 'center',
     justifyContent: 'center',
     minHeight: '200px',
+    color: colors.table.text.secondary,
 };

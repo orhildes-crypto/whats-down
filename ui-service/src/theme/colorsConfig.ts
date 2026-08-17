@@ -44,8 +44,26 @@ export const colors = {
 
     form: {
         title: '#1f2937',
-        subtitle:  '#6b7280',
+        subtitle: '#6b7280',
         footerText: '#4b5563',
-    }
-} as const;
+    },
 
+    table: {
+        text: {
+            primary: '#f4f4f5',
+            secondary: '#a1a1aa',
+            muted: '#71717a',
+        },
+        background: {
+            dark: '#09090b',
+            header: '#18181b',
+            rowHover: 'rgba(24, 24, 27, 0.4)',
+        },
+        border: '#27272a',
+        muiSelect: {
+            border: '#75757c',
+            borderHover: '#3f3f46',
+            
+        }
+    },
+} as const;
