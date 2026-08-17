@@ -9,7 +9,6 @@ volumes:
     driver: local
 
 services:
-  # 1. Database
   mongo:
     image: mongo:7.0
     container_name: whats-down-mongo
@@ -26,7 +25,6 @@ services:
       timeout: 5s
       retries: 5
 
-  # 2. Users Service
   users-service:
     build:
       context: .
@@ -46,7 +44,6 @@ services:
     networks:
       - whats-down-network
 
-  # 3. System Service
   systems-service:
     build:
       context: .
@@ -65,7 +62,6 @@ services:
     networks:
       - whats-down-network
 
-  # 4. Backend Service (Proxy)
   backend-service:
     build:
       context: .
@@ -84,7 +80,6 @@ services:
     networks:
       - whats-down-network
 
-  # 5. UI Frontend + Nginx Proxy
   ui-service:
     build:
       context: .

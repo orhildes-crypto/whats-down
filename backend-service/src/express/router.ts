@@ -1,12 +1,12 @@
 import { Router } from 'express';
-import { backendSystemsRouter } from './backend-service/routes/systems.routes.js';
-import { backendUsersRouter } from './backend-service/routes/users.routes.js';
+import { systemsRouter } from './backend-service/routes/systems.js';
+import { usersRouter } from './backend-service/routes/users.js';
 import { StatusCodes } from 'http-status-codes';
 
 export const appRouter = Router();
 
-appRouter.use('/users', backendUsersRouter);
-appRouter.use('/systems', backendSystemsRouter);
+appRouter.use('/users', usersRouter);
+appRouter.use('/systems', systemsRouter);
 
 appRouter.use(['/isAlive', '/isalive', '/health'], (_req, res) => {
     res.status(StatusCodes.OK).send('alive');
