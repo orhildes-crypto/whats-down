@@ -1,24 +1,12 @@
 import { createProxyMiddleware, fixRequestBody, Options } from 'http-proxy-middleware';
-import { rewriteSetCookiePath } from './cookie.js';
 import { StatusCodes } from 'http-status-codes';
 
-interface ServiceProxyOptions {
-    cookieRewritePath?: string;
-}
-
-export const createServiceProxy = (targetBaseUrl: string, options?: ServiceProxyOptions) => {
+export const createServiceProxy = (targetBaseUrl: string) => {
     const proxyOptions: Options = {
         target: targetBaseUrl,
         changeOrigin: true,
         on: {
             proxyReq: fixRequestBody,
-            proxyRes: (proxyRes) => {
-                const setCookieHeader = proxyRes.headers['set-cookie'];
-
-                if (setCookieHeader && options?.cookieRewritePath) {
-                    proxyRes.headers['set-cookie'] = rewriteSetCookiePath(setCookieHeader, options.cookieRewritePath);
-                }
-            },
             error: (err, _req, res) => {
                 console.error(`[Proxy Error] Failed to forward request to ${targetBaseUrl}:`, err);
 

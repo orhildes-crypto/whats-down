@@ -17,10 +17,4 @@ export const config = {
             ? env.get('JWT_SECRET').required().asString() 
             : env.get('JWT_SECRET').default('local-dev-secret-key-123').asString(),
     },
-    proxy: {
-        publicRefreshPath: env.get('PUBLIC_REFRESH_PATH').default('/api/users/auth/refresh').asString(),
-    },
-    refreshToken: {
-        cookieName: env.get('REFRESH_TOKEN_COOKIE_NAME').default('refreshToken').required().asString(),
-    },
 };

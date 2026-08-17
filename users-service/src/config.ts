@@ -15,5 +15,4 @@ export const config = {
             ? env.get('GOOGLE_CLIENT_ID').required().asString()
             : env.get('GOOGLE_CLIENT_ID').default('local-dev-client-id-123').asString(),
     },
-
 };
