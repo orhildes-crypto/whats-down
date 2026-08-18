@@ -1,6 +1,6 @@
-import { SystemStatus, SystemStatusPriority } from '@whats-down/shared';
+import { SystemStatus } from '@whats-down/shared';
 import mongoose from 'mongoose';
-import { config } from '../../config.js';
+import { config } from '@/config.js';
 import { SystemDocument } from './interface.js';
 
 const { Schema } = mongoose;
@@ -29,11 +29,6 @@ const SystemServiceSchema = new mongoose.Schema<SystemDocument>(
             enum: Object.values(SystemStatus),
             default: SystemStatus.UP,
         },
-        statusPriority: {
-            type: Number,
-            required: true,
-            default: () => SystemStatusPriority[SystemStatus.UP],
-        },
         statusUpdatedAt: {
             type: Date,
             required: true,
@@ -50,7 +45,5 @@ const SystemServiceSchema = new mongoose.Schema<SystemDocument>(
         timestamps: true,
     },
 );
-
-SystemServiceSchema.index({ statusPriority: 1, name: 1 });
 
 export const SystemModel = mongoose.model<SystemDocument>('System', SystemServiceSchema, config.mongo.systemServiceCollectionName);

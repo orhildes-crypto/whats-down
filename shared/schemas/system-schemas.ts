@@ -9,7 +9,6 @@ export const systemRequiredFields = z.object({
     createdBy: zodMongoObjectId,
     createdByUsername: z.string(),
     status: z.nativeEnum(SystemStatus),
-    statusPriority: z.number(),
     hasChildren: z.coerce.boolean(),
     createdAt: z.coerce.date(),
     statusUpdatedAt: z.coerce.date(),

@@ -1,16 +1,24 @@
 import { config } from '@/config.js';
 import { DocumentNotFoundError, SystemWithChildrenError } from '@/utils/errors.js';
 import { SystemFilters, SystemStatus, SystemStatusPriority } from '@whats-down/shared';
-import mongoose from 'mongoose';
+import mongoose, { PipelineStage } from 'mongoose';
 import { CreateSystemPayload, SystemDocument } from './interface.js';
 import { SystemModel } from './model.js';
 
 export class SystemServiceManager {
     static getByQuery = async (query: SystemFilters, step: number, limit?: number): Promise<SystemDocument[]> => {
-        return SystemModel.find(query, {}, limit ? { limit, skip: limit * step } : {})
-            .sort(config.systems.defaultSort)
-            .lean()
-            .exec();
+        const castedQuery = {
+            ...query,
+            ...(query.parentId && { parentId: this.toObjectId(query.parentId) }),
+        };
+
+        return SystemModel.aggregate([
+            { $match: castedQuery },
+            this.buildStatusWeightStage(),
+            { $sort: { statusWeight: 1, name: 1 } },
+            ...(limit ? [{ $skip: limit * step }, { $limit: limit }] : []),
+            { $unset: 'statusWeight' },
+        ]).exec();
     };
 
     static getCount = async (query: SystemFilters): Promise<number> => {
@@ -22,13 +30,16 @@ export class SystemServiceManager {
     };
 
     static getRoots = async (step: number, limit?: number): Promise<SystemDocument[]> => {
-        return SystemModel.find({ parentId: null }, {}, limit ? { limit, skip: limit * step } : {})
-            .sort(config.systems.defaultSort)
-            .lean()
-            .exec();
+        return SystemModel.aggregate([
+            { $match: { parentId: null } },
+            this.buildStatusWeightStage(),
+            { $sort: { statusWeight: 1, name: 1 } },
+            ...(limit ? [{ $skip: limit * step }, { $limit: limit }] : []),
+            { $unset: 'statusWeight' },
+        ]).exec();
     };
 
-    static getParentsOfSystem  = async (id: string): Promise<SystemDocument[]> => {
+    static getParentsOfSystem = async (id: string): Promise<SystemDocument[]> => {
         const targetObjectId = this.toObjectId(id);
 
         const [targetSystem] = await SystemModel.aggregate([
@@ -214,10 +225,23 @@ export class SystemServiceManager {
     private static toObjectId = (id: string): mongoose.Types.ObjectId => {
         return new mongoose.Types.ObjectId(id);
     };
+
+    private static buildStatusWeightStage = (): PipelineStage.AddFields => ({
+        $addFields: {
+            statusWeight: {
+                $switch: {
+                    branches: Object.entries(SystemStatusPriority).map(([status, weight]) => ({
+                        case: { $eq: ['$status', status] },
+                        then: weight,
+                    })),
+                    default: Object.values(SystemStatusPriority).length,
+                },
+            },
+        },
+    });
 }
 
 const buildStatusUpdate = (status: SystemStatus) => ({
     status,
-    statusPriority: SystemStatusPriority[status],
     statusUpdatedAt: Date.now(),
 });
