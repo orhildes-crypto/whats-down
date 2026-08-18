@@ -1,6 +1,6 @@
 import { GenericModal } from '@/shared/components/GenericModal/GenericModal';
-import { Box, Button, CircularProgress, TextField } from '@mui/material';
-import { SYSTEM_MAX_NAME_LENGTH, SYSTEM_MIN_NAME_LENGTH, createSystemBodySchema } from '@whats-down/shared/common';
+import { Box, Button, CircularProgress, TextField, FormControl, Select, InputLabel, MenuItem } from '@mui/material';
+import { SYSTEM_MAX_NAME_LENGTH, SYSTEM_MIN_NAME_LENGTH, SystemStatus, createSystemBodySchema } from '@whats-down/shared/common';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useCreateSystem } from './useCreateSystem';
@@ -16,18 +16,20 @@ export const CreateSystemModal = ({ isOpen, onClose, parentId }: CreateSystemMod
     const { t } = useTranslation('createSystemModal');
 
     const [name, setName] = useState('');
+    const [status, setStatus] = useState<SystemStatus>(SystemStatus.UP);
     const [error, setError] = useState<string | null>(null);
 
     const { mutateAsync: createSystemAsync, isPending } = useCreateSystem();
 
     const handleClose = () => {
         setName('');
+        setStatus(SystemStatus.UP);
         setError(null);
         onClose();
     };
 
     const handleSubmit = async () => {
-        const result = createSystemBodySchema.safeParse({ name, parentId });
+        const result = createSystemBodySchema.safeParse({ name, parentId, status });
 
         if (!result.success) {
             const issue = result.error.issues[0];
@@ -44,7 +46,7 @@ export const CreateSystemModal = ({ isOpen, onClose, parentId }: CreateSystemMod
         setError(null);
 
         try {
-            await createSystemAsync({ name: result.data.name, parentId });
+            await createSystemAsync({ name: result.data.name, parentId, status: result.data.status });
             handleClose();
         } catch (err) {}
     };
@@ -81,6 +83,23 @@ export const CreateSystemModal = ({ isOpen, onClose, parentId }: CreateSystemMod
                     autoFocus
                 />
             </Box>
+
+            <FormControl fullWidth disabled={isPending} sx={{ mt: 1 }}>
+                <InputLabel id="system-status-select-label">{t('statusLabel')}</InputLabel>
+                <Select
+                    labelId="system-status-select-label"
+                    id="system-status-select"
+                    value={status}
+                    label={t('statusLabel')}
+                    onChange={(e) => setStatus(e.target.value as SystemStatus)}
+                >
+                    {Object.values(SystemStatus).map((statusValue) => (
+                        <MenuItem key={statusValue} value={statusValue}>
+                            {statusValue}
+                        </MenuItem>
+                    ))}
+                </Select>
+            </FormControl>
         </GenericModal>
     );
 };

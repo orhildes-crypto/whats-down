@@ -4,5 +4,6 @@
     "submitting": "creating...",
     "systemName": "System name",
     "nameTooShort": "The system name must contain at least {{min}} characters",
-    "nameTooLong": "The system name must contain maximum {{max}} characters"
+    "nameTooLong": "The system name must contain maximum {{max}} characters",
+    "statusLabel": "Status"
 }

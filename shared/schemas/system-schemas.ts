@@ -8,13 +8,13 @@ export const systemRequiredFields = z.object({
     parentId: zodMongoObjectId,
     createdBy: zodMongoObjectId,
     createdByUsername: z.string(),
-    status: z.nativeEnum(SystemStatus),
+    status: z.nativeEnum(SystemStatus).default(SystemStatus.UP),
     hasChildren: z.coerce.boolean(),
     createdAt: z.coerce.date(),
     statusUpdatedAt: z.coerce.date(),
 });
 
-export const createSystemBodySchema = systemRequiredFields.pick({ name: true, parentId: true }).extend({
+export const createSystemBodySchema = systemRequiredFields.pick({ name: true, parentId: true, status: true }).extend({
     parentId: zodMongoObjectId.nullable(),
 });
 
