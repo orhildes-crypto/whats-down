@@ -1,30 +1,19 @@
 import { apiClient } from '@/shared/api/apiClient';
-import type {
-    CreateSystemPayload,
-    SystemDocument,
-    SystemFilters,
-    SystemQueryParams,
-} from '@/shared/types/system-interfaces';
+import type { CreateSystemPayload, SystemDocument, SystemFilters, SystemQueryParams } from '@/shared/types/system-interfaces';
 import type { SystemStatus } from '@whats-down/shared/common';
 
 const BASE_URL = '/systems';
 
 export const systemsService = {
     getByQuery: async (params: SystemQueryParams): Promise<SystemDocument[]> => {
-        const { step = 0, limit = 10, ...filters } = params;
-
         return (
             await apiClient.get<SystemDocument[]>(BASE_URL, {
-                params: {
-                    step,
-                    limit,
-                    ...filters,
-                },
+                params,
             })
         ).data;
     },
 
-    getRoots: async (step = 0, limit = 10): Promise<SystemDocument[]> => {
+    getRoots: async (step: number, limit?: number): Promise<SystemDocument[]> => {
         return (
             await apiClient.get<SystemDocument[]>(`${BASE_URL}/roots`, {
                 params: { step, limit },

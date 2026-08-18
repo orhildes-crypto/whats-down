@@ -25,5 +25,5 @@ export const systemFiltersSchema = systemRequiredFields
 
 export const systemQueryParamsSchema = systemFiltersSchema.extend({
     step: z.coerce.number().min(0).default(0),
-    limit: z.coerce.number().optional(),
+    limit: z.coerce.number().optional().default(10),
 });

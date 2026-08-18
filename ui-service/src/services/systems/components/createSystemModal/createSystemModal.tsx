@@ -18,7 +18,7 @@ export const CreateSystemModal = ({ isOpen, onClose, parentId }: CreateSystemMod
     const [name, setName] = useState('');
     const [error, setError] = useState<string | null>(null);
 
-    const { mutate: createSystem, isPending } = useCreateSystem();
+    const { mutateAsync: createSystemAsync, isPending } = useCreateSystem();
 
     const handleClose = () => {
         setName('');
@@ -26,7 +26,7 @@ export const CreateSystemModal = ({ isOpen, onClose, parentId }: CreateSystemMod
         onClose();
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         const result = createSystemBodySchema.safeParse({ name, parentId });
 
         if (!result.success) {
@@ -43,14 +43,10 @@ export const CreateSystemModal = ({ isOpen, onClose, parentId }: CreateSystemMod
         }
         setError(null);
 
-        createSystem(
-            { name: result.data.name, parentId },
-            {
-                onSuccess: () => {
-                    handleClose();
-                },
-            },
-        );
+        try {
+            await createSystemAsync({ name: result.data.name, parentId });
+            handleClose();
+        } catch (err) {}
     };
 
     return (

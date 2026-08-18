@@ -13,7 +13,7 @@ type DeleteSystemModalProps = {
 
 export const DeleteSystemModal = ({ isOpen, onClose, system }: DeleteSystemModalProps) => {
     const { t } = useTranslation('deleteSystemModal');
-    const { mutate: deleteSystem, isPending } = useDeleteSystem();
+    const { mutateAsync: deleteSystemAsync, isPending } = useDeleteSystem();
 
     const handleClose = (e?: React.SyntheticEvent | React.MouseEvent) => {
         if (e) {
@@ -22,17 +22,13 @@ export const DeleteSystemModal = ({ isOpen, onClose, system }: DeleteSystemModal
         onClose();
     };
 
-    const handleSubmit = (e: React.MouseEvent) => {
+    const handleSubmit = async (e: React.MouseEvent) => {
         e.stopPropagation();
-        
-        deleteSystem(
-            { systemId: system._id },
-            {
-                onSuccess: () => {
-                    handleClose();
-                },
-            },
-        );
+
+        try {
+            await deleteSystemAsync({ systemId: system._id });
+            handleClose();
+        } catch (err) {}
     };
 
     return (
