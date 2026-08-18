@@ -1,0 +1,9 @@
+{
+    "loadingSystem": "טוען מערכות...",
+    "loadingError": "לא הצלחנו לטעון את המערכות",
+    "userError": "לא הצלחנו לזהות את המשתמש המחובר",
+    "loadingBreadcrumbs": "טוען נתיב...",
+    "emptyPage": "אין מערכות כאן עדיין",
+    "addSystemButton": "הוסף מערכת",
+    "manageUsersButton": "ניהול משתמשים"
+}

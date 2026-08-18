@@ -1,0 +1,49 @@
+import { SystemStatus } from '@whats-down/shared';
+import mongoose from 'mongoose';
+import { config } from '@/config.js';
+import { SystemDocument } from './interface.js';
+
+const { Schema } = mongoose;
+
+const SystemServiceSchema = new mongoose.Schema<SystemDocument>(
+    {
+        name: {
+            type: String,
+            required: true,
+        },
+        parentId: {
+            type: Schema.Types.ObjectId,
+            ref: config.model.name,
+            default: null,
+        },
+        createdBy: {
+            type: String,
+            required: true,
+        },
+        createdByUsername: {
+            type: String,
+            required: false,
+        },
+        status: {
+            type: String,
+            enum: Object.values(SystemStatus),
+            default: SystemStatus.UP,
+        },
+        statusUpdatedAt: {
+            type: Date,
+            required: true,
+            default: Date.now,
+        },
+        hasChildren: {
+            type: Boolean,
+            required: true,
+            default: false,
+        },
+    },
+    {
+        versionKey: false,
+        timestamps: true,
+    },
+);
+
+export const SystemModel = mongoose.model<SystemDocument>('System', SystemServiceSchema, config.mongo.systemServiceCollectionName);

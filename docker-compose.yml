@@ -1,0 +1,96 @@
+version: '3.4'
+
+networks:
+  whats-down-network:
+    driver: bridge
+
+volumes:
+  mongo-data:
+    driver: local
+
+services:
+  mongo:
+    image: mongo:7.0
+    container_name: whats-down-mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - whats-down-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  users-service:
+    build:
+      context: .
+      dockerfile: users-service/Dockerfile
+    container_name: whats-down-users-service
+    restart: always
+    environment:
+      PORT: 5000
+      NODE_ENV: production
+      MONGO_URI: mongodb://mongo:27017/whats-down
+      JWT_SECRET: ${JWT_SECRET}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-560795352096-014p20nb8gq6rfe5h1pujlc93ljebrb4.apps.googleusercontent.com}
+      USERS_SERVICE_COLLECTION_NAME: users
+    depends_on:
+      mongo:
+        condition: service_healthy
+    networks:
+      - whats-down-network
+
+  systems-service:
+    build:
+      context: .
+      dockerfile: systems-service/Dockerfile
+    container_name: whats-down-systems-service
+    restart: always
+    environment:
+      PORT: 8000
+      NODE_ENV: production
+      MONGO_URI: mongodb://mongo:27017/whats-down
+      JWT_SECRET: ${JWT_SECRET}
+      SYSTEM_SERVICE_COLLECTION_NAME: systems-service
+    depends_on:
+      mongo:
+        condition: service_healthy
+    networks:
+      - whats-down-network
+
+  backend-service:
+    build:
+      context: .
+      dockerfile: backend-service/Dockerfile
+    container_name: whats-down-backend-service
+    restart: always
+    environment:
+      PORT: 3000
+      NODE_ENV: production
+      USERS_SERVICE_URL: http://users-service:5000
+      SYSTEMS_SERVICE_URL: http://systems-service:8000
+      JWT_SECRET: ${JWT_SECRET}
+    depends_on:
+      - users-service
+      - systems-service
+    networks:
+      - whats-down-network
+
+  ui-service:
+    build:
+      context: .
+      dockerfile: ui-service/Dockerfile
+      args:
+        VITE_GOOGLE_CLIENT_ID: ${VITE_GOOGLE_CLIENT_ID:-560795352096-014p20nb8gq6rfe5h1pujlc93ljebrb4.apps.googleusercontent.com}
+    container_name: whats-down-ui
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend-service
+    networks:
+      - whats-down-network

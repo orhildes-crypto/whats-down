@@ -1,0 +1,19 @@
+{
+    "title": "Register",
+    "subtitle": "Create a new account to get started",
+    "username": "Username",
+    "password": "Password",
+    "email": "Email",
+    "registerButton": "Register",
+    "registerPending": "Registering...",
+    "registerError": "We couldn't register you, ",
+    "loginText":"Already have an account?",
+    "loginLink": "Login",
+    "validation": {
+        "required": "Required field",
+        "invalidEmail": "Invalid email address",
+        "usernameMin": "Username must be at least {{min}} characters",
+        "passwordMin": "Password must be at least {{min}} characters",
+        "invalidField": "Invalid field"
+    }
+}

@@ -1,0 +1,20 @@
+import { config as sharedConf } from '@whats-down/shared';
+import 'dotenv/config';
+import env from 'env-var';
+
+export const config = {
+    service: {
+        port: env.get('PORT').default(3000).required().asPortNumber(),
+    },
+    services: {
+        usersServiceUrl: env.get('USERS_SERVICE_URL').default('http://localhost:5000').asString(),
+        systemsServiceUrl: env.get('SYSTEMS_SERVICE_URL').default('http://localhost:8000').asString(),
+        usersServiceRoute: env.get('USERS_SERVICE_ROUTE').default('/api/users').asString(),
+        systemsServiceRoute: env.get('SYSTEMS_SERVICE_ROUTE').default('/api/systems').asString(),
+    },
+    jwt: {
+        secret: sharedConf.isProduction 
+            ? env.get('JWT_SECRET').required().asString() 
+            : env.get('JWT_SECRET').default('local-dev-secret-key-123').asString(),
+    },
+};

@@ -1,0 +1,8 @@
+{
+    "title": "Delete system {{systemName}}",
+    "confirmButton": "Delete system",
+    "deleting": "deleting...",
+    "validationMessage": "Are you certain you want to delete system {{systemName}}?",
+    "validationMessageWithChildren": "The system {{systemName}} has sub-systems. Deleting it will permanently delete all associated sub-systems. Are you sure you want to continue?",
+    "cancelDelete": "Cancel"
+}
