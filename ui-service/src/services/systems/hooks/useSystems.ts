@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { systemsService } from '../api/systemsApi';
 import type { SystemQueryParams } from '@/shared/types/system-interfaces';
+import { config } from '@/config';
 
 export const useSystems = (query: SystemQueryParams) => {
     return useQuery({
@@ -8,5 +9,7 @@ export const useSystems = (query: SystemQueryParams) => {
         queryFn: () => query.parentId === undefined
             ? systemsService.getRoots(query.step, query.limit)
             : systemsService.getByQuery(query),
+        refetchInterval: config.polling.systemsInterval,
+        meta: { silentPollingErrors: true },
     });
 };

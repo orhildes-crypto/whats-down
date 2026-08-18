@@ -27,6 +27,11 @@ export const queryClient = new QueryClient({
             if (isAuthErrorAndRedirect(error)) {
                 return;
             }
+
+            if (query.meta?.silentPollingErrors && query.state.data !== undefined) {
+                return;
+            }
+
             showErrorToast(error);
         },
     }),
