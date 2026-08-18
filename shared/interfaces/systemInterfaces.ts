@@ -17,7 +17,7 @@ export const SystemStatusPriority: Record<SystemStatus, number> = {
 };
 
 export type SystemFilters = z.infer<typeof systemFiltersSchema>;
-export type SystemQueryParams = z.infer<typeof systemQueryParamsSchema>;
+export type SystemQueryParams = z.input<typeof systemQueryParamsSchema>;
 export type CreateSystemPayload = z.infer<typeof createSystemBodySchema>;
 
 type BaseSystemFromSchema = z.infer<typeof systemRequiredFields>;

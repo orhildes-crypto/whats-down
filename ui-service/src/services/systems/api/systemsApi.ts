@@ -13,7 +13,7 @@ export const systemsService = {
         ).data;
     },
 
-    getRoots: async (step: number, limit?: number): Promise<SystemDocument[]> => {
+    getRoots: async (step?: number, limit?: number): Promise<SystemDocument[]> => {
         return (
             await apiClient.get<SystemDocument[]>(`${BASE_URL}/roots`, {
                 params: { step, limit },

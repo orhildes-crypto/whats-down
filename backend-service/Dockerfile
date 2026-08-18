@@ -4,6 +4,7 @@ FROM node:20-alpine AS build
 WORKDIR /app
 
 COPY package*.json ./
+COPY tsconfig.base.json ./
 COPY shared/package*.json ./shared/
 COPY backend-service/package*.json ./backend-service/
 

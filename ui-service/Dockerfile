@@ -5,6 +5,7 @@ WORKDIR /app
 
 # Copying workspace settings from the root and from ui-service/shared.
 COPY package*.json ./
+COPY tsconfig.base.json ./
 COPY shared/package*.json ./shared/
 COPY ui-service/package*.json ./ui-service/
 COPY backend-service/package*.json ./backend-service/

@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import env from 'env-var';
+import * as env from 'env-var';
 
 export const config = {
     isProduction: env.get('NODE_ENV').asString() === 'production',
