@@ -44,10 +44,6 @@ export const usersService = {
         ).data;
     },
 
-    refresh: async (): Promise<{ success: boolean }> => {
-        return (await apiClient.post<{ success: boolean }>(`${BASE_URL}/auth/refresh`)).data;
-    },
-
     changeRole: async (role: UserRole, userId: string): Promise<SafeUserDocument> => {
         return (
             await apiClient.put<SafeUserDocument>(`${BASE_URL}/${userId}/role`, {
