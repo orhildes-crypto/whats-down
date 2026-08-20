@@ -13,6 +13,7 @@
     "@whats-down/shared": "*",
     "dotenv": "^16.6.1",
     "env-var": "^7.4.1",
+    "uuid": "^14.0.2",
     "winston": "^3.8.2"
   },
   "devDependencies": {
