@@ -27,6 +27,12 @@ export class SelfDemotionError extends ServiceError {
     }
 }
 
+export class SystemDemotionError extends ServiceError {
+    constructor() {
+        super(StatusCodes.FORBIDDEN, 'You cannot demote a system user');
+    }
+}
+
 export class ReuseTokenAttackDetected extends ServiceError {
     constructor(userId: mongoose.Types.ObjectId) {
         super(StatusCodes.UNAUTHORIZED, `reuse token hash attack detected for user id ${userId}`)

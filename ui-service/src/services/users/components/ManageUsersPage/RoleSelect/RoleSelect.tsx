@@ -36,7 +36,9 @@ export const RoleSelect: React.FC<RoleSelectProps> = ({ value, onChange, disable
                 },
             }}
         >
-            {ROLES.map((role) => (
+            {ROLES
+            .filter((role) => role !== UserRole.SYSTEM)
+            .map((role) => (
                 <MenuItem key={role} value={role}>
                     {t(`roles.${role}`)}
                 </MenuItem>

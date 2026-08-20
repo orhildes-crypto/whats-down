@@ -1,4 +1,3 @@
-import { generateForest } from "./treeInitializer.js";
 import { MockSystem, MockSystemNode } from "./types.js";
 
 export const getLeavesOfRoot = (root: MockSystemNode): MockSystem[] => {
@@ -29,5 +28,3 @@ export const getLeavesOfForest = (roots: MockSystemNode[]): MockSystem[] => {
 
     return leaves;
 }
-
-console.log(getLeavesOfForest(generateForest()));

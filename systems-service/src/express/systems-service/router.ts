@@ -59,7 +59,7 @@ systemRouter.get(
 systemRouter.post(
     '/',
     authenticateMiddleware(config.jwt.secret),
-    authorizationMiddleware([UserRole.ADMIN, UserRole.EDITOR]),
+    authorizationMiddleware([UserRole.ADMIN, UserRole.EDITOR, UserRole.SYSTEM]),
     validateRequest(createOneRequestSchema),
     wrapController(SystemServiceController.createOne),
 );

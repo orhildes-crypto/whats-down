@@ -12,6 +12,7 @@ export enum UserRole {
     ADMIN = 'ADMIN',
     EDITOR = 'EDITOR',
     VIEWER = 'VIEWER',
+    SYSTEM = 'SYSTEM',
 }
 
 export type BaseUser = z.infer<typeof baseUserSchema>;
