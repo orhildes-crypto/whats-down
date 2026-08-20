@@ -15,11 +15,13 @@ const generateRandomTree = (levelsRemaining: number): MockSystemNode => {
 
     if (levelsRemaining <= 1) return root;
 
-    if (Math.random() < 0.5) {
+    const forceLeft = Math.random() < 0.5;
+
+    if (forceLeft || Math.random() < 0.5) {
         root.left = generateRandomTree(levelsRemaining - 1);
     }
 
-    if (Math.random() < 0.5) {
+    if (!forceLeft || Math.random() < 0.5) {
         root.right = generateRandomTree(levelsRemaining - 1);
     }
 
@@ -34,3 +36,5 @@ export const generateForest = (): MockSystemNode[] => {
     const tree2Depth4 = generateRandomTree(4);
     return [tree1Depth2, tree2Depth2, tree1Depth3, tree1Depth4, tree2Depth4];
 };
+
+
