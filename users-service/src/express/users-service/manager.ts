@@ -1,5 +1,5 @@
 import { config } from '@/config.js';
-import { DocumentNotFoundError, GoogleAuthError, PasswordIncorrectError, SelfDemotionError, SystemDemotionError } from '@/utils/errors.js';
+import { DocumentNotFoundError, GoogleAuthError, PasswordIncorrectError, SelfDemotionError, SystemDeleteError, SystemDemotionError } from '@/utils/errors.js';
 import { AuthenticationError, ConflictError, UserFilters, UserRole, config as sharedConf } from '@whats-down/shared';
 import bcrypt from 'bcryptjs';
 import { TokenPayload, OAuth2Client } from 'google-auth-library';
@@ -105,6 +105,10 @@ export class UsersServiceManager {
     };
 
     static deleteUser = async (id: string): Promise<SafeUserDocument> => {
+        const res = await UserModel.findById(id);
+        if (res?.role === UserRole.SYSTEM) {
+            throw new SystemDeleteError();
+        }
         const user = await UserModel.findByIdAndDelete(id).orFail(new DocumentNotFoundError(id)).lean().exec();
 
         return this.toSafeUser(user);

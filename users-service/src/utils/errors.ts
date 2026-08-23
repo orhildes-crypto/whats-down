@@ -33,6 +33,12 @@ export class SystemDemotionError extends ServiceError {
     }
 }
 
+export class SystemDeleteError extends ServiceError {
+    constructor() {
+        super(StatusCodes.FORBIDDEN, 'You cannot delete a system user');
+    }
+}
+
 export class ReuseTokenAttackDetected extends ServiceError {
     constructor(userId: mongoose.Types.ObjectId) {
         super(StatusCodes.UNAUTHORIZED, `reuse token hash attack detected for user id ${userId}`)
