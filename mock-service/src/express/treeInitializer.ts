@@ -1,31 +1,57 @@
 import type { MockSystemNode } from './types.js';
 import { MOCK_SYSTEM_NAMES } from './mockSystems.js';
 import { ObjectId } from 'bson';
+import { SystemStatus } from '@whats-down/shared';
 
-const generateRandomTree = (levelsRemaining: number, parentId: string | null): MockSystemNode => {
+const generateRandomTree = (levelsRemaining: number, parentId: string | null = null): MockSystemNode => {
     const randomName = MOCK_SYSTEM_NAMES[Math.floor(Math.random() * MOCK_SYSTEM_NAMES.length)];
 
     if (!randomName) {
         throw new Error('MOCK_SYSTEM_NAMES is empty');
     }
 
-    const root: MockSystemNode = {
-        system: { id: new ObjectId().toString(), name: randomName, parentId },
+    const currentId = new ObjectId().toString();
+
+    let leftChild: MockSystemNode | undefined;
+    let rightChild: MockSystemNode | undefined;
+
+    if (levelsRemaining > 1) {
+        const forceLeft = Math.random() < 0.5;
+
+        if (forceLeft || Math.random() < 0.5) {
+            leftChild = generateRandomTree(levelsRemaining - 1, currentId);
+        }
+
+        if (!forceLeft || Math.random() < 0.5) {
+            rightChild = generateRandomTree(levelsRemaining - 1, currentId);
+        }
+    }
+
+    const hasChildren = Boolean(leftChild || rightChild);
+
+    let status: SystemStatus;
+
+    if (!hasChildren) {
+        status = Math.random() < 0.5 ? SystemStatus.UP : SystemStatus.DOWN;
+    } else {
+        const isAnyChildDown =
+            leftChild?.system.status === SystemStatus.DOWN ||
+            rightChild?.system.status === SystemStatus.DOWN;
+
+        status = isAnyChildDown ? SystemStatus.DOWN : SystemStatus.UP;
+    }
+
+    return {
+        system: {
+            _id: currentId,
+            name: randomName,
+            parentId,
+            status,
+            hasChildren,
+        },
+        left: leftChild,
+        right: rightChild,
     };
-
-    if (levelsRemaining <= 1) return root;
-
-    const forceLeft = Math.random() < 0.5;
-
-    if (forceLeft || Math.random() < 0.5) {
-        root.left = generateRandomTree(levelsRemaining - 1, root.system.id);
-    }
-
-    if (!forceLeft || Math.random() < 0.5) {
-        root.right = generateRandomTree(levelsRemaining - 1, root.system.id);
-    }
-
-    return root;
 };
 
 export const generateForest = (): MockSystemNode[] => {

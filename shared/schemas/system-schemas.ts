@@ -18,6 +18,13 @@ export const createSystemBodySchema = systemRequiredFields.pick({ name: true, pa
     parentId: zodMongoObjectId.nullable(),
 });
 
+export const mockSystemSchema = systemRequiredFields.pick({ name: true, parentId: true, status: true, hasChildren: true }).extend({
+    parentId: zodMongoObjectId.nullable(),
+    _id: zodMongoObjectId,
+});
+
+export const createMockSystemsBodySchema = z.array(mockSystemSchema);
+
 export const systemFiltersSchema = systemRequiredFields
     .pick({ name: true, status: true, parentId: true, createdByUsername: true, hasChildren: true })
     .partial();

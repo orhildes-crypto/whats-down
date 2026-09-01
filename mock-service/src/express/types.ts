@@ -1,8 +1,5 @@
-export interface MockSystem {
-    id: string;
-    name: string;
-    parentId: string | null;
-}
+export { type MockSystem } from '@whats-down/shared';
+import { type MockSystem } from '@whats-down/shared';
 
 export interface MockTreeNode<T> {
     system: T;

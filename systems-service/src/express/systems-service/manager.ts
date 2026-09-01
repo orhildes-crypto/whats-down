@@ -1,6 +1,6 @@
 import { config } from '@/config.js';
 import { DocumentNotFoundError, SystemWithChildrenError } from '@/utils/errors.js';
-import { SystemFilters, SystemStatus, SystemStatusPriority } from '@whats-down/shared';
+import { MockSystemsPayload, SystemFilters, SystemStatus, SystemStatusPriority } from '@whats-down/shared';
 import mongoose, { PipelineStage } from 'mongoose';
 import { CreateSystemPayload, SystemDocument } from './interface.js';
 import { SystemModel } from './model.js';
@@ -129,6 +129,33 @@ export class SystemServiceManager {
         await Promise.all(tasks);
 
         return newSystem;
+    };
+
+    static createMany = async (
+        createMockSystemPayload: MockSystemsPayload,
+        createdBy: string,
+        createdByUsername: string,
+    ): Promise<SystemDocument[]> => {
+        const session = await mongoose.startSession();
+
+        try {
+            let createdSystems: SystemDocument[] = [];
+
+            await session.withTransaction(async () => {
+                createdSystems = await SystemModel.insertMany(
+                    createMockSystemPayload.map((system) => ({
+                        ...system,
+                        createdBy,
+                        createdByUsername,
+                    })),
+                    { session, ordered: true },
+                );
+            });
+
+            return createdSystems;
+        } finally {
+            await session.endSession();
+        }
     };
 
     static deleteOne = async (id: string): Promise<SystemDocument> => {

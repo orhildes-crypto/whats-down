@@ -11,6 +11,7 @@ import {
     editServiceRequestSchema,
     getRootsByQueryRequestSchema,
     getParentsByIdRequestSchema,
+    createManyRequestSchema,
 } from './validations.js';
 import { config } from '@/config.js';
 
@@ -62,6 +63,14 @@ systemRouter.post(
     authorizationMiddleware([UserRole.ADMIN, UserRole.EDITOR, UserRole.SYSTEM]),
     validateRequest(createOneRequestSchema),
     wrapController(SystemServiceController.createOne),
+);
+
+systemRouter.post(
+    '/many',
+    authenticateMiddleware(config.jwt.secret),
+    authorizationMiddleware([UserRole.SYSTEM]),
+    validateRequest(createManyRequestSchema),
+    wrapController(SystemServiceController.createMany),
 );
 
 systemRouter.put(
