@@ -92,8 +92,6 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role, onAddChild
 
     return (
         <Box onClick={() => navigate({ to: `/systems/${system._id}` })} sx={styles.cubeContainerStyle(statusStyle)}>
-            <Box sx={styles.statusBadgeStyle}>{system.status}</Box>
-
             <Box sx={{ marginTop: '25px', marginBottom: '6px' }}>
                 {isEditingName ? (
                     <TextField

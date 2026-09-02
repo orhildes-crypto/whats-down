@@ -36,19 +36,6 @@ export const cubeContainerStyle = (statusStyle: StatusColorSet): SxProps<Theme> 
     },
 });
 
-export const statusBadgeStyle: SxProps<Theme> = {
-    position: 'absolute',
-    top: '14px',
-    right: '14px',
-    fontSize: '0.9rem',
-    fontWeight: 700,
-    letterSpacing: '0.08em',
-    padding: '3px 9px',
-    borderRadius: '4px',
-    textTransform: 'uppercase',
-    color: colors.text.onLight,
-};
-
 export const editTextFieldStyle: SxProps<Theme> = {
     marginBottom: '6px',
     width: '100%',

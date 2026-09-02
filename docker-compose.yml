@@ -9,6 +9,16 @@ volumes:
     driver: local
 
 services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: whats-down-rabbitmq
+    restart: always
+    ports:
+      - '5672:5672' # AMQP protocol - זה מה שה-services שלך יתחברו אליו
+      - '15672:15672' # Management UI - נוח לדיבוג, לראות queues/messages בדפדפן
+    networks:
+      - whats-down-network
+
   mongo:
     image: mongo:7.0
     command: ['--replSet', 'rs0']
