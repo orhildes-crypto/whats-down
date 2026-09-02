@@ -19,7 +19,12 @@ export const getRootsByQueryRequestSchema = z.object({
 // GET /system-service/count
 export const getCountRequestSchema = z.object({
     body: z.object({}),
-    query: systemRequiredFields.partial(),
+    query: systemRequiredFields.partial().and(
+        z.object({
+            isRoot: z.enum(['true', 'false']).optional(),
+        }),
+    ),
+
     params: z.object({}),
 });
 

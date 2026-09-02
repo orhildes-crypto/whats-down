@@ -20,7 +20,7 @@ export const systemRouter = Router();
 systemRouter.get(
     '/',
     authenticateMiddleware(config.jwt.secret),
-    authorizationMiddleware([UserRole.ADMIN, UserRole.EDITOR, UserRole.VIEWER]),
+    authorizationMiddleware([UserRole.ADMIN, UserRole.EDITOR, UserRole.VIEWER, UserRole.SYSTEM]),
     validateRequest(getByQueryRequestSchema),
     wrapController(SystemServiceController.getByQuery),
 );
@@ -28,7 +28,7 @@ systemRouter.get(
 systemRouter.get(
     '/count',
     authenticateMiddleware(config.jwt.secret),
-    authorizationMiddleware([UserRole.ADMIN, UserRole.EDITOR, UserRole.VIEWER]),
+    authorizationMiddleware([UserRole.ADMIN, UserRole.EDITOR, UserRole.VIEWER, UserRole.SYSTEM]),
     validateRequest(getCountRequestSchema),
     wrapController(SystemServiceController.getCount),
 );

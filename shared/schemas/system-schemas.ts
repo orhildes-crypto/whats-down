@@ -5,7 +5,7 @@ import { SYSTEM_MIN_NAME_LENGTH, SYSTEM_MAX_NAME_LENGTH } from '../constants/sys
 
 export const systemRequiredFields = z.object({
     name: z.string().min(SYSTEM_MIN_NAME_LENGTH).max(SYSTEM_MAX_NAME_LENGTH),
-    parentId: zodMongoObjectId,
+    parentId: zodMongoObjectId.nullable(),
     createdBy: zodMongoObjectId,
     createdByUsername: z.string(),
     status: z.nativeEnum(SystemStatus).default(SystemStatus.UP),

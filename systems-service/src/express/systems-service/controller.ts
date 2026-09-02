@@ -28,6 +28,10 @@ export class SystemServiceController {
     };
 
     static getCount = async (req: TypedRequest<typeof getCountRequestSchema>, res: Response) => {
+        if (req.query.isRoot === 'true') {
+            req.query.parentId = null;
+        }
+
         res.json(await SystemServiceManager.getCount(req.query));
     };
 
