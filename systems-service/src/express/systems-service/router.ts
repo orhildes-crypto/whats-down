@@ -11,6 +11,7 @@ import {
     editServiceRequestSchema,
     getRootsByQueryRequestSchema,
     getParentsByIdRequestSchema,
+    createManyRequestSchema,
 } from './validations.js';
 import { config } from '@/config.js';
 
@@ -19,7 +20,7 @@ export const systemRouter = Router();
 systemRouter.get(
     '/',
     authenticateMiddleware(config.jwt.secret),
-    authorizationMiddleware([UserRole.ADMIN, UserRole.EDITOR, UserRole.VIEWER]),
+    authorizationMiddleware([UserRole.ADMIN, UserRole.EDITOR, UserRole.VIEWER, UserRole.SYSTEM]),
     validateRequest(getByQueryRequestSchema),
     wrapController(SystemServiceController.getByQuery),
 );
@@ -27,7 +28,7 @@ systemRouter.get(
 systemRouter.get(
     '/count',
     authenticateMiddleware(config.jwt.secret),
-    authorizationMiddleware([UserRole.ADMIN, UserRole.EDITOR, UserRole.VIEWER]),
+    authorizationMiddleware([UserRole.ADMIN, UserRole.EDITOR, UserRole.VIEWER, UserRole.SYSTEM]),
     validateRequest(getCountRequestSchema),
     wrapController(SystemServiceController.getCount),
 );
@@ -59,9 +60,17 @@ systemRouter.get(
 systemRouter.post(
     '/',
     authenticateMiddleware(config.jwt.secret),
-    authorizationMiddleware([UserRole.ADMIN, UserRole.EDITOR]),
+    authorizationMiddleware([UserRole.ADMIN, UserRole.EDITOR, UserRole.SYSTEM]),
     validateRequest(createOneRequestSchema),
     wrapController(SystemServiceController.createOne),
+);
+
+systemRouter.post(
+    '/many',
+    authenticateMiddleware(config.jwt.secret),
+    authorizationMiddleware([UserRole.SYSTEM]),
+    validateRequest(createManyRequestSchema),
+    wrapController(SystemServiceController.createMany),
 );
 
 systemRouter.put(

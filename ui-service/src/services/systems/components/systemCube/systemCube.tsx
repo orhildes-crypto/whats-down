@@ -8,7 +8,6 @@ import { SYSTEM_MAX_NAME_LENGTH, SYSTEM_MIN_NAME_LENGTH, SystemStatus, UserRole 
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DeleteSystemModal } from '../deleteSystemModal/deleteSystemModal';
-import { useChangeStatus } from './hooks/useChangeStatus';
 import { useRename } from './hooks/useRename';
 
 import * as styles from './systemCube.styles';
@@ -25,14 +24,12 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role, onAddChild
 
     const { t } = useTranslation('systemCube');
 
-    const { mutate: changeStatus, isPending: statusIsPending } = useChangeStatus();
     const { mutate: rename } = useRename();
 
     const [isEditingName, setIsEditingName] = useState(false);
     const [nameValue, setNameValue] = useState(system.name);
     const inputRef = useRef<HTMLInputElement>(null);
 
-    const isUp = system.status === SystemStatus.UP;
     const canEdit = role === UserRole.ADMIN || role === UserRole.EDITOR;
 
     const statusStyle = system.status === SystemStatus.UP ? styles.STATUS_COLORS.up : styles.STATUS_COLORS.down;
@@ -87,19 +84,6 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role, onAddChild
         }
     };
 
-    const handleStatusToggle = () => {
-        if (isEditingName) return;
-
-        if (system.hasChildren) {
-            navigate({ to: `/systems/${system._id}` });
-        } else {
-            if (!canEdit || statusIsPending) return;
-
-            const newStatus = isUp ? SystemStatus.DOWN : SystemStatus.UP;
-            changeStatus({ systemId: system._id, status: newStatus });
-        }
-    };
-
     const infoRows = [
         { label: t('creationTime'), value: formatDate(system.createdAt) },
         { label: t('statusUpdateTime'), value: formatDate(system.statusUpdatedAt) },
@@ -107,9 +91,7 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role, onAddChild
     ];
 
     return (
-        <Box onClick={handleStatusToggle} sx={styles.cubeContainerStyle(statusStyle)}>
-            <Box sx={styles.statusBadgeStyle}>{system.status}</Box>
-
+        <Box onClick={() => navigate({ to: `/systems/${system._id}` })} sx={styles.cubeContainerStyle(statusStyle)}>
             <Box sx={{ marginTop: '25px', marginBottom: '6px' }}>
                 {isEditingName ? (
                     <TextField

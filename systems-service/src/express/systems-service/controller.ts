@@ -10,9 +10,9 @@ import {
     changeStatusRequestSchema,
     getRootsByQueryRequestSchema,
     getParentsByIdRequestSchema,
+    createManyRequestSchema,
 } from './validations.js';
-import { TypedRequest } from '@whats-down/shared';
-
+import { SystemFilters, TypedRequest } from '@whats-down/shared';
 
 export class SystemServiceController {
     static getByQuery = async (req: TypedRequest<typeof getByQueryRequestSchema>, res: Response) => {
@@ -28,7 +28,15 @@ export class SystemServiceController {
     };
 
     static getCount = async (req: TypedRequest<typeof getCountRequestSchema>, res: Response) => {
-        res.json(await SystemServiceManager.getCount(req.query));
+        const { isRoot, ...restFilters } = req.query;
+
+        const filters: SystemFilters = { ...restFilters };
+
+        if (isRoot === 'true') {
+            filters.parentId = null;
+        }
+
+        res.json(await SystemServiceManager.getCount(filters));
     };
 
     static getById = async (req: TypedRequest<typeof getByIdRequestSchema>, res: Response) => {
@@ -41,8 +49,14 @@ export class SystemServiceController {
 
     static createOne = async (req: TypedRequest<typeof createOneRequestSchema>, res: Response) => {
         const { userId, username } = req.user!;
-        
+
         res.json(await SystemServiceManager.createOne(req.body, userId, username));
+    };
+
+    static createMany = async (req: TypedRequest<typeof createManyRequestSchema>, res: Response) => {
+        const { userId, username } = req.user!;
+
+        res.json(await SystemServiceManager.createMany(req.body, userId, username));
     };
 
     static renameSystem = async (req: TypedRequest<typeof editServiceRequestSchema>, res: Response) => {

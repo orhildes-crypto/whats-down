@@ -1,5 +1,5 @@
 import { config } from '@/config.js';
-import { DocumentNotFoundError, GoogleAuthError, PasswordIncorrectError, SelfDemotionError } from '@/utils/errors.js';
+import { DocumentNotFoundError, GoogleAuthError, PasswordIncorrectError, SelfDemotionError, SystemDeleteError, SystemDemotionError } from '@/utils/errors.js';
 import { AuthenticationError, ConflictError, UserFilters, UserRole, config as sharedConf } from '@whats-down/shared';
 import bcrypt from 'bcryptjs';
 import { TokenPayload, OAuth2Client } from 'google-auth-library';
@@ -22,7 +22,7 @@ export class UsersServiceManager {
             .lean()
             .exec();
 
-        return users.map(user => this.toSafeUser(user));
+        return users.map((user) => this.toSafeUser(user));
     };
 
     static createLocalUser = async (payload: CreateLocalUserPayload): Promise<SafeUserDocument> => {
@@ -74,8 +74,8 @@ export class UsersServiceManager {
         const user = await UserModel.findOne({ email: payload.email }).exec();
 
         if (!user) {
-        throw new AuthenticationError('No account found associated with this Google address. Please sign up first.');
-    }
+            throw new AuthenticationError('No account found associated with this Google address. Please sign up first.');
+        }
 
         if (!user.googleId) {
             user.googleId = payload.sub;
@@ -91,6 +91,11 @@ export class UsersServiceManager {
             throw new SelfDemotionError();
         }
 
+        const targetUser = await UserModel.findById(targetId);
+        if (targetUser?.role === UserRole.SYSTEM) {
+            throw new SystemDemotionError();
+        }
+
         const updatedUser = await UserModel.findByIdAndUpdate(targetId, { role }, { new: true })
             .orFail(new DocumentNotFoundError(targetId))
             .lean()
@@ -100,6 +105,10 @@ export class UsersServiceManager {
     };
 
     static deleteUser = async (id: string): Promise<SafeUserDocument> => {
+        const res = await UserModel.findById(id);
+        if (res?.role === UserRole.SYSTEM) {
+            throw new SystemDeleteError();
+        }
         const user = await UserModel.findByIdAndDelete(id).orFail(new DocumentNotFoundError(id)).lean().exec();
 
         return this.toSafeUser(user);
@@ -120,7 +129,9 @@ export class UsersServiceManager {
     };
 
     static generateJWTToken = (user: UserDocument): string => {
-        return jwt.sign({ userId: user._id, role: user.role, username: user.username }, sharedConf.jwt.secret, { expiresIn: sharedConf.jwt.expiresIn as SignOptions['expiresIn'] });
+        return jwt.sign({ userId: user._id, role: user.role, username: user.username }, sharedConf.jwt.secret, {
+            expiresIn: sharedConf.jwt.expiresIn as SignOptions['expiresIn'],
+        });
     };
 
     static toSafeUser = (user: UserDocument): SafeUserDocument => {

@@ -6,6 +6,7 @@
     "users-service",
     "backend-service",
     "ui-service",
+    "mock-service",
     "shared"
   ],
   "devDependencies": {
