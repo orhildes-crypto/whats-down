@@ -19,8 +19,9 @@ export type StatusColorSet = (typeof STATUS_COLORS)[keyof typeof STATUS_COLORS];
 export const cubeContainerStyle = (statusStyle: StatusColorSet): SxProps<Theme> => ({
     position: 'relative',
     borderRadius: '10px',
-    padding: '20px 15px 16px',
+    padding: '10px 15px 16px',
     display: 'flex',
+    justifyContent: 'space-between',
     flexDirection: 'column',
     minHeight: '200px',
     width: '100%',
@@ -64,6 +65,7 @@ export const titleTypographyStyle: SxProps<Theme> = {
     lineHeight: 1.3,
     color: colors.text.primary,
     wordBreak: 'break-word',
+    padding: '10px 0px',
 };
 
 export const infoTextStyle: SxProps<Theme> = {

@@ -43,5 +43,23 @@ export const createManySystems = async (payload: MockSystemsPayload): Promise<vo
 };
 
 export const getLeaves = async (): Promise<SystemDocument[]> => {
-    return request<SystemDocument[]>('/api/systems?hasChildren=false', { method: 'GET' });
+    const PAGE_SIZE = 100;
+    const MAX_ITERATIONS = 50;
+
+    let allLeaves: SystemDocument[] = [];
+    let step = 0;
+
+    while (step < MAX_ITERATIONS) {
+        const page = await request<SystemDocument[]>(`/api/systems?hasChildren=false&limit=${PAGE_SIZE}&step=${step}`, { method: 'GET' });
+
+        allLeaves = allLeaves.concat(page);
+
+        if (page.length < PAGE_SIZE) {
+            break;
+        }
+
+        step++;
+    }
+
+    return allLeaves;
 };
