@@ -19,7 +19,6 @@ export const createSystemBodySchema = systemRequiredFields.pick({ name: true, pa
 });
 
 export const mockSystemSchema = systemRequiredFields.pick({ name: true, parentId: true, status: true, hasChildren: true }).extend({
-    parentId: zodMongoObjectId.nullable(),
     _id: zodMongoObjectId,
 });
 
