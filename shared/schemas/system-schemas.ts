@@ -9,7 +9,7 @@ export const systemRequiredFields = z.object({
     createdBy: zodMongoObjectId,
     createdByUsername: z.string(),
     status: z.nativeEnum(SystemStatus).default(SystemStatus.UP),
-    hasChildren: z.coerce.boolean(),
+    hasChildren: z.preprocess((val) => (val === 'false' ? false : val === 'true' ? true : val), z.boolean()),
     createdAt: z.coerce.date(),
     statusUpdatedAt: z.coerce.date(),
 });

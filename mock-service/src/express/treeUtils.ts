@@ -1,4 +1,4 @@
-import { MockSystem, MockSystemNode } from "./types.js";
+import { MockSystem, MockSystemNode } from './types.js';
 
 export const getLeavesOfRoot = (root: MockSystemNode): MockSystem[] => {
     const leaves: MockSystem[] = [];
@@ -13,7 +13,7 @@ export const getLeavesOfRoot = (root: MockSystemNode): MockSystem[] => {
 
         traverse(systemNode.left);
         traverse(systemNode.right);
-    }
+    };
 
     traverse(root);
     return leaves;
@@ -22,9 +22,9 @@ export const getLeavesOfRoot = (root: MockSystemNode): MockSystem[] => {
 export const getLeavesOfForest = (roots: MockSystemNode[]): MockSystem[] => {
     const leaves: MockSystem[] = [];
 
-    roots.forEach(root => {
-        leaves.push(...getLeavesOfRoot(root))
-    })
+    roots.forEach((root) => {
+        leaves.push(...getLeavesOfRoot(root));
+    });
 
     return leaves;
-}
+};

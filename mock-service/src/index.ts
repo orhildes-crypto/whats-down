@@ -4,7 +4,7 @@ import { createManySystems, getLeaves, getRootsCount } from './express/httpClien
 import { generateForest } from './express/treeInitializer.js';
 import type { MockSystem, MockSystemNode } from './express/types.js';
 import { SystemStatus } from '@whats-down/shared';
-import { connectToRabbit, publishStatusUpdate } from './rabbitClient.js';
+import { connectToRabbit, publishStatusUpdate } from './rabbitmq/producer.js';
 
 const flattenForest = (roots: MockSystemNode[]): MockSystem[] => {
     let result: MockSystem[] = [];

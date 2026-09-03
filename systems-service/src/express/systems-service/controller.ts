@@ -12,7 +12,7 @@ import {
     getParentsByIdRequestSchema,
     createManyRequestSchema,
 } from './validations.js';
-import { TypedRequest } from '@whats-down/shared';
+import { SystemFilters, TypedRequest } from '@whats-down/shared';
 
 export class SystemServiceController {
     static getByQuery = async (req: TypedRequest<typeof getByQueryRequestSchema>, res: Response) => {
@@ -28,11 +28,15 @@ export class SystemServiceController {
     };
 
     static getCount = async (req: TypedRequest<typeof getCountRequestSchema>, res: Response) => {
-        if (req.query.isRoot === 'true') {
-            req.query.parentId = null;
+        const { isRoot, ...restFilters } = req.query;
+
+        const filters: SystemFilters = { ...restFilters };
+
+        if (isRoot === 'true') {
+            filters.parentId = null;
         }
 
-        res.json(await SystemServiceManager.getCount(req.query));
+        res.json(await SystemServiceManager.getCount(filters));
     };
 
     static getById = async (req: TypedRequest<typeof getByIdRequestSchema>, res: Response) => {

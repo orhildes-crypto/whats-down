@@ -1,8 +1,6 @@
 import amqp from 'amqplib';
 import { config } from '@/config.js';
-import { SystemStatus } from '@whats-down/shared';
-
-const QUEUE_NAME = 'system-status-updates';
+import { QUEUE_NAME, SystemStatus } from '@whats-down/shared';
 
 let channel: amqp.Channel | null = null;
 
