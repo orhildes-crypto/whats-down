@@ -14,8 +14,8 @@ services:
     container_name: whats-down-rabbitmq
     restart: always
     ports:
-      - '5672:5672' # AMQP protocol - זה מה שה-services שלך יתחברו אליו
-      - '15672:15672' # Management UI - נוח לדיבוג, לראות queues/messages בדפדפן
+      - '5672:5672'
+      - '15672:15672'
     networks:
       - whats-down-network
 
