@@ -37,7 +37,4 @@ COPY --from=build /app/mock-service/dist ./mock-service/dist
 
 WORKDIR /app/mock-service
 
-# אין endpoint HTTP נכנס למוק עצמו (הוא רק יוצא), אז אין EXPOSE כרגע -
-# תוסיף אם תחליט שאתה כן רוצה health-check endpoint
-
 CMD ["npm", "start"]
