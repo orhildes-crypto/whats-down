@@ -1,8 +1,10 @@
 import { config } from '@/config.js';
 import { login } from './express/authClient.js';
-import { createManySystems, getRootsCount } from './express/httpClient.js';
+import { createManySystems, getLeaves, getRootsCount } from './express/httpClient.js';
 import { generateForest } from './express/treeInitializer.js';
 import type { MockSystem, MockSystemNode } from './express/types.js';
+import { SystemStatus } from '@whats-down/shared';
+import { connectToRabbit, publishStatusUpdate } from './rabbitClient.js';
 
 const flattenForest = (roots: MockSystemNode[]): MockSystem[] => {
     let result: MockSystem[] = [];
@@ -35,14 +37,34 @@ const seedIfNeeded = async (): Promise<void> => {
     await createManySystems(flatSystems);
 };
 
+const runCycle = async (): Promise<void> => {
+    const leaves = await getLeaves();
+
+    leaves.forEach((leaf) => {
+        const status = Math.random() > 0.5 ? SystemStatus.DOWN : SystemStatus.UP;
+        publishStatusUpdate(leaf._id, status);
+    });
+};
+
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 const main = async (): Promise<void> => {
     console.log('mock-service starting...');
     console.log(`config: interval=${config.intervalMs}ms`);
 
     await login();
+    await connectToRabbit();
     await seedIfNeeded();
 
-    // TODO: כאן יתווסף בהמשך ה-setInterval/cron loop
+    while (true) {
+        try {
+            await runCycle();
+        } catch (error) {
+            console.error('Cycle failed:', error);
+        }
+
+        await delay(config.intervalMs);
+    }
 };
 
 main().catch((error) => {

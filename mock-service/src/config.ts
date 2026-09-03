@@ -11,4 +11,7 @@ export const config = {
         username: env.get('MOCK_USER_USERNAME').required().asString(),
         password: env.get('MOCK_USER_PASSWORD').required().asString(),
     },
+    rabbitmq: {
+        url: env.get('RABBITMQ_URL').required().asString(),
+    },
 };
