@@ -9,6 +9,7 @@ export const config = {
     mongo: {
         uri: env.get('MONGO_URI').default('mongodb://localhost').required().asString(),
         systemServiceCollectionName: env.get('SYSTEM_SERVICE_COLLECTION_NAME').default('systems-service').required().asString(),
+        systemEventsCollectionName: env.get('SYSTEM_EVENTS_COLLECTION_NAME').default('system-events').required().asString(),
     },
     jwt: {
         secret: sharedConf.isProduction
