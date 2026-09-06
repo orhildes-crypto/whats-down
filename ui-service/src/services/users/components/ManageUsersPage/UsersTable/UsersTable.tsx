@@ -42,19 +42,25 @@ export const UsersTable: React.FC = () => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {users.map((user) => {
-                        const isCurrentUser = user._id === currentUser?._id;
+                    {users
+                        .filter((user) => user.role !== UserRole.SYSTEM)
+                        .map((user) => {
+                            const isCurrentUser = user._id === currentUser?._id;
 
-                        return (
-                            <TableRow key={user._id} sx={isCurrentUser ? styles.currentUserRowStyle : styles.bodyRowStyle}>
-                                <TableCell>{user.username}</TableCell>
-                                <TableCell sx={styles.secondaryCellStyle}>{user.email}</TableCell>
-                                <TableCell>
-                                    <RoleSelect value={user.role} disabled={isCurrentUser} onChange={(role) => handleRoleChange(user._id, role)} />
-                                </TableCell>
-                            </TableRow>
-                        );
-                    })}
+                            return (
+                                <TableRow key={user._id} sx={isCurrentUser ? styles.currentUserRowStyle : styles.bodyRowStyle}>
+                                    <TableCell>{user.username}</TableCell>
+                                    <TableCell sx={styles.secondaryCellStyle}>{user.email}</TableCell>
+                                    <TableCell>
+                                        <RoleSelect
+                                            value={user.role}
+                                            disabled={isCurrentUser}
+                                            onChange={(role) => handleRoleChange(user._id, role)}
+                                        />
+                                    </TableCell>
+                                </TableRow>
+                            );
+                        })}
                 </TableBody>
             </Table>
         </TableContainer>

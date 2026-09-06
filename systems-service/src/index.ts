@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import { config } from './config.js';
 import { Server } from './express/server.js';
 import { logger } from './utils/logger/index.js';
+import { startStatusUpdateConsumer } from './rabbitmq/consumer.js';
 
 const { mongo, service } = config;
 
@@ -22,6 +23,8 @@ const main = async () => {
     await server.start();
 
     logger.info(`Server started on port: ${service.port}`);
+
+    await startStatusUpdateConsumer();
 };
 
 main().catch(logger.error);

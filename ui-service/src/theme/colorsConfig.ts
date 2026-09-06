@@ -18,7 +18,7 @@ export const colors = {
         onLight: '#000000',
         onDark: '#ffffff',
         muted: '#9e9e9e',
-        empty: '#8b93a1',
+        empty: '#ffffff',
     },
 
     background: {
@@ -63,7 +63,6 @@ export const colors = {
         muiSelect: {
             border: '#75757c',
             borderHover: '#3f3f46',
-            
-        }
+        },
     },
 } as const;

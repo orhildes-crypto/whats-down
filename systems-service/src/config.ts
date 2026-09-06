@@ -11,7 +11,7 @@ export const config = {
         systemServiceCollectionName: env.get('SYSTEM_SERVICE_COLLECTION_NAME').default('systems-service').required().asString(),
     },
     jwt: {
-        secret: sharedConf.isProduction 
+        secret: sharedConf.isProduction
             ? env.get('JWT_SECRET').required().asString()
             : env.get('JWT_SECRET').default('local-dev-secret-key-123').asString(),
     },
@@ -20,5 +20,8 @@ export const config = {
     },
     systems: {
         maxParentsDepth: env.get('SYSTEMS_MAX_PARENTS_DEPTH').default(20).asIntPositive(),
+    },
+    rabbitmq: {
+        url: env.get('RABBITMQ_URL').required().asString(),
     },
 };

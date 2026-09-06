@@ -1,5 +1,5 @@
 import { zodMongoObjectId } from '@whats-down/shared';
-import { createSystemBodySchema, systemRequiredFields, systemQueryParamsSchema } from '@whats-down/shared/common';
+import { createSystemBodySchema, systemRequiredFields, systemQueryParamsSchema, createMockSystemsBodySchema } from '@whats-down/shared';
 import { z } from 'zod';
 
 // GET /system-service
@@ -19,7 +19,12 @@ export const getRootsByQueryRequestSchema = z.object({
 // GET /system-service/count
 export const getCountRequestSchema = z.object({
     body: z.object({}),
-    query: systemRequiredFields.partial(),
+    query: systemRequiredFields.partial().and(
+        z.object({
+            isRoot: z.enum(['true', 'false']).optional(),
+        }),
+    ),
+
     params: z.object({}),
 });
 
@@ -44,6 +49,13 @@ export const getParentsByIdRequestSchema = z.object({
 // POST /system-service
 export const createOneRequestSchema = z.object({
     body: createSystemBodySchema,
+    query: z.object({}),
+    params: z.object({}),
+});
+
+// POST /system-service/many
+export const createManyRequestSchema = z.object({
+    body: createMockSystemsBodySchema,
     query: z.object({}),
     params: z.object({}),
 });
