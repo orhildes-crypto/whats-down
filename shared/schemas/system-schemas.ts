@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { SystemStatus } from '../interfaces/systemInterfaces.js';
+import { SystemStatus } from '../interfaces/system-interfaces.js';
 import { zodMongoObjectId } from '../zod.js';
 import { SYSTEM_MIN_NAME_LENGTH, SYSTEM_MAX_NAME_LENGTH } from '../constants/systemConstants.js';
 
