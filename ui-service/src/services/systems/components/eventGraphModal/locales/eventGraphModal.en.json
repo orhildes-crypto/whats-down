@@ -1,0 +1,20 @@
+{
+  "systemEvents": {
+    "title": "Event History for {{systemName}}",
+    "selectRangeLabel": "Time Range",
+    "ranges": {
+      "5m": "Last 5 minutes",
+      "30m": "Last 30 minutes",
+      "1h": "Last hour",
+      "24h": "Last 24 hours"
+    },
+    "noData": "No events found for the selected time range",
+    "errorLoading": "An error occurred while loading system events",
+    "eventsFoundPlaceholder": "Found {{count}} events"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "close": "Close"
+  }
+}

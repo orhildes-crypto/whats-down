@@ -12,6 +12,7 @@ import { useRename } from './hooks/useRename';
 
 import * as styles from './systemCube.styles';
 import { router } from '@/shared/router';
+import { EventGraphModal } from '../eventGraphModal/eventGraphModal';
 
 export interface SystemCubeProps {
     system: SystemDocument;
@@ -189,6 +190,7 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role, onAddChild
             </Box>
 
             <DeleteSystemModal isOpen={isDeleteModalOpen} onClose={closeDeleteModal} system={system} />
+            <EventGraphModal isOpen={isEventGraphModalOpen} onClose={closeEventGraphModal} system={system} />
         </Box>
     );
 };

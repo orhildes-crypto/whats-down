@@ -1,5 +1,6 @@
 export * from './constants/rabbitmqConstants.js';
 export * from './constants/systemConstants.js';
+export * from './constants/systemEventConstants.js';
 export * from './constants/userConstants.js';
 export * from './interfaces/system-events-interfaces.js';
 export * from './interfaces/system-interfaces.js';
