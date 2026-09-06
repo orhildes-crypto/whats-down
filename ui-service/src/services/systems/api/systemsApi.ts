@@ -1,10 +1,26 @@
 import { apiClient } from '@/shared/api/apiClient';
-import type { CreateSystemPayload, SystemDocument, SystemFilters, SystemQueryParams } from '@/shared/types/system-interfaces';
+import type {
+    CreateSystemPayload,
+    SystemDocument,
+    SystemFilters,
+    SystemQueryParams,
+    SystemEventsFilters,
+    SystemEventDocument,
+} from '@/shared/types/system-interfaces';
 import type { SystemStatus } from '@whats-down/shared/common';
 
 const BASE_URL = '/systems';
+const EVENTS_URL = `${BASE_URL}/events`;
 
 export const systemsService = {
+    getEventsByTime: async (params: SystemEventsFilters): Promise<SystemEventDocument[]> => {
+        return (
+            await apiClient.get<SystemEventDocument[]>(EVENTS_URL, {
+                params,
+            })
+        ).data;
+    },
+
     getByQuery: async (params: SystemQueryParams): Promise<SystemDocument[]> => {
         return (
             await apiClient.get<SystemDocument[]>(BASE_URL, {
@@ -13,7 +29,7 @@ export const systemsService = {
         ).data;
     },
 
-    getRoots: async (step: number, limit?: number): Promise<SystemDocument[]> => {
+    getRoots: async (step?: number, limit?: number | null): Promise<SystemDocument[]> => {
         return (
             await apiClient.get<SystemDocument[]>(`${BASE_URL}/roots`, {
                 params: { step, limit },
