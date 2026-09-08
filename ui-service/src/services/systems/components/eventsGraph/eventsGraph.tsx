@@ -1,7 +1,7 @@
 import { transformEventsToChartData } from '@/shared/utils/eventsToChartData';
 import { Box } from '@mui/material';
 import type { SystemEventDocument } from '@whats-down/shared/common';
-import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import * as styles from './eventsGraph.styles';
 
 type EventsChartProps = {
@@ -25,7 +25,7 @@ export const EventsChart = ({ events, rangeEnd }: EventsChartProps) => {
     return (
         <Box sx={styles.chartContainerStyle}>
             <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={data} margin={{ top: 10, right: 20, left: 10, bottom: 0 }}>
+                <LineChart data={data} margin={{ top: 10, right: 20, left: 50, bottom: 0 }}>
                     <XAxis
                         dataKey="time"
                         type="number"
@@ -47,7 +47,7 @@ export const EventsChart = ({ events, rangeEnd }: EventsChartProps) => {
                         stroke={styles.chartColors.axis}
                         axisLine={{ stroke: styles.chartColors.grid }}
                         tickLine={{ stroke: styles.chartColors.grid }}
-                        tickMargin={45}
+                        tickMargin={50}
                         width={60}
                     />
 

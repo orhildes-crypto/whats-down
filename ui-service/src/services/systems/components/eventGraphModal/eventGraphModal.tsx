@@ -48,7 +48,7 @@ export const EventGraphModal = ({ isOpen, onClose, system }: EventGraphModalProp
         isError,
     } = useSystemEvents(
         {
-            systemId: system?._id ?? '',
+            systemId: system._id,
             start: dateRange?.start ?? '',
             end: dateRange?.end ?? 'now',
         },
@@ -67,7 +67,7 @@ export const EventGraphModal = ({ isOpen, onClose, system }: EventGraphModalProp
     const hasEvents = eventsData && eventsData.length > 0;
 
     return (
-        <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="md" onClick={(e) => e.stopPropagation()}>
+        <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="xl" onClick={(e) => e.stopPropagation()}>
             <DialogTitle sx={{ m: 0, p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Typography variant="h6" component="div">
                     {t('systemEvents.title', { systemName: system.name })}

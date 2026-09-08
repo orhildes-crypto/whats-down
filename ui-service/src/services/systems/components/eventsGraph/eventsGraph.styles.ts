@@ -21,7 +21,7 @@ export const chartColors = {
 };
 
 export const axisTickStyle = {
-    fontSize: 12,
+    fontSize: 15,
     fill: chartColors.axis,
 };
 
