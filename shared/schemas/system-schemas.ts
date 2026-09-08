@@ -6,6 +6,7 @@ import { SYSTEM_MIN_NAME_LENGTH, SYSTEM_MAX_NAME_LENGTH } from '../constants/sys
 export const systemEventSchema = z.object({
     status: z.nativeEnum(SystemStatus),
     systemId: zodMongoObjectId,
+    createdAt: z.coerce.date(),
 });
 
 export const systemRequiredFields = z.object({

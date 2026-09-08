@@ -2,7 +2,7 @@ import { config } from '@/config.js';
 import { DocumentNotFoundError, SystemWithChildrenError } from '@/utils/errors.js';
 import { MockSystemsPayload, SystemFilters, SystemStatus, SystemStatusPriority } from '@whats-down/shared';
 import mongoose, { PipelineStage } from 'mongoose';
-import { CreateSystemPayload, SystemDocument } from './interface.js';
+import { CreateSystemPayload, StatusUpdateResult, SystemDocument } from './interface.js';
 import { SystemModel } from './model.js';
 import { SystemEventModel } from './system-events/model.js';
 
@@ -181,7 +181,7 @@ export class SystemServiceManager {
         return await SystemModel.findByIdAndUpdate(id, { name }, { new: true }).orFail(new DocumentNotFoundError(id)).lean().exec();
     };
 
-    private static updateStatusWithEvent = async (systemId: string, status: SystemStatus, enforceLeaf = false): Promise<SystemDocument> => {
+    private static updateStatusWithEvent = async (systemId: string, status: SystemStatus, enforceLeaf = false): Promise<StatusUpdateResult> => {
         const session = await mongoose.startSession();
         session.startTransaction();
 
@@ -192,13 +192,18 @@ export class SystemServiceManager {
                 throw new SystemWithChildrenError(systemId);
             }
 
+            if (system.status === status) {
+                await session.commitTransaction();
+                return { system: system.toObject(), changed: false };
+            }
+
             system.set(buildStatusUpdate(status));
             const updatedSystem = await system.save({ session });
 
             await SystemEventModel.create([{ systemId, status }], { session });
 
             await session.commitTransaction();
-            return updatedSystem.toObject();
+            return { system: updatedSystem.toObject(), changed: true };
         } catch (error) {
             await session.abortTransaction();
             throw error;
@@ -208,9 +213,11 @@ export class SystemServiceManager {
     };
 
     static changeStatus = async (id: string, status: SystemStatus): Promise<SystemDocument> => {
-        const updated = await this.updateStatusWithEvent(id, status, true);
+        const { system: updated, changed } = await this.updateStatusWithEvent(id, status, true);
 
-        await this.updateParentsStatus(updated.parentId ? updated.parentId.toString() : null, status);
+        if (changed) {
+            await this.updateParentsStatus(updated.parentId ? updated.parentId.toString() : null, status);
+        }
 
         return updated;
     };

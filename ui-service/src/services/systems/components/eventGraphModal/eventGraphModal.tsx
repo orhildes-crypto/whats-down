@@ -22,6 +22,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import { useSystemEvents } from '../systemCube/hooks/useSystemEvents';
 import * as styles from './eventGraphModal.styles';
+import { EventsChart } from '../eventsGraph/eventsGraph';
 
 type EventGraphModalProps = {
     isOpen: boolean;
@@ -109,17 +110,12 @@ export const EventGraphModal = ({ isOpen, onClose, system }: EventGraphModalProp
 
                     {!isLoading && !isError && !hasEvents && <Typography color="text.secondary">{t('systemEvents.noData')}</Typography>}
 
-                    {!isLoading && !isError && hasEvents && (
-                        <Box sx={{ width: '100%', textAlign: 'center' }}>
-                            {/* TODO [שלב 2]: להחליף את ה-Placeholder ברכיב ה-Graph (Recharts / Chart) */}
-                            <Typography color="text.primary">{t('systemEvents.eventsFoundPlaceholder', { count: eventsData.length })}</Typography>
-                        </Box>
-                    )}
+                    {!isLoading && !isError && hasEvents && eventsData && <EventsChart events={eventsData} rangeEnd={new Date()} />}
                 </Box>
             </DialogContent>
 
-            <DialogActions>
-                <Button onClick={handleClose} color="primary">
+            <DialogActions sx={{ justifyContent: 'flex-start', p: 2 }}>
+                <Button onClick={handleClose} sx={styles.closeButtonStyle}>
                     {t('common.close')}
                 </Button>
             </DialogActions>

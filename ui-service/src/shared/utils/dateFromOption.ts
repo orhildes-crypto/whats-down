@@ -4,6 +4,7 @@ const RANGE_TO_MS: Record<TimeRangeOption, number> = {
     [TimeRangeOption.FIVE_MINUTES]: 5 * 60 * 1000,
     [TimeRangeOption.HALF_HOUR]: 30 * 60 * 1000,
     [TimeRangeOption.ONE_HOUR]: 60 * 60 * 1000,
+    [TimeRangeOption.TEN_HOURS]: 10 * 60 * 60 * 1000,
     [TimeRangeOption.TWENTY_FOUR_HOURS]: 24 * 60 * 60 * 1000,
 };
 
