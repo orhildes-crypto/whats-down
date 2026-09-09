@@ -166,10 +166,17 @@ export class SystemServiceManager {
 
         const parentIdStr = deletedSystem.parentId ? deletedSystem.parentId.toString() : null;
 
-        const tasks: Promise<unknown>[] = [this.updateParentsStatus(parentIdStr, SystemStatus.UP), this.updateParentHasChildren(parentIdStr)];
+        const tasks: Promise<unknown>[] = [
+            this.updateParentsStatus(parentIdStr, SystemStatus.UP),
+            this.updateParentHasChildren(parentIdStr),
+            SystemEventModel.deleteMany({ systemId: id }).exec(),
+        ];
 
         if (descendantIds.length > 0) {
             tasks.push(SystemModel.deleteMany({ _id: { $in: descendantIds } }).exec());
+
+            const descendantIdsInString = descendantIds.map((descendantId) => descendantId.toString());
+            tasks.push(SystemEventModel.deleteMany({ systemId: { $in: descendantIdsInString } }).exec());
         }
 
         await Promise.all(tasks);
