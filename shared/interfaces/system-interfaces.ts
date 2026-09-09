@@ -6,6 +6,7 @@ import {
     systemQueryParamsSchema,
     createMockSystemsBodySchema,
     mockSystemSchema,
+    systemEventSchema,
 } from '../schemas/system-schemas.js';
 
 export enum SystemStatus {
@@ -17,6 +18,12 @@ export const SystemStatusPriority: Record<SystemStatus, number> = {
     [SystemStatus.DOWN]: 0,
     [SystemStatus.UP]: 1,
 };
+
+export type SystemEvent = z.infer<typeof systemEventSchema>;
+
+export interface SystemEventDocument extends SystemEvent {
+    _id: string;
+}
 
 export type SystemFilters = z.infer<typeof systemFiltersSchema>;
 export type SystemQueryParams = z.input<typeof systemQueryParamsSchema>;

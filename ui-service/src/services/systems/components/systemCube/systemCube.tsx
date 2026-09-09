@@ -12,6 +12,7 @@ import { useRename } from './hooks/useRename';
 
 import * as styles from './systemCube.styles';
 import { router } from '@/shared/router';
+import { EventGraphModal } from '../eventGraphModal/eventGraphModal';
 
 export interface SystemCubeProps {
     system: SystemDocument;
@@ -35,6 +36,7 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role, onAddChild
     const statusStyle = system.status === SystemStatus.UP ? styles.STATUS_COLORS.up : styles.STATUS_COLORS.down;
 
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [isEventGraphModalOpen, setIsEventGraphModalOpen] = useState(false);
 
     const openDeleteModal = () => {
         setIsDeleteModalOpen(true);
@@ -42,6 +44,14 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role, onAddChild
 
     const closeDeleteModal = () => {
         setIsDeleteModalOpen(false);
+    };
+
+    const openEventGraphModal = () => {
+        setIsEventGraphModalOpen(true);
+    };
+
+    const closeEventGraphModal = () => {
+        setIsEventGraphModalOpen(false);
     };
 
     useEffect(() => {
@@ -84,6 +94,16 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role, onAddChild
         }
     };
 
+    const handleStatusToggle = () => {
+        if (isEditingName) return;
+
+        if (system.hasChildren) {
+            navigate({ to: `/systems/${system._id}` });
+        } else {
+            openEventGraphModal();
+        }
+    };
+
     const infoRows = [
         { label: t('creationTime'), value: formatDate(system.createdAt) },
         { label: t('statusUpdateTime'), value: formatDate(system.statusUpdatedAt) },
@@ -91,7 +111,7 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role, onAddChild
     ];
 
     return (
-        <Box onClick={() => navigate({ to: `/systems/${system._id}` })} sx={styles.cubeContainerStyle(statusStyle)}>
+        <Box onClick={() => handleStatusToggle()} sx={styles.cubeContainerStyle(statusStyle)}>
             <Box sx={{ marginTop: '25px', marginBottom: '6px' }}>
                 {isEditingName ? (
                     <TextField
@@ -170,6 +190,7 @@ export const SystemCube: React.FC<SystemCubeProps> = ({ system, role, onAddChild
             </Box>
 
             <DeleteSystemModal isOpen={isDeleteModalOpen} onClose={closeDeleteModal} system={system} />
+            <EventGraphModal isOpen={isEventGraphModalOpen} onClose={closeEventGraphModal} system={system} />
         </Box>
     );
 };
