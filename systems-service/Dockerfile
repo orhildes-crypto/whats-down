@@ -6,6 +6,7 @@ WORKDIR /app
 # copying workspace settings from the root and from systems-service
 COPY package*.json ./
 COPY shared/package*.json ./shared/
+COPY tsconfig.base.json ./
 COPY systems-service/package*.json ./systems-service/
 
 # run npm ci to install dependencies for all workspaces

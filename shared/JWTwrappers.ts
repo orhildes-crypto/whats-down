@@ -1,4 +1,4 @@
-import jwt, { SignOptions } from 'jsonwebtoken';
+import * as jwt from 'jsonwebtoken';
 import { AuthenticationError, AuthorizationError, DeveloperError } from './errors.js';
 import { NextFunction, Response, Request } from 'express';
 import { UserRole } from './index.js';
@@ -41,7 +41,7 @@ export const authenticateMiddleware = (secret: string) => {
                         username: verified.username,
                     },
                     secret,
-                    { expiresIn: config.jwt.expiresIn as SignOptions['expiresIn'] }
+                    { expiresIn: config.jwt.expiresIn as jwt.SignOptions['expiresIn'] }
                 );
 
                 setAuthCookie(res, newToken);
