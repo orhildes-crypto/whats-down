@@ -4,6 +4,8 @@ import {
     createSystemBodySchema,
     systemFiltersSchema,
     systemQueryParamsSchema,
+    createMockSystemsBodySchema,
+    mockSystemSchema,
 } from '../schemas/system-schemas.js';
 
 export enum SystemStatus {
@@ -32,3 +34,6 @@ export interface System extends Omit<BaseSystemFromSchema, 'parentId' | 'created
 export interface SystemDocument extends System {
     _id: string;
 }
+
+export type MockSystem = z.infer<typeof mockSystemSchema>;
+export type MockSystemsPayload = z.infer<typeof createMockSystemsBodySchema>;

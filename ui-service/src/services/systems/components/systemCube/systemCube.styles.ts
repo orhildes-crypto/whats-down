@@ -19,8 +19,9 @@ export type StatusColorSet = (typeof STATUS_COLORS)[keyof typeof STATUS_COLORS];
 export const cubeContainerStyle = (statusStyle: StatusColorSet): SxProps<Theme> => ({
     position: 'relative',
     borderRadius: '10px',
-    padding: '20px 15px 16px',
+    padding: '10px 15px 16px',
     display: 'flex',
+    justifyContent: 'space-between',
     flexDirection: 'column',
     minHeight: '200px',
     width: '100%',
@@ -35,19 +36,6 @@ export const cubeContainerStyle = (statusStyle: StatusColorSet): SxProps<Theme> 
         transform: 'translateY(-2px)',
     },
 });
-
-export const statusBadgeStyle: SxProps<Theme> = {
-    position: 'absolute',
-    top: '14px',
-    right: '14px',
-    fontSize: '0.9rem',
-    fontWeight: 700,
-    letterSpacing: '0.08em',
-    padding: '3px 9px',
-    borderRadius: '4px',
-    textTransform: 'uppercase',
-    color: colors.text.onLight,
-};
 
 export const editTextFieldStyle: SxProps<Theme> = {
     marginBottom: '6px',
@@ -77,6 +65,7 @@ export const titleTypographyStyle: SxProps<Theme> = {
     lineHeight: 1.3,
     color: colors.text.primary,
     wordBreak: 'break-word',
+    padding: '10px 0px',
 };
 
 export const infoTextStyle: SxProps<Theme> = {
