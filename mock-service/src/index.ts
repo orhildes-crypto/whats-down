@@ -2,27 +2,9 @@ import { config } from '@/config.js';
 import { login } from './express/authClient.js';
 import { createManySystems, getLeaves, getRootsCount } from './express/httpClient.js';
 import { generateForest } from './express/treeInitializer.js';
-import type { MockSystem, MockSystemNode } from './express/types.js';
+import type { MockSystem } from './express/types.js';
 import { SystemStatus } from '@whats-down/shared';
 import { connectToRabbit, publishStatusUpdate } from './rabbitmq/producer.js';
-
-const flattenForest = (roots: MockSystemNode[]): MockSystem[] => {
-    let result: MockSystem[] = [];
-
-    roots.forEach((root) => {
-        const queue: MockSystemNode[] = [root];
-
-        while (queue.length > 0) {
-            const current = queue.shift()!;
-            result.push(current.system);
-
-            if (current.left) queue.push(current.left);
-            if (current.right) queue.push(current.right);
-        }
-    });
-
-    return result;
-};
 
 const seedIfNeeded = async (): Promise<void> => {
     const rootsCount = await getRootsCount();
@@ -31,10 +13,9 @@ const seedIfNeeded = async (): Promise<void> => {
         return;
     }
 
-    const forest = generateForest();
-    const flatSystems = flattenForest(forest);
+    const forest: MockSystem[] = generateForest();
 
-    await createManySystems(flatSystems);
+    await createManySystems(forest);
 };
 
 const runCycle = async (): Promise<void> => {
@@ -46,8 +27,6 @@ const runCycle = async (): Promise<void> => {
     });
 };
 
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
 const main = async (): Promise<void> => {
     console.log('mock-service starting...');
     console.log(`config: interval=${config.intervalMs}ms`);
@@ -56,15 +35,13 @@ const main = async (): Promise<void> => {
     await connectToRabbit();
     await seedIfNeeded();
 
-    while (true) {
+    setInterval(async () => {
         try {
             await runCycle();
         } catch (error) {
-            console.error('Cycle failed:', error);
+            console.error('Error during mock-service cycle:', error);
         }
-
-        await delay(config.intervalMs);
-    }
+    }, config.intervalMs);
 };
 
 main().catch((error) => {

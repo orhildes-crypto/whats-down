@@ -10,6 +10,7 @@
     "build": "tsc && tsc-alias"
   },
   "dependencies": {
+    "@faker-js/faker": "^10.6.0",
     "@whats-down/shared": "*",
     "amqplib": "^2.0.1",
     "dotenv": "^16.6.1",

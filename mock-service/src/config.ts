@@ -14,4 +14,5 @@ export const config = {
     rabbitmq: {
         url: env.get('RABBITMQ_URL').required().asString(),
     },
+    fakerSeedAmount: env.get('FAKER_SEED').default(123).asIntPositive(),
 };
