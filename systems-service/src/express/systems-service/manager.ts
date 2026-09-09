@@ -2,8 +2,9 @@ import { config } from '@/config.js';
 import { DocumentNotFoundError, SystemWithChildrenError } from '@/utils/errors.js';
 import { MockSystemsPayload, SystemFilters, SystemStatus, SystemStatusPriority } from '@whats-down/shared';
 import mongoose, { PipelineStage } from 'mongoose';
-import { CreateSystemPayload, SystemDocument } from './interface.js';
+import { CreateSystemPayload, StatusUpdateResult, SystemDocument } from './interface.js';
 import { SystemModel } from './model.js';
+import { SystemEventModel } from './system-events/model.js';
 
 export class SystemServiceManager {
     static getByQuery = async (query: SystemFilters, step: number, limit?: number): Promise<SystemDocument[]> => {
@@ -165,10 +166,17 @@ export class SystemServiceManager {
 
         const parentIdStr = deletedSystem.parentId ? deletedSystem.parentId.toString() : null;
 
-        const tasks: Promise<unknown>[] = [this.updateParentsStatus(parentIdStr, SystemStatus.UP), this.updateParentHasChildren(parentIdStr)];
+        const tasks: Promise<unknown>[] = [
+            this.updateParentsStatus(parentIdStr, SystemStatus.UP),
+            this.updateParentHasChildren(parentIdStr),
+            SystemEventModel.deleteMany({ systemId: id }).exec(),
+        ];
 
         if (descendantIds.length > 0) {
             tasks.push(SystemModel.deleteMany({ _id: { $in: descendantIds } }).exec());
+
+            const descendantIdsInString = descendantIds.map((descendantId) => descendantId.toString());
+            tasks.push(SystemEventModel.deleteMany({ systemId: { $in: descendantIdsInString } }).exec());
         }
 
         await Promise.all(tasks);
@@ -180,19 +188,45 @@ export class SystemServiceManager {
         return await SystemModel.findByIdAndUpdate(id, { name }, { new: true }).orFail(new DocumentNotFoundError(id)).lean().exec();
     };
 
-    static changeStatus = async (id: string, status: SystemStatus): Promise<SystemDocument> => {
-        const system = await SystemModel.findById(id).orFail(new DocumentNotFoundError(id)).exec();
+    private static updateStatusWithEvent = async (systemId: string, status: SystemStatus, enforceLeaf = false): Promise<StatusUpdateResult> => {
+        const session = await mongoose.startSession();
+        session.startTransaction();
 
-        if (system.hasChildren) {
-            throw new SystemWithChildrenError(id);
+        try {
+            const system = await SystemModel.findById(systemId).session(session).orFail(new DocumentNotFoundError(systemId)).exec();
+
+            if (enforceLeaf && system.hasChildren) {
+                throw new SystemWithChildrenError(systemId);
+            }
+
+            if (system.status === status) {
+                await session.commitTransaction();
+                return { system: system.toObject(), changed: false };
+            }
+
+            system.set(buildStatusUpdate(status));
+            const updatedSystem = await system.save({ session });
+
+            await SystemEventModel.create([{ systemId, status }], { session });
+
+            await session.commitTransaction();
+            return { system: updatedSystem.toObject(), changed: true };
+        } catch (error) {
+            await session.abortTransaction();
+            throw error;
+        } finally {
+            await session.endSession();
+        }
+    };
+
+    static changeStatus = async (id: string, status: SystemStatus): Promise<SystemDocument> => {
+        const { system: updated, changed } = await this.updateStatusWithEvent(id, status, true);
+
+        if (changed) {
+            await this.updateParentsStatus(updated.parentId ? updated.parentId.toString() : null, status);
         }
 
-        system.set(buildStatusUpdate(status));
-        const updated = await system.save();
-
-        await this.updateParentsStatus(updated.parentId ? updated.parentId.toString() : null, status);
-
-        return updated.toObject();
+        return updated;
     };
 
     static updateParentHasChildren = async (parentId: string | null): Promise<void> => {
@@ -232,9 +266,7 @@ export class SystemServiceManager {
                 return;
             }
 
-            await SystemModel.findByIdAndUpdate(parent._id, { $set: buildStatusUpdate(newStatus) })
-                .lean()
-                .exec();
+            await this.updateStatusWithEvent(parent._id, newStatus);
 
             currentStatus = newStatus;
         }

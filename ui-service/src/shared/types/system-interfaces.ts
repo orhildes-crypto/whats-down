@@ -1,1 +1,9 @@
-export type { SystemStatus, CreateSystemPayload, SystemDocument, SystemFilters, SystemQueryParams } from '@whats-down/shared/common';
+export type {
+    SystemStatus,
+    CreateSystemPayload,
+    SystemDocument,
+    SystemFilters,
+    SystemQueryParams,
+    SystemEventsFilters,
+    SystemEventDocument,
+} from '@whats-down/shared/common';

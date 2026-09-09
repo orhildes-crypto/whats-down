@@ -1,7 +1,13 @@
 import { z } from 'zod';
-import { SystemStatus } from '../interfaces/systemInterfaces.js';
+import { SystemStatus } from '../interfaces/system-interfaces.js';
 import { zodMongoObjectId } from '../zod.js';
 import { SYSTEM_MIN_NAME_LENGTH, SYSTEM_MAX_NAME_LENGTH } from '../constants/systemConstants.js';
+
+export const systemEventSchema = z.object({
+    status: z.nativeEnum(SystemStatus),
+    systemId: zodMongoObjectId,
+    createdAt: z.coerce.date(),
+});
 
 export const systemRequiredFields = z.object({
     name: z.string().min(SYSTEM_MIN_NAME_LENGTH).max(SYSTEM_MAX_NAME_LENGTH),

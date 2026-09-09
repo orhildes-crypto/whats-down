@@ -2,6 +2,8 @@ import createSystemModalEn from '@/services/systems/components/createSystemModal
 import createSystemModalHe from '@/services/systems/components/createSystemModal/locales/createModal.he.json';
 import deleteSystemModalEn from '@/services/systems/components/deleteSystemModal/locales/deleteModal.en.json';
 import deleteSystemModalHe from '@/services/systems/components/deleteSystemModal/locales/deleteModal.he.json';
+import eventGraphEn from '@/services/systems/components/eventGraphModal/locales/eventGraphModal.en.json';
+import eventGraphHe from '@/services/systems/components/eventGraphModal/locales/eventGraphModal.he.json';
 import systemCubeEn from '@/services/systems/components/systemCube/locales/systemCube.en.json';
 import systemCubeHe from '@/services/systems/components/systemCube/locales/systemCube.he.json';
 import systemsPageEn from '@/services/systems/components/systemGridPage/locales/systemPage.en.json';
@@ -44,6 +46,7 @@ i18next.use(initReactI18next).init({
             errorPage: errorPageHe,
             utils: utilsHe,
             manageUsers: manageUsersHe,
+            eventGraphModal: eventGraphHe,
         },
         en: {
             loginForm: loginFormEn,
@@ -55,7 +58,8 @@ i18next.use(initReactI18next).init({
             deleteSystemModal: deleteSystemModalEn,
             errorPage: errorPageEn,
             utils: utilsEn,
-            manageUsers: manageUsersEn
+            manageUsers: manageUsersEn,
+            eventGraphModal: eventGraphEn,
         },
     },
     lng: savedLang ?? 'he',
